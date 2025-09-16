@@ -1,0 +1,13 @@
+{
+  "Title": "string",
+  "Concept": "string",
+  "Exercise": ["string"],
+  "WhyItMatters": "string",
+  "JamPrompt": "string",
+  "SubFocusExplainer": "string",
+  "YouTubeSearchQuery": "string",
+  "ChordAscii": "string",
+  "ChordCodes": [
+    { "name": "string", "caged": "string", "fingering": "string", "position": "string", "usedInStep": 1 }
+  ]
+}
