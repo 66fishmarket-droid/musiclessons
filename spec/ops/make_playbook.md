@@ -38,7 +38,7 @@
 - **Clamp:** Tier between 1 and 5.
 
 ## Module naming (house style)
-CTX LAST → HIST L14 → CTX AGG → SF PICK → SF SELECT → FOCUS LAST SUB → SF FINAL → KEY FINAL → FINAL VARS → TIMESTAMPS+UID → FORM LINK → GPT LESSON → JSON PARSE → EMAIL SEND → LESSONS ADD → PROGRESS STAMP
+CTX LAST → HIST L14 → CTX AGG → SF PICK → SF SELECT → FOCUS LAST SUB → SF FINAL → KEY FINAL → FINAL VARS → TIMESTAMPS+UID → FORM LINK → **CHORD REPO FETCH** → **CTX AGG (append chord repo)** → GPT LESSON → JSON PARSE → EMAIL SEND → LESSONS ADD → PROGRESS STAMP
 
 ## Validation checklist (before running)
 - [ ] `needsReinforceOrLowConf` computed once from UID-matched feedback.
@@ -58,3 +58,15 @@ CTX LAST → HIST L14 → CTX AGG → SF PICK → SF SELECT → FOCUS LAST SUB �
 
 **Q:** How do I ensure two distinct history blocks?  
 **A:** Duplicate the Search rows module; each feeds its own Text aggregator.
+
+### CHORD REPO FETCH (HTTP → Get a file)
+- Position: after FORM LINK, before GPT LESSON.
+- Module name: **CHORD REPO FETCH**
+- Method: GET
+- URL: `{{CHORD_REPO_SOURCE_URL}}`
+- Expected: raw JSON text of the curated chord repository.
+- Output mapping:
+  - Response body → variable **CHORD_REPO_JSON**
+
+### CTX AGG (append chord repo)
+- Append this literal block at the **end of the system message** you already assemble:
