@@ -157,4 +157,70 @@
   "G#": {
     "major": [
       { "id": "G#_Eshape_4", "eadgbe": ["4","6","6","5","4","4"], "ascii": "466544", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @4", "voicing":"mid" },
-      { "id": "G#_Ashape_11", "eadgbe": ["x","11","13","13","13","11"], "ascii": "x11131311", "fingering": ["x","1","3","4","2","1"],
+      { "id": "G#_Ashape_11", "eadgbe": ["x","11","13","13","13","11"], "ascii": "x11131311", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @11", "voicing":"mid" }
+    ],
+    "minor": [
+      { "id": "G#m_Eshape_4", "eadgbe": ["4","6","6","4","4","4"], "ascii": "466444", "fingering": ["1","3","4","1","1","1"], "position": "E-shape @4", "voicing":"mid" }
+    ],
+    "sus4": [
+      { "id": "G#sus4_Eshape_4", "eadgbe": ["4","6","6","6","4","4"], "ascii": "466664", "fingering": ["1","3","4","3","1","1"], "position": "E-shape @4", "voicing":"mid" }
+    ],
+    "dom7": [
+      { "id": "G#7_Eshape_4", "eadgbe": ["4","6","4","5","4","4"], "ascii": "464544", "fingering": ["1","3","1","2","1","1"], "position": "E-shape @4", "voicing":"mid" }
+    ]
+  },
+
+  "A": {
+    "major": [
+      { "id": "A_open", "eadgbe": ["x","0","2","2","2","0"], "ascii": "x02220", "fingering": ["x","0","1","2","3","0"], "position": "open", "voicing":"open" },
+      { "id": "A_Eshape_5", "eadgbe": ["5","7","7","6","5","5"], "ascii": "577655", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @5", "voicing":"mid" }
+    ],
+    "minor": [
+      { "id": "Am_open", "eadgbe": ["x","0","2","2","1","0"], "ascii": "x02210", "fingering": ["x","0","2","3","1","0"], "position": "open", "voicing":"open" }
+    ],
+    "sus2": [
+      { "id": "Asus2_open", "eadgbe": ["x","0","2","2","0","0"], "ascii": "x02200", "fingering": ["x","0","2","3","0","0"], "position": "open", "voicing":"open" }
+    ],
+    "sus4": [
+      { "id": "Asus4_open", "eadgbe": ["x","0","2","2","3","0"], "ascii": "x02230", "fingering": ["x","0","1","2","3","0"], "position": "open", "voicing":"open" }
+    ],
+    "add9": [
+      { "id": "Aadd9_open", "eadgbe": ["x","0","2","4","2","0"], "ascii": "x02420", "fingering": ["x","0","1","4","2","0"], "position": "open", "voicing":"open" }
+    ],
+    "dom7": [
+      { "id": "A7_open", "eadgbe": ["x","0","2","0","2","0"], "ascii": "x02020", "fingering": ["x","0","2","0","1","0"], "position": "open", "voicing":"open" }
+    ]
+  },
+
+  "A#": {
+    "major": [
+      { "id": "A#_Eshape_6", "eadgbe": ["6","8","8","7","6","6"], "ascii": "688766", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @6", "voicing":"mid" },
+      { "id": "A#_Ashape_1", "eadgbe": ["x","1","3","3","3","1"], "ascii": "x13331", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @1", "voicing":"low" }
+    ],
+    "minor": [
+      { "id": "A#m_Ashape_1", "eadgbe": ["x","1","3","3","2","1"], "ascii": "x13321", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @1", "voicing":"low" }
+    ],
+    "sus4": [
+      { "id": "A#sus4_Eshape_6", "eadgbe": ["6","8","8","8","6","6"], "ascii": "688886", "fingering": ["1","3","4","3","1","1"], "position": "E-shape @6", "voicing":"mid" }
+    ],
+    "dom7": [
+      { "id": "A#7_Eshape_6", "eadgbe": ["6","8","6","7","6","6"], "ascii": "686766", "fingering": ["1","3","1","2","1","1"], "position": "E-shape @6", "voicing":"mid" }
+    ]
+  },
+
+  "B": {
+    "major": [
+      { "id": "B_Eshape_7", "eadgbe": ["7","9","9","8","7","7"], "ascii": "799877", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @7", "voicing":"mid" },
+      { "id": "B_Ashape_2", "eadgbe": ["x","2","4","4","4","2"], "ascii": "x24442", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @2", "voicing":"low" }
+    ],
+    "minor": [
+      { "id": "Bm_Ashape_2", "eadgbe": ["x","2","4","4","3","2"], "ascii": "x24432", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @2", "voicing":"low" }
+    ],
+    "sus4": [
+      { "id": "Bsus4_Eshape_7", "eadgbe": ["7","9","9","9","7","7"], "ascii": "799997", "fingering": ["1","3","4","3","1","1"], "position": "E-shape @7", "voicing":"mid" }
+    ],
+    "dom7": [
+      { "id": "B7_Eshape_7", "eadgbe": ["7","9","7","8","7","7"], "ascii": "797877", "fingering": ["1","3","1","2","1","1"], "position": "E-shape @7", "voicing":"mid" }
+    ]
+  }
+}
