@@ -53,6 +53,10 @@ Process rule: Respond with one completeable chunk at a time. Do not jump ahead. 
 ## Key cycle (policy)
 `G → D → A → E → C → F → Bb → Eb → Ab → Db → Gb → G` (pin on reinforcement)
 
+## External Sources
+- CHORD_REPO_SOURCE_URL — Static text. Default:
+  https://raw.githubusercontent.com/66fishmarket-droid/musiclessons/main/spec/domain/chord_repo.json
+  
 ## Tags legend
 - `[SR]` Spaced Review
 - `[IL]` Interleave
