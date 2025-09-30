@@ -37,8 +37,55 @@
 - **Thresholds:** Score ≥ +3 → Tier +1 (then Score = 0). Score ≤ –3 → Tier –1 (then Score = 0).
 - **Clamp:** Tier between 1 and 5.
 
-## Module naming (house style)
-CTX LAST → HIST L14 → CTX AGG → SF PICK → SF SELECT → FOCUS LAST SUB → SF FINAL → KEY FINAL → FINAL VARS → TIMESTAMPS+UID → FORM LINK → **CHORD REPO FETCH** → **CTX AGG (append chord repo)** → GPT LESSON → JSON PARSE → EMAIL SEND → LESSONS ADD → PROGRESS STAMP
+## Module Naming (final)
+
+Each line: **Canonical Name** — purpose — key outputs (vars).
+
+1. **CTX LAST** — Pull last lesson context — LastLesson, LastKey, LastSubfocus, LastTier
+2. **CTX AGG / Last Vars** — Normalize last* fields — Last* vars
+3. **CTX AGG / Pull Feedback** — Read latest feedback row — feedback raw
+4. **CTX AGG / Feedback Vars** — Map to fb* + flags — fbcompleted, fbneedreinforce, fbconfidence, fbnotes, fbsuggestedfocus, lastfeedbacklessonUID
+5. **CTX AGG / Apply Feedback** — Apply overrides (repeat/reinforce) — AppliedState
+6. **CTX AGG / Repeat Hold** — Freeze SF/Key if repeating — RepeatHold
+7. **CTX AGG / Normalize** — Fill defaults and clean — NormState
+8. **FOCUS ROTATE / Compute** — Compute next high-level focus — Focus.Next
+9. **FOCUS ROTATE / Apply** — Persist next focus — NextFocus
+10. **SF PICK / Catalog Fetch** — Read SubFocus catalog for NextFocus — SFCatalog
+11. **FOCUS LAST SUB / Load** — Load last-subfocus metadata — LastSubForFocus, etc.
+12. **FOCUS LAST SUB / Name** — Resolve display name — SF.LastName
+13. **SF FINAL / Sanitize Names** — norm/trim names — normNextFocus, lastSub
+14. **SF PICK / Candidate** — Candidate subfocus via rotation — SF.Candidate
+15. **SF FINAL / Select** — Accept/lock candidate — SF.FinalId, SF.FinalName
+16. **KEY FINAL** — Compute next key (cycle rules) — FinalKey, KeyReason
+17. **HIST L14 / Fetch** — Pull rows for last 14 days — HistoryRows
+18. **HIST L14 / Aggregate** — Aggregate seen counts — FocusSeenCounts, KeySeenCounts
+19. **HIST L14 / History+FB Text** — Safe concat — historyAndFeedbackText
+20. **FINAL VARS / NextDay** — Day index helper — FinalNextDay
+21. **SF PICK / Progress Scan** — From SubFocusProgress (A=NextFocus), sort LastSeen asc — SF.Candidate{Id,Name,Level}
+22. **SF SELECT / Tier→Level** — Tier via weighted fb* → Level — Tier, Level.Final
+23. **SF SELECT / Fallback (unused)** — Set DefaultSub (not used)
+24. **SF FINAL / Lock** — Lock final subfocus — SF.Final
+25. **SF FINAL / Display Names** — Compose names — FocusName, SFDisplay
+26. **GPT LESSON (JSON-only)** — GPT returns lesson JSON only — Lesson.RawJSON
+27. **JSON PARSE / Clean** — Scrub/validate JSON block — Lesson.JSON.Clean
+28. **JSON PARSE / Shape→schema** — Conform to spec/schema/lesson_response.json — Lesson.JSON
+29. **MEDIA YT URL** — Build YouTube search URL — YouTubeSearchURL
+30. **MEDIA YT SEARCH (query-only)** — Maintain/query text only — YouTubeTopN? (optional)
+31. **LESSON LINES** — Split exercise into lines — ExerciseLines[]
+32. **UG SEARCH URL / Build** — Build UG search helpers — UGBase, UGSong, UGArtist, UGSongArtist
+33. **UG PARSE** — Parse any UG JSON (if present) — UG.Results[]
+34. **UG NBEST / Vars** — Choose/present N best or tidy — UG.Top[]
+35. **UG URL / Build** — Final UG link(s) — UG.URL
+36. **TIMESTAMPS+UID / Dates** — Date formats — DatePretty, DateISO
+37. **TIMESTAMPS+UID / UID** — Deterministic ID — LessonUID
+38. **FORM LINK / Base** — Base form URL + entry ids — FormBase, EntryUID
+39. **FORM LINK / Prefill** — Append UID param — FormURL.Prefill
+40. **EMAIL SEND** — Send lesson email — EmailStatus
+41. **FINAL VARS / Email Summary** — Summaries + blank sheet cols — EmailSummary, SheetBlankCols
+42. **FINAL VARS / Runtime Meta** — Runtime/meta flags — Has_SR, Has_IL, Has_MP, YTQuery, YTLinkType, Model, PromptVersion, GeneratedAt
+43. **LESSONS ADD** — Append lesson row — LessonsRowId
+44. **PROGRESS STAMP** — Update SubFocusProgress.LastSeen (YYYY-MM-DD) — ProgressRowId
+
 
 ## Validation checklist (before running)
 - [ ] `needsReinforceOrLowConf` computed once from UID-matched feedback.
