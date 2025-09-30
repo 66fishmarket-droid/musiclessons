@@ -12,6 +12,7 @@ Use this file for high-level, human-readable entries whenever you change prompts
 - Key cycle policy: pinned G→D→A→E→C→F→Bb→Eb→Ab→Db→Gb; reinforcement pin rules.
 - Learning science: durations per Tier; success metrics per step.
 - Ingestor: Score→Tier thresholds (±3) and deltas {reinforce:-2, 1–2:-1, 3:0, 4:+1, 5:+2}.
+- - 2025-09-30: Added CHORD_REPO_SOURCE_URL variable for curated chord repository.
 
 ## Template for future entries
 - Date — version tag (if applicable)
