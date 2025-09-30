@@ -1,226 +1,289 @@
 {
   "C": {
     "major": [
-      { "id": "C_open", "eadgbe": ["x","3","2","0","1","0"], "ascii": "x32010", "fingering": ["x","3","2","0","1","0"], "position": "open", "voicing":"open" },
-      { "id": "C_Ashape_3", "eadgbe": ["x","3","5","5","5","3"], "ascii": "x35553", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @3", "voicing":"mid" }
+      { "id": "C_open", "eadgbe": ["x","3","2","0","1","0"], "ascii": "x32010", "fingering": ["x","3","2","0","1","0"], "position": "open", "voicing": "open" },
+      { "id": "C_Ashape_3", "eadgbe": ["x","3","5","5","5","3"], "ascii": "x35553", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @3", "voicing": "mid" }
     ],
     "minor": [
-      { "id": "Cm_Ashape_3", "eadgbe": ["x","3","5","5","4","3"], "ascii": "x35543", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @3", "voicing":"mid" }
+      { "id": "Cm_Ashape_3", "eadgbe": ["x","3","5","5","4","3"], "ascii": "x35543", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @3", "voicing": "mid" }
     ],
     "sus2": [
-      { "id": "Csus2_Ashape_3", "eadgbe": ["x","3","5","5","3","3"], "ascii": "x35533", "fingering": ["x","1","3","4","1","1"], "position": "A-shape @3", "voicing":"mid" }
+      { "id": "Csus2_Ashape_3", "eadgbe": ["x","3","5","5","3","3"], "ascii": "x35533", "fingering": ["x","1","3","4","1","1"], "position": "A-shape @3", "voicing": "mid" }
     ],
     "sus4": [
-      { "id": "Csus4_open", "eadgbe": ["x","3","3","0","1","1"], "ascii": "x33011", "fingering": ["x","3","4","0","1","1"], "position": "open", "voicing":"open" }
+      { "id": "Csus4_open", "eadgbe": ["x","3","3","0","1","1"], "ascii": "x33011", "fingering": ["x","3","4","0","1","1"], "position": "open", "voicing": "open" }
     ],
     "add9": [
-      { "id": "Cadd9_open", "eadgbe": ["x","3","2","0","3","3"], "ascii": "x32033", "fingering": ["x","3","2","0","3","4"], "position": "open", "voicing":"open" }
+      { "id": "Cadd9_open", "eadgbe": ["x","3","2","0","3","3"], "ascii": "x32033", "fingering": ["x","3","2","0","3","4"], "position": "open", "voicing": "open" }
     ],
     "dom7": [
-      { "id": "C7_Ashape_3", "eadgbe": ["x","3","5","3","5","3"], "ascii": "x35353", "fingering": ["x","1","3","1","4","1"], "position": "A-shape @3", "voicing":"mid" }
+      { "id": "C7_Ashape_3", "eadgbe": ["x","3","5","3","5","3"], "ascii": "x35353", "fingering": ["x","1","3","1","4","1"], "position": "A-shape @3", "voicing": "mid" }
+    ],
+    "maj7": [
+      { "id": "Cmaj7_open", "eadgbe": ["x","3","2","0","0","0"], "ascii": "x32000", "fingering": ["x","3","2","0","0","0"], "position": "open", "voicing": "open" }
+    ],
+    "min7": [
+      { "id": "Cm7_Ashape_3", "eadgbe": ["x","3","5","3","4","3"], "ascii": "x35343", "fingering": ["x","1","3","1","2","1"], "position": "A-shape @3", "voicing": "mid" }
     ]
   },
 
   "C#": {
     "major": [
-      { "id": "C#_Eshape_9", "eadgbe": ["9","11","11","10","9","9"], "ascii": "911111099", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @9", "voicing":"mid" },
-      { "id": "C#_Ashape_4", "eadgbe": ["x","4","6","6","6","4"], "ascii": "x46664", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @4", "voicing":"mid" }
+      { "id": "C#_Eshape_9", "eadgbe": ["9","11","11","10","9","9"], "ascii": "911111099", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @9", "voicing": "mid" },
+      { "id": "C#_Ashape_4", "eadgbe": ["x","4","6","6","6","4"], "ascii": "x46664", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @4", "voicing": "mid" }
     ],
     "minor": [
-      { "id": "C#m_Ashape_4", "eadgbe": ["x","4","6","6","5","4"], "ascii": "x46654", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @4", "voicing":"mid" }
+      { "id": "C#m_Ashape_4", "eadgbe": ["x","4","6","6","5","4"], "ascii": "x46654", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @4", "voicing": "mid" }
     ],
     "sus4": [
-      { "id": "C#sus4_Ashape_4", "eadgbe": ["x","4","6","6","7","4"], "ascii": "x46674", "fingering": ["x","1","3","4","2/4","1"], "position": "A-shape @4", "voicing":"mid" }
+      { "id": "C#sus4_Ashape_4", "eadgbe": ["x","4","6","6","7","4"], "ascii": "x46674", "fingering": ["x","1","3","4","2/4","1"], "position": "A-shape @4", "voicing": "mid" }
     ],
     "add9": [
-      { "id": "C#add9_Eshape_9", "eadgbe": ["9","11","11","10","9","11"], "ascii": "911111011", "fingering": ["1","3","4","2","1","4"], "position": "E-shape @9", "voicing":"mid" }
+      { "id": "C#add9_Eshape_9", "eadgbe": ["9","11","11","10","9","11"], "ascii": "911111011", "fingering": ["1","3","4","2","1","4"], "position": "E-shape @9", "voicing": "mid" }
     ],
     "dom7": [
-      { "id": "C#7_Ashape_4", "eadgbe": ["x","4","6","4","6","4"], "ascii": "x46464", "fingering": ["x","1","3","1","4","1"], "position": "A-shape @4", "voicing":"mid" }
+      { "id": "C#7_Ashape_4", "eadgbe": ["x","4","6","4","6","4"], "ascii": "x46464", "fingering": ["x","1","3","1","4","1"], "position": "A-shape @4", "voicing": "mid" }
+    ],
+    "maj7": [
+      { "id": "C#maj7_Ashape_4", "eadgbe": ["x","4","6","5","6","4"], "ascii": "x46564", "fingering": ["x","1","3","2","4","1"], "position": "A-shape @4", "voicing": "mid" }
+    ],
+    "min7": [
+      { "id": "C#m7_Ashape_4", "eadgbe": ["x","4","6","4","5","4"], "ascii": "x46454", "fingering": ["x","1","3","1","2","1"], "position": "A-shape @4", "voicing": "mid" }
     ]
   },
 
   "D": {
     "major": [
-      { "id": "D_open", "eadgbe": ["x","x","0","2","3","2"], "ascii": "xx0232", "fingering": ["x","x","0","1","3","2"], "position": "open", "voicing":"open" },
-      { "id": "D_Ashape_5", "eadgbe": ["x","5","7","7","7","5"], "ascii": "x57775", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @5", "voicing":"mid" }
+      { "id": "D_open", "eadgbe": ["x","x","0","2","3","2"], "ascii": "xx0232", "fingering": ["x","x","0","1","3","2"], "position": "open", "voicing": "open" },
+      { "id": "D_Ashape_5", "eadgbe": ["x","5","7","7","7","5"], "ascii": "x57775", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @5", "voicing": "mid" }
     ],
     "minor": [
-      { "id": "Dm_open", "eadgbe": ["x","x","0","2","3","1"], "ascii": "xx0231", "fingering": ["x","x","0","2","3","1"], "position": "open", "voicing":"open" }
+      { "id": "Dm_open", "eadgbe": ["x","x","0","2","3","1"], "ascii": "xx0231", "fingering": ["x","x","0","2","3","1"], "position": "open", "voicing": "open" }
     ],
     "sus2": [
-      { "id": "Dsus2_open", "eadgbe": ["x","x","0","2","3","0"], "ascii": "xx0230", "fingering": ["x","x","0","1","3","0"], "position": "open", "voicing":"open" }
+      { "id": "Dsus2_open", "eadgbe": ["x","x","0","2","3","0"], "ascii": "xx0230", "fingering": ["x","x","0","1","3","0"], "position": "open", "voicing": "open" }
     ],
     "sus4": [
-      { "id": "Dsus4_open", "eadgbe": ["x","x","0","2","3","3"], "ascii": "xx0233", "fingering": ["x","x","0","1","3","4"], "position": "open", "voicing":"open" }
+      { "id": "Dsus4_open", "eadgbe": ["x","x","0","2","3","3"], "ascii": "xx0233", "fingering": ["x","x","0","1","3","4"], "position": "open", "voicing": "open" }
     ],
     "add9": [
-      { "id": "Dadd9_open", "eadgbe": ["x","x","0","2","3","0"], "ascii": "xx0230", "fingering": ["x","x","0","1","3","0"], "position": "open", "voicing":"open" }
+      { "id": "Dadd9_open", "eadgbe": ["x","x","0","2","3","0"], "ascii": "xx0230", "fingering": ["x","x","0","1","3","0"], "position": "open", "voicing": "open" }
     ],
     "dom7": [
-      { "id": "D7_Ashape_5", "eadgbe": ["x","5","7","5","7","5"], "ascii": "x57575", "fingering": ["x","1","3","1","4","1"], "position": "A-shape @5", "voicing":"mid" }
+      { "id": "D7_Ashape_5", "eadgbe": ["x","5","7","5","7","5"], "ascii": "x57575", "fingering": ["x","1","3","1","4","1"], "position": "A-shape @5", "voicing": "mid" }
+    ],
+    "maj7": [
+      { "id": "Dmaj7_open", "eadgbe": ["x","x","0","2","2","2"], "ascii": "xx0222", "fingering": ["x","x","0","1","2","3"], "position": "open", "voicing": "open" }
+    ],
+    "min7": [
+      { "id": "Dm7_open", "eadgbe": ["x","x","0","2","1","1"], "ascii": "xx0211", "fingering": ["x","x","0","2","1","1"], "position": "open", "voicing": "open" }
     ]
   },
 
   "D#": {
     "major": [
-      { "id": "D#_Eshape_11", "eadgbe": ["11","13","13","12","11","11"], "ascii": "1113131211", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @11", "voicing":"mid" },
-      { "id": "D#_Ashape_6", "eadgbe": ["x","6","8","8","8","6"], "ascii": "x68886", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @6", "voicing":"mid" }
+      { "id": "D#_Eshape_11", "eadgbe": ["11","13","13","12","11","11"], "ascii": "1113131211", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @11", "voicing": "mid" },
+      { "id": "D#_Ashape_6", "eadgbe": ["x","6","8","8","8","6"], "ascii": "x68886", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @6", "voicing": "mid" }
     ],
     "minor": [
-      { "id": "D#m_Ashape_6", "eadgbe": ["x","6","8","8","7","6"], "ascii": "x68876", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @6", "voicing":"mid" }
+      { "id": "D#m_Ashape_6", "eadgbe": ["x","6","8","8","7","6"], "ascii": "x68876", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @6", "voicing": "mid" }
     ],
     "sus4": [
-      { "id": "D#sus4_Ashape_6", "eadgbe": ["x","6","8","8","9","6"], "ascii": "x68896", "fingering": ["x","1","3","4","2/4","1"], "position": "A-shape @6", "voicing":"mid" }
+      { "id": "D#sus4_Ashape_6", "eadgbe": ["x","6","8","8","9","6"], "ascii": "x68896", "fingering": ["x","1","3","4","2/4","1"], "position": "A-shape @6", "voicing": "mid" }
     ],
     "dom7": [
-      { "id": "D#7_Ashape_6", "eadgbe": ["x","6","8","6","8","6"], "ascii": "x68686", "fingering": ["x","1","3","1","4","1"], "position": "A-shape @6", "voicing":"mid" }
+      { "id": "D#7_Ashape_6", "eadgbe": ["x","6","8","6","8","6"], "ascii": "x68686", "fingering": ["x","1","3","1","4","1"], "position": "A-shape @6", "voicing": "mid" }
+    ],
+    "maj7": [
+      { "id": "D#maj7_Ashape_6", "eadgbe": ["x","6","8","7","8","6"], "ascii": "x68786", "fingering": ["x","1","3","2","4","1"], "position": "A-shape @6", "voicing": "mid" }
+    ],
+    "min7": [
+      { "id": "D#m7_Ashape_6", "eadgbe": ["x","6","8","6","7","6"], "ascii": "x68676", "fingering": ["x","1","3","1","2","1"], "position": "A-shape @6", "voicing": "mid" }
     ]
   },
 
   "E": {
     "major": [
-      { "id": "E_open", "eadgbe": ["0","2","2","1","0","0"], "ascii": "022100", "fingering": ["0","2","3","1","0","0"], "position": "open", "voicing":"open" },
-      { "id": "E_Ashape_7", "eadgbe": ["x","7","9","9","9","7"], "ascii": "x79997", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @7", "voicing":"mid" }
+      { "id": "E_open", "eadgbe": ["0","2","2","1","0","0"], "ascii": "022100", "fingering": ["0","2","3","1","0","0"], "position": "open", "voicing": "open" },
+      { "id": "E_Ashape_7", "eadgbe": ["x","7","9","9","9","7"], "ascii": "x79997", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @7", "voicing": "mid" }
     ],
     "minor": [
-      { "id": "Em_open", "eadgbe": ["0","2","2","0","0","0"], "ascii": "022000", "fingering": ["0","2","3","0","0","0"], "position": "open", "voicing":"open" }
+      { "id": "Em_open", "eadgbe": ["0","2","2","0","0","0"], "ascii": "022000", "fingering": ["0","2","3","0","0","0"], "position": "open", "voicing": "open" }
     ],
     "sus4": [
-      { "id": "Esus4_open", "eadgbe": ["0","2","2","2","0","0"], "ascii": "022200", "fingering": ["0","2","3","4","0","0"], "position": "open", "voicing":"open" }
+      { "id": "Esus4_open", "eadgbe": ["0","2","2","2","0","0"], "ascii": "022200", "fingering": ["0","2","3","4","0","0"], "position": "open", "voicing": "open" }
     ],
     "add9": [
-      { "id": "Eadd9_open", "eadgbe": ["0","2","2","1","0","2"], "ascii": "022102", "fingering": ["0","2","3","1","0","2"], "position": "open", "voicing":"open" }
+      { "id": "Eadd9_open", "eadgbe": ["0","2","2","1","0","2"], "ascii": "022102", "fingering": ["0","2","3","1","0","2"], "position": "open", "voicing": "open" }
     ],
     "dom7": [
-      { "id": "E7_open", "eadgbe": ["0","2","0","1","0","0"], "ascii": "020100", "fingering": ["0","2","0","1","0","0"], "position": "open", "voicing":"open" }
+      { "id": "E7_open", "eadgbe": ["0","2","0","1","0","0"], "ascii": "020100", "fingering": ["0","2","0","1","0","0"], "position": "open", "voicing": "open" }
+    ],
+    "maj7": [
+      { "id": "Emaj7_Ashape_7", "eadgbe": ["x","7","9","8","9","7"], "ascii": "x79897", "fingering": ["x","1","3","2","4","1"], "position": "A-shape @7", "voicing": "mid" }
+    ],
+    "min7": [
+      { "id": "Em7_open", "eadgbe": ["0","2","2","0","3","0"], "ascii": "022030", "fingering": ["0","2","3","0","4","0"], "position": "open", "voicing": "open" }
     ]
   },
 
   "F": {
     "major": [
-      { "id": "F_Eshape_1", "eadgbe": ["1","3","3","2","1","1"], "ascii": "133211", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @1", "voicing":"low" },
-      { "id": "F_Ashape_8", "eadgbe": ["x","8","10","10","10","8"], "ascii": "x810108", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @8", "voicing":"mid" }
+      { "id": "F_Eshape_1", "eadgbe": ["1","3","3","2","1","1"], "ascii": "133211", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @1", "voicing": "low" },
+      { "id": "F_Ashape_8", "eadgbe": ["x","8","10","10","10","8"], "ascii": "x810108", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @8", "voicing": "mid" }
     ],
     "minor": [
-      { "id": "Fm_Eshape_1", "eadgbe": ["1","3","3","1","1","1"], "ascii": "133111", "fingering": ["1","3","4","1","1","1"], "position": "E-shape @1", "voicing":"low" }
+      { "id": "Fm_Eshape_1", "eadgbe": ["1","3","3","1","1","1"], "ascii": "133111", "fingering": ["1","3","4","1","1","1"], "position": "E-shape @1", "voicing": "low" }
     ],
     "sus4": [
-      { "id": "Fsus4_Eshape_1", "eadgbe": ["1","3","3","3","1","1"], "ascii": "133311", "fingering": ["1","3","4","3","1","1"], "position": "E-shape @1", "voicing":"low" }
+      { "id": "Fsus4_Eshape_1", "eadgbe": ["1","3","3","3","1","1"], "ascii": "133311", "fingering": ["1","3","4","3","1","1"], "position": "E-shape @1", "voicing": "low" }
     ],
     "add9": [
-      { "id": "Fadd9_Eshape_1", "eadgbe": ["1","3","3","2","1","3"], "ascii": "133213", "fingering": ["1","3","4","2","1","4"], "position": "E-shape @1", "voicing":"low" }
+      { "id": "Fadd9_Eshape_1", "eadgbe": ["1","3","3","2","1","3"], "ascii": "133213", "fingering": ["1","3","4","2","1","4"], "position": "E-shape @1", "voicing": "low" }
     ],
     "dom7": [
-      { "id": "F7_Eshape_1", "eadgbe": ["1","3","1","2","1","1"], "ascii": "131211", "fingering": ["1","3","1","2","1","1"], "position": "E-shape @1", "voicing":"low" }
+      { "id": "F7_Eshape_1", "eadgbe": ["1","3","1","2","1","1"], "ascii": "131211", "fingering": ["1","3","1","2","1","1"], "position": "E-shape @1", "voicing": "low" }
+    ],
+    "maj7": [
+      { "id": "Fmaj7_open-like", "eadgbe": ["1","3","3","2","1","0"], "ascii": "133210", "fingering": ["1","3","4","2","1","0"], "position": "E-shape w/ open e", "voicing": "low" }
+    ],
+    "min7": [
+      { "id": "Fm7_Eshape_1", "eadgbe": ["1","3","1","1","1","1"], "ascii": "131111", "fingering": ["1","3","1","1","1","1"], "position": "E-shape @1", "voicing": "low" }
     ]
   },
 
   "F#": {
     "major": [
-      { "id": "F#_Eshape_2", "eadgbe": ["2","4","4","3","2","2"], "ascii": "244322", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @2", "voicing":"low" },
-      { "id": "F#_Ashape_9", "eadgbe": ["x","9","11","11","11","9"], "ascii": "x911119", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @9", "voicing":"mid" }
+      { "id": "F#_Eshape_2", "eadgbe": ["2","4","4","3","2","2"], "ascii": "244322", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @2", "voicing": "low" },
+      { "id": "F#_Ashape_9", "eadgbe": ["x","9","11","11","11","9"], "ascii": "x911119", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @9", "voicing": "mid" }
     ],
     "minor": [
-      { "id": "F#m_Eshape_2", "eadgbe": ["2","4","4","2","2","2"], "ascii": "244222", "fingering": ["1","3","4","1","1","1"], "position": "E-shape @2", "voicing":"low" }
+      { "id": "F#m_Eshape_2", "eadgbe": ["2","4","4","2","2","2"], "ascii": "244222", "fingering": ["1","3","4","1","1","1"], "position": "E-shape @2", "voicing": "low" }
     ],
     "sus4": [
-      { "id": "F#sus4_Eshape_2", "eadgbe": ["2","4","4","4","2","2"], "ascii": "244422", "fingering": ["1","3","4","3","1","1"], "position": "E-shape @2", "voicing":"low" }
+      { "id": "F#sus4_Eshape_2", "eadgbe": ["2","4","4","4","2","2"], "ascii": "244422", "fingering": ["1","3","4","3","1","1"], "position": "E-shape @2", "voicing": "low" }
     ],
     "dom7": [
-      { "id": "F#7_Eshape_2", "eadgbe": ["2","4","2","3","2","2"], "ascii": "242322", "fingering": ["1","3","1","2","1","1"], "position": "E-shape @2", "voicing":"low" }
+      { "id": "F#7_Eshape_2", "eadgbe": ["2","4","2","3","2","2"], "ascii": "242322", "fingering": ["1","3","1","2","1","1"], "position": "E-shape @2", "voicing": "low" }
+    ],
+    "maj7": [
+      { "id": "F#maj7_Eshape_2", "eadgbe": ["2","4","3","3","2","2"], "ascii": "243322", "fingering": ["1","3","2","3","1","1"], "position": "E-shape @2", "voicing": "low" }
+    ],
+    "min7": [
+      { "id": "F#m7_Eshape_2", "eadgbe": ["2","4","2","2","2","2"], "ascii": "242222", "fingering": ["1","3","1","1","1","1"], "position": "E-shape @2", "voicing": "low" }
     ]
   },
-
+  
   "G": {
     "major": [
-      { "id": "G_open", "eadgbe": ["3","2","0","0","0","3"], "ascii": "320003", "fingering": ["3","2","0","0","0","4"], "position": "open", "voicing":"open" },
-      { "id": "G_Eshape_3", "eadgbe": ["3","5","5","4","3","3"], "ascii": "355433", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @3", "voicing":"mid" }
+      { "id": "G_open", "eadgbe": ["3","2","0","0","0","3"], "ascii": "320003", "fingering": ["2","1","0","0","0","3"], "position": "open", "voicing": "open" },
+      { "id": "G_Eshape_3", "eadgbe": ["3","5","5","4","3","3"], "ascii": "355433", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @3", "voicing": "mid" }
     ],
     "minor": [
-      { "id": "Gm_Eshape_3", "eadgbe": ["3","5","5","3","3","3"], "ascii": "355333", "fingering": ["1","3","4","1","1","1"], "position": "E-shape @3", "voicing":"mid" }
-    ],
-    "sus2": [
-      { "id": "Gsus2_open", "eadgbe": ["3","0","0","0","3","3"], "ascii": "300033", "fingering": ["3","0","0","0","3","4"], "position": "open", "voicing":"open" }
+      { "id": "Gm_Eshape_3", "eadgbe": ["3","5","5","3","3","3"], "ascii": "355333", "fingering": ["1","3","4","1","1","1"], "position": "E-shape @3", "voicing": "mid" }
     ],
     "sus4": [
-      { "id": "Gsus4_Eshape_3", "eadgbe": ["3","5","5","5","3","3"], "ascii": "355533", "fingering": ["1","3","4","3","1","1"], "position": "E-shape @3", "voicing":"mid" }
-    ],
-    "add9": [
-      { "id": "Gadd9_open", "eadgbe": ["3","2","0","0","2","3"], "ascii": "320023", "fingering": ["3","2","0","0","1","4"], "position": "open", "voicing":"open" }
+      { "id": "Gsus4_open", "eadgbe": ["3","2","0","0","1","3"], "ascii": "320013", "fingering": ["2","1","0","0","1","3"], "position": "open", "voicing": "open" }
     ],
     "dom7": [
-      { "id": "G7_Eshape_3", "eadgbe": ["3","5","3","4","3","3"], "ascii": "353433", "fingering": ["1","3","1","2","1","1"], "position": "E-shape @3", "voicing":"mid" }
+      { "id": "G7_Eshape_3", "eadgbe": ["3","5","3","4","3","3"], "ascii": "353433", "fingering": ["1","3","1","2","1","1"], "position": "E-shape @3", "voicing": "mid" }
+    ],
+    "maj7": [
+      { "id": "Gmaj7_Eshape_3", "eadgbe": ["3","5","4","4","3","3"], "ascii": "354433", "fingering": ["1","3","2","3","1","1"], "position": "E-shape @3", "voicing": "mid" }
+    ],
+    "min7": [
+      { "id": "Gm7_Eshape_3", "eadgbe": ["3","5","3","3","3","3"], "ascii": "353333", "fingering": ["1","3","1","1","1","1"], "position": "E-shape @3", "voicing": "mid" }
     ]
   },
 
   "G#": {
     "major": [
-      { "id": "G#_Eshape_4", "eadgbe": ["4","6","6","5","4","4"], "ascii": "466544", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @4", "voicing":"mid" },
-      { "id": "G#_Ashape_11", "eadgbe": ["x","11","13","13","13","11"], "ascii": "x11131311", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @11", "voicing":"mid" }
+      { "id": "G#_Eshape_4", "eadgbe": ["4","6","6","5","4","4"], "ascii": "466544", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @4", "voicing": "mid" }
     ],
     "minor": [
-      { "id": "G#m_Eshape_4", "eadgbe": ["4","6","6","4","4","4"], "ascii": "466444", "fingering": ["1","3","4","1","1","1"], "position": "E-shape @4", "voicing":"mid" }
+      { "id": "G#m_Eshape_4", "eadgbe": ["4","6","6","4","4","4"], "ascii": "466444", "fingering": ["1","3","4","1","1","1"], "position": "E-shape @4", "voicing": "mid" }
     ],
     "sus4": [
-      { "id": "G#sus4_Eshape_4", "eadgbe": ["4","6","6","6","4","4"], "ascii": "466664", "fingering": ["1","3","4","3","1","1"], "position": "E-shape @4", "voicing":"mid" }
+      { "id": "G#sus4_Eshape_4", "eadgbe": ["4","6","6","6","4","4"], "ascii": "466664", "fingering": ["1","3","4","3","1","1"], "position": "E-shape @4", "voicing": "mid" }
     ],
     "dom7": [
-      { "id": "G#7_Eshape_4", "eadgbe": ["4","6","4","5","4","4"], "ascii": "464544", "fingering": ["1","3","1","2","1","1"], "position": "E-shape @4", "voicing":"mid" }
+      { "id": "G#7_Eshape_4", "eadgbe": ["4","6","4","5","4","4"], "ascii": "464544", "fingering": ["1","3","1","2","1","1"], "position": "E-shape @4", "voicing": "mid" }
+    ],
+    "maj7": [
+      { "id": "G#maj7_Eshape_4", "eadgbe": ["4","6","5","5","4","4"], "ascii": "465544", "fingering": ["1","3","2","3","1","1"], "position": "E-shape @4", "voicing": "mid" }
+    ],
+    "min7": [
+      { "id": "G#m7_Eshape_4", "eadgbe": ["4","6","4","4","4","4"], "ascii": "464444", "fingering": ["1","3","1","1","1","1"], "position": "E-shape @4", "voicing": "mid" }
     ]
   },
 
   "A": {
     "major": [
-      { "id": "A_open", "eadgbe": ["x","0","2","2","2","0"], "ascii": "x02220", "fingering": ["x","0","1","2","3","0"], "position": "open", "voicing":"open" },
-      { "id": "A_Eshape_5", "eadgbe": ["5","7","7","6","5","5"], "ascii": "577655", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @5", "voicing":"mid" }
+      { "id": "A_open", "eadgbe": ["x","0","2","2","2","0"], "ascii": "x02220", "fingering": ["x","0","1","2","3","0"], "position": "open", "voicing": "open" },
+      { "id": "A_Eshape_5", "eadgbe": ["5","7","7","6","5","5"], "ascii": "577655", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @5", "voicing": "mid" }
     ],
     "minor": [
-      { "id": "Am_open", "eadgbe": ["x","0","2","2","1","0"], "ascii": "x02210", "fingering": ["x","0","2","3","1","0"], "position": "open", "voicing":"open" }
+      { "id": "Am_open", "eadgbe": ["x","0","2","2","1","0"], "ascii": "x02210", "fingering": ["x","0","2","3","1","0"], "position": "open", "voicing": "open" }
     ],
     "sus2": [
-      { "id": "Asus2_open", "eadgbe": ["x","0","2","2","0","0"], "ascii": "x02200", "fingering": ["x","0","2","3","0","0"], "position": "open", "voicing":"open" }
+      { "id": "Asus2_open", "eadgbe": ["x","0","2","2","0","0"], "ascii": "x02200", "fingering": ["x","0","2","3","0","0"], "position": "open", "voicing": "open" }
     ],
     "sus4": [
-      { "id": "Asus4_open", "eadgbe": ["x","0","2","2","3","0"], "ascii": "x02230", "fingering": ["x","0","1","2","3","0"], "position": "open", "voicing":"open" }
+      { "id": "Asus4_open", "eadgbe": ["x","0","2","2","3","0"], "ascii": "x02230", "fingering": ["x","0","1","2","3","0"], "position": "open", "voicing": "open" }
     ],
     "add9": [
-      { "id": "Aadd9_open", "eadgbe": ["x","0","2","4","2","0"], "ascii": "x02420", "fingering": ["x","0","1","4","2","0"], "position": "open", "voicing":"open" }
+      { "id": "Aadd9_open", "eadgbe": ["x","0","2","4","2","0"], "ascii": "x02420", "fingering": ["x","0","1","4","2","0"], "position": "open", "voicing": "open" }
     ],
     "dom7": [
-      { "id": "A7_open", "eadgbe": ["x","0","2","0","2","0"], "ascii": "x02020", "fingering": ["x","0","2","0","1","0"], "position": "open", "voicing":"open" }
+      { "id": "A7_open", "eadgbe": ["x","0","2","0","2","0"], "ascii": "x02020", "fingering": ["x","0","2","0","1","0"], "position": "open", "voicing": "open" }
+    ],
+    "maj7": [
+      { "id": "Amaj7_open", "eadgbe": ["x","0","2","1","2","0"], "ascii": "x02120", "fingering": ["x","0","2","1","3","0"], "position": "open", "voicing": "open" }
+    ],
+    "min7": [
+      { "id": "Am7_open", "eadgbe": ["x","0","2","0","1","0"], "ascii": "x02010", "fingering": ["x","0","2","0","1","0"], "position": "open", "voicing": "open" }
     ]
   },
 
   "A#": {
     "major": [
-      { "id": "A#_Eshape_6", "eadgbe": ["6","8","8","7","6","6"], "ascii": "688766", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @6", "voicing":"mid" },
-      { "id": "A#_Ashape_1", "eadgbe": ["x","1","3","3","3","1"], "ascii": "x13331", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @1", "voicing":"low" }
+      { "id": "A#_Eshape_6", "eadgbe": ["6","8","8","7","6","6"], "ascii": "688766", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @6", "voicing": "mid" }
     ],
     "minor": [
-      { "id": "A#m_Ashape_1", "eadgbe": ["x","1","3","3","2","1"], "ascii": "x13321", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @1", "voicing":"low" }
+      { "id": "A#m_Eshape_6", "eadgbe": ["6","8","8","6","6","6"], "ascii": "688666", "fingering": ["1","3","4","1","1","1"], "position": "E-shape @6", "voicing": "mid" }
     ],
     "sus4": [
-      { "id": "A#sus4_Eshape_6", "eadgbe": ["6","8","8","8","6","6"], "ascii": "688886", "fingering": ["1","3","4","3","1","1"], "position": "E-shape @6", "voicing":"mid" }
+      { "id": "A#sus4_Eshape_6", "eadgbe": ["6","8","8","8","6","6"], "ascii": "688886", "fingering": ["1","3","4","3","1","1"], "position": "E-shape @6", "voicing": "mid" }
     ],
     "dom7": [
-      { "id": "A#7_Eshape_6", "eadgbe": ["6","8","6","7","6","6"], "ascii": "686766", "fingering": ["1","3","1","2","1","1"], "position": "E-shape @6", "voicing":"mid" }
+      { "id": "A#7_Eshape_6", "eadgbe": ["6","8","6","7","6","6"], "ascii": "686766", "fingering": ["1","3","1","2","1","1"], "position": "E-shape @6", "voicing": "mid" }
+    ],
+    "maj7": [
+      { "id": "A#maj7_Eshape_6", "eadgbe": ["6","8","7","7","6","6"], "ascii": "687766", "fingering": ["1","3","2","3","1","1"], "position": "E-shape @6", "voicing": "mid" }
+    ],
+    "min7": [
+      { "id": "A#m7_Eshape_6", "eadgbe": ["6","8","6","6","6","6"], "ascii": "686666", "fingering": ["1","3","1","1","1","1"], "position": "E-shape @6", "voicing": "mid" }
     ]
   },
 
   "B": {
     "major": [
-      { "id": "B_Eshape_7", "eadgbe": ["7","9","9","8","7","7"], "ascii": "799877", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @7", "voicing":"mid" },
-      { "id": "B_Ashape_2", "eadgbe": ["x","2","4","4","4","2"], "ascii": "x24442", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @2", "voicing":"low" }
+      { "id": "B_Eshape_7", "eadgbe": ["7","9","9","8","7","7"], "ascii": "799877", "fingering": ["1","3","4","2","1","1"], "position": "E-shape @7", "voicing": "mid" }
     ],
     "minor": [
-      { "id": "Bm_Ashape_2", "eadgbe": ["x","2","4","4","3","2"], "ascii": "x24432", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @2", "voicing":"low" }
+      { "id": "Bm_Ashape_2", "eadgbe": ["x","2","4","4","3","2"], "ascii": "x24432", "fingering": ["x","1","3","4","2","1"], "position": "A-shape @2", "voicing": "low" }
     ],
     "sus4": [
-      { "id": "Bsus4_Eshape_7", "eadgbe": ["7","9","9","9","7","7"], "ascii": "799997", "fingering": ["1","3","4","3","1","1"], "position": "E-shape @7", "voicing":"mid" }
+      { "id": "Bsus4_Eshape_7", "eadgbe": ["7","9","9","9","7","7"], "ascii": "799997", "fingering": ["1","3","4","3","1","1"], "position": "E-shape @7", "voicing": "mid" }
     ],
     "dom7": [
-      { "id": "B7_Eshape_7", "eadgbe": ["7","9","7","8","7","7"], "ascii": "797877", "fingering": ["1","3","1","2","1","1"], "position": "E-shape @7", "voicing":"mid" }
+      { "id": "B7_Eshape_7", "eadgbe": ["7","9","7","8","7","7"], "ascii": "797877", "fingering": ["1","3","1","2","1","1"], "position": "E-shape @7", "voicing": "mid" }
+    ],
+    "maj7": [
+      { "id": "Bmaj7_Eshape_7", "eadgbe": ["7","9","8","8","7","7"], "ascii": "798877", "fingering": ["1","3","2","3","1","1"], "position": "E-shape @7", "voicing": "mid" }
+    ],
+    "min7": [
+      { "id": "Bm7_Ashape_2", "eadgbe": ["x","2","4","2","3","2"], "ascii": "x24232", "fingering": ["x","1","3","1","2","1"], "position": "A-shape @2", "voicing": "low" }
     ]
   }
 }
