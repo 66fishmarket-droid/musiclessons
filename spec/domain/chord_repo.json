@@ -1,0 +1,339 @@
+FILE: spec/domain/chord_repo.json
+ADD (new file)
+{
+  "C": {
+    "major": [
+      {
+        "id": "C_open",
+        "eadgbe": ["x","3","2","0","1","0"],
+        "ascii": "x32010",
+        "fingering": ["x","3","2","0","1","0"],
+        "position": "open"
+      },
+      {
+        "id": "C_Ashape_3",
+        "eadgbe": ["x","3","5","5","5","3"],
+        "ascii": "x35553",
+        "fingering": ["x","1","3","4","2","1"],
+        "position": "A-shape @3"
+      }
+    ],
+    "minor": [
+      {
+        "id": "Cm_Ashape_3",
+        "eadgbe": ["x","3","5","5","4","3"],
+        "ascii": "x35543",
+        "fingering": ["x","1","3","4","2","1"],
+        "position": "A-shape @3"
+      }
+    ]
+  },
+
+  "C#": {
+    "major": [
+      {
+        "id": "C#_Eshape_9",
+        "eadgbe": ["9","11","11","10","9","9"],
+        "ascii": "9 11 11 10 9 9",
+        "fingering": ["1","3","4","2","1","1"],
+        "position": "E-shape @9"
+      },
+      {
+        "id": "C#_Ashape_4",
+        "eadgbe": ["x","4","6","6","6","4"],
+        "ascii": "x46664",
+        "fingering": ["x","1","3","4","2","1"],
+        "position": "A-shape @4"
+      }
+    ],
+    "minor": [
+      {
+        "id": "C#m_open",
+        "eadgbe": ["x","4","6","6","5","4"],
+        "ascii": "x46654",
+        "fingering": ["x","1","3","4","2","1"],
+        "position": "A-shape @4"
+      }
+    ]
+  },
+
+  "D": {
+    "major": [
+      {
+        "id": "D_open",
+        "eadgbe": ["x","x","0","2","3","2"],
+        "ascii": "xx0232",
+        "fingering": ["x","x","0","1","3","2"],
+        "position": "open"
+      },
+      {
+        "id": "D_Ashape_5",
+        "eadgbe": ["x","5","7","7","7","5"],
+        "ascii": "x57775",
+        "fingering": ["x","1","3","4","2","1"],
+        "position": "A-shape @5"
+      }
+    ],
+    "minor": [
+      {
+        "id": "Dm_open",
+        "eadgbe": ["x","x","0","2","3","1"],
+        "ascii": "xx0231",
+        "fingering": ["x","x","0","2","3","1"],
+        "position": "open"
+      }
+    ]
+  },
+
+  "D#": {
+    "major": [
+      {
+        "id": "D#_Eshape_11",
+        "eadgbe": ["11","13","13","12","11","11"],
+        "ascii": "11 13 13 12 11 11",
+        "fingering": ["1","3","4","2","1","1"],
+        "position": "E-shape @11"
+      },
+      {
+        "id": "D#_Ashape_6",
+        "eadgbe": ["x","6","8","8","8","6"],
+        "ascii": "x68886",
+        "fingering": ["x","1","3","4","2","1"],
+        "position": "A-shape @6"
+      }
+    ],
+    "minor": [
+      {
+        "id": "D#m_Ashape_6",
+        "eadgbe": ["x","6","8","8","7","6"],
+        "ascii": "x68876",
+        "fingering": ["x","1","3","4","2","1"],
+        "position": "A-shape @6"
+      }
+    ]
+  },
+
+  "E": {
+    "major": [
+      {
+        "id": "E_open",
+        "eadgbe": ["0","2","2","1","0","0"],
+        "ascii": "022100",
+        "fingering": ["0","2","3","1","0","0"],
+        "position": "open"
+      },
+      {
+        "id": "E_Ashape_7",
+        "eadgbe": ["x","7","9","9","9","7"],
+        "ascii": "x79997",
+        "fingering": ["x","1","3","4","2","1"],
+        "position": "A-shape @7"
+      }
+    ],
+    "minor": [
+      {
+        "id": "Em_open",
+        "eadgbe": ["0","2","2","0","0","0"],
+        "ascii": "022000",
+        "fingering": ["0","2","3","0","0","0"],
+        "position": "open"
+      }
+    ]
+  },
+
+  "F": {
+    "major": [
+      {
+        "id": "F_Eshape_1",
+        "eadgbe": ["1","3","3","2","1","1"],
+        "ascii": "133211",
+        "fingering": ["1","3","4","2","1","1"],
+        "position": "E-shape @1"
+      },
+      {
+        "id": "F_Ashape_8",
+        "eadgbe": ["x","8","10","10","10","8"],
+        "ascii": "x810108",
+        "fingering": ["x","1","3","4","2","1"],
+        "position": "A-shape @8"
+      }
+    ],
+    "minor": [
+      {
+        "id": "Fm_Eshape_1",
+        "eadgbe": ["1","3","3","1","1","1"],
+        "ascii": "133111",
+        "fingering": ["1","3","4","1","1","1"],
+        "position": "E-shape @1"
+      }
+    ]
+  },
+
+  "F#": {
+    "major": [
+      {
+        "id": "F#_Eshape_2",
+        "eadgbe": ["2","4","4","3","2","2"],
+        "ascii": "244322",
+        "fingering": ["1","3","4","2","1","1"],
+        "position": "E-shape @2"
+      },
+      {
+        "id": "F#_Ashape_9",
+        "eadgbe": ["x","9","11","11","11","9"],
+        "ascii": "x911119",
+        "fingering": ["x","1","3","4","2","1"],
+        "position": "A-shape @9"
+      }
+    ],
+    "minor": [
+      {
+        "id": "F#m_open",
+        "eadgbe": ["2","4","4","2","2","2"],
+        "ascii": "244222",
+        "fingering": ["1","3","4","1","1","1"],
+        "position": "E-shape @2"
+      }
+    ]
+  },
+
+  "G": {
+    "major": [
+      {
+        "id": "G_open",
+        "eadgbe": ["3","2","0","0","0","3"],
+        "ascii": "320003",
+        "fingering": ["3","2","0","0","0","4"],
+        "position": "open"
+      },
+      {
+        "id": "G_Eshape_3",
+        "eadgbe": ["3","5","5","4","3","3"],
+        "ascii": "355433",
+        "fingering": ["1","3","4","2","1","1"],
+        "position": "E-shape @3"
+      }
+    ],
+    "minor": [
+      {
+        "id": "Gm_Eshape_3",
+        "eadgbe": ["3","5","5","3","3","3"],
+        "ascii": "355333",
+        "fingering": ["1","3","4","1","1","1"],
+        "position": "E-shape @3"
+      }
+    ]
+  },
+
+  "G#": {
+    "major": [
+      {
+        "id": "G#_Eshape_4",
+        "eadgbe": ["4","6","6","5","4","4"],
+        "ascii": "466544",
+        "fingering": ["1","3","4","2","1","1"],
+        "position": "E-shape @4"
+      },
+      {
+        "id": "G#_Ashape_11",
+        "eadgbe": ["x","11","13","13","13","11"],
+        "ascii": "x11131311",
+        "fingering": ["x","1","3","4","2","1"],
+        "position": "A-shape @11"
+      }
+    ],
+    "minor": [
+      {
+        "id": "G#m_Eshape_4",
+        "eadgbe": ["4","6","6","4","4","4"],
+        "ascii": "466444",
+        "fingering": ["1","3","4","1","1","1"],
+        "position": "E-shape @4"
+      }
+    ]
+  },
+
+  "A": {
+    "major": [
+      {
+        "id": "A_open",
+        "eadgbe": ["x","0","2","2","2","0"],
+        "ascii": "x02220",
+        "fingering": ["x","0","1","2","3","0"],
+        "position": "open"
+      },
+      {
+        "id": "A_Eshape_5",
+        "eadgbe": ["5","7","7","6","5","5"],
+        "ascii": "577655",
+        "fingering": ["1","3","4","2","1","1"],
+        "position": "E-shape @5"
+      }
+    ],
+    "minor": [
+      {
+        "id": "Am_open",
+        "eadgbe": ["x","0","2","2","1","0"],
+        "ascii": "x02210",
+        "fingering": ["x","0","2","3","1","0"],
+        "position": "open"
+      }
+    ]
+  },
+
+  "A#": {
+    "major": [
+      {
+        "id": "A#_Eshape_6",
+        "eadgbe": ["6","8","8","7","6","6"],
+        "ascii": "688766",
+        "fingering": ["1","3","4","2","1","1"],
+        "position": "E-shape @6"
+      },
+      {
+        "id": "A#_Ashape_1",
+        "eadgbe": ["x","1","3","3","3","1"],
+        "ascii": "x13331",
+        "fingering": ["x","1","3","4","2","1"],
+        "position": "A-shape @1"
+      }
+    ],
+    "minor": [
+      {
+        "id": "A#m_Ashape_1",
+        "eadgbe": ["x","1","3","3","2","1"],
+        "ascii": "x13321",
+        "fingering": ["x","1","3","4","2","1"],
+        "position": "A-shape @1"
+      }
+    ]
+  },
+
+  "B": {
+    "major": [
+      {
+        "id": "B_Eshape_7",
+        "eadgbe": ["7","9","9","8","7","7"],
+        "ascii": "799877",
+        "fingering": ["1","3","4","2","1","1"],
+        "position": "E-shape @7"
+      },
+      {
+        "id": "B_Ashape_2",
+        "eadgbe": ["x","2","4","4","4","2"],
+        "ascii": "x24442",
+        "fingering": ["x","1","3","4","2","1"],
+        "position": "A-shape @2"
+      }
+    ],
+    "minor": [
+      {
+        "id": "Bm_Ashape_2",
+        "eadgbe": ["x","2","4","4","3","2"],
+        "ascii": "x24432",
+        "fingering": ["x","1","3","4","2","1"],
+        "position": "A-shape @2"
+      }
+    ]
+  }
+}
