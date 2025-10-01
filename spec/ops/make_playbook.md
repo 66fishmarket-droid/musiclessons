@@ -96,6 +96,20 @@ Each line: **Canonical Name** — purpose — key outputs (vars).
 - [ ] JSON parser succeeds (no BOM; correct schema).
 - [ ] After email: Lessons row added; `SubfocusProgress.LastSeen` updated via ProgressRowId.
 
+
+### CHORD REPO FETCH (HTTP → Get)
+Purpose: Retrieve `spec/domain/chord_repo.json` as text for use in the system prompt.
+Placement in flow: after FORM LINK, before GPT LESSON.
+Module settings:
+- Method: GET
+- URL: `{{CHORD_REPO_SOURCE_URL}}`
+- Headers (only if the repo is private):
+ Authorization: token {{GITHUB_PAT_READ}}
+  Accept: application/vnd.github.v3.raw
+Outputs:
+- Response body → **CHORD_REPO_JSON**
+
+
 ## FAQ
 **Q:** How do I build a prefilled Google Form link?  
 **A:** `formPrefill = [FORM_BASE]?usp=pp_url&[entry.2057838612]=encodeURL(LessonUID)`
@@ -106,14 +120,7 @@ Each line: **Canonical Name** — purpose — key outputs (vars).
 **Q:** How do I ensure two distinct history blocks?  
 **A:** Duplicate the Search rows module; each feeds its own Text aggregator.
 
-### CHORD REPO FETCH (HTTP → Get a file)
-- Position: after FORM LINK, before GPT LESSON.
-- Module name: **CHORD REPO FETCH**
-- Method: GET
-- URL: `{{CHORD_REPO_SOURCE_URL}}`
-- Expected: raw JSON text of the curated chord repository.
-- Output mapping:
-  - Response body → variable **CHORD_REPO_JSON**
+
 
 ### CTX AGG (append chord repo)
 - Append this literal block at the **end of the system message** you already assemble:
