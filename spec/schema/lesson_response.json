@@ -1,4 +1,3 @@
-FILE: spec/schema/lesson_response.json
 {
   "$id": "https://66fishmarket-droid.github.io/musiclessons/schema/lesson_response.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
