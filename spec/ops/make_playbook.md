@@ -69,22 +69,28 @@ Each line: **Canonical Name** — purpose — key outputs (vars).
 26. **GPT LESSON (JSON-only)** — GPT returns lesson JSON only — Lesson.RawJSON
 27. **JSON PARSE / Clean** — Scrub/validate JSON block — Lesson.JSON.Clean
 28. **JSON PARSE / Shape→schema** — Conform to spec/schema/lesson_response.json — Lesson.JSON
-29. **MEDIA YT URL** — Build YouTube search URL — YouTubeSearchURL
-30. **MEDIA YT SEARCH (query-only)** — Maintain/query text only — YouTubeTopN? (optional)
-31. **LESSON LINES** — Split exercise into lines — ExerciseLines[]
-32. **UG SEARCH URL / Build** — Build UG search helpers — UGBase, UGSong, UGArtist, UGSongArtist
-33. **UG PARSE** — Parse any UG JSON (if present) — UG.Results[]
-34. **UG NBEST / Vars** — Choose/present N best or tidy — UG.Top[]
-35. **UG URL / Build** — Final UG link(s) — UG.URL
-36. **TIMESTAMPS+UID / Dates** — Date formats — DatePretty, DateISO
-37. **TIMESTAMPS+UID / UID** — Deterministic ID — LessonUID
-38. **FORM LINK / Base** — Base form URL + entry ids — FormBase, EntryUID
-39. **FORM LINK / Prefill** — Append UID param — FormURL.Prefill
-40. **EMAIL SEND** — Send lesson email — EmailStatus
-41. **FINAL VARS / Email Summary** — Summaries + blank sheet cols — EmailSummary, SheetBlankCols
-42. **FINAL VARS / Runtime Meta** — Runtime/meta flags — Has_SR, Has_IL, Has_MP, YTQuery, YTLinkType, Model, PromptVersion, GeneratedAt
-43. **LESSONS ADD** — Append lesson row — LessonsRowId
-44. **PROGRESS STAMP** — Update SubFocusProgress.LastSeen (YYYY-MM-DD) — ProgressRowId
+29. **CHORDS ITER** — Iterate `ChordCodes[]` — name, caged, fingering, position, usedInStep, status
+30. **CHORDS ROUTER** — Side path for `status="NOT_FOUND"` — split for logging; main path continues
+31. **NOTFOUND_AGG** — De-dupe missing chords — NotFound unique names
+32. **NOTFOUND_LIST_TXT** — Comma-separated list — NotFoundList
+33. **NOTFOUND_VARS** — Count + email note — NotFoundCount, NotFoundNote
+34. **MISSINGCHORDS ADD** — Append grouped missing chords row — MissingChordsRowId
+35. **MEDIA YT URL** — Build YouTube search URL — YouTubeSearchURL
+36. **MEDIA YT SEARCH (query-only)** — Maintain/query text only — YouTubeTopN? (optional)
+37. **LESSON LINES** — Split exercise into lines — ExerciseLines[]
+38. **UG SEARCH URL / Build** — Build UG search helpers — UGBase, UGSong, UGArtist, UGSongArtist
+39. **UG PARSE** — Parse any UG JSON (if present) — UG.Results[]
+40. **UG NBEST / Vars** — Choose/present N best or tidy — UG.Top[]
+41. **UG URL / Build** — Final UG link(s) — UG.URL
+42. **TIMESTAMPS+UID / Dates** — Date formats — DatePretty, DateISO
+43. **TIMESTAMPS+UID / UID** — Deterministic ID — LessonUID
+44. **FORM LINK / Base** — Base form URL + entry ids — FormBase, EntryUID
+45. **FORM LINK / Prefill** — Append UID param — FormURL.Prefill
+46. **EMAIL SEND** — Send lesson email — EmailStatus
+47. **FINAL VARS / Email Summary** — Summaries + blank sheet cols — EmailSummary, SheetBlankCols
+48. **FINAL VARS / Runtime Meta** — Runtime/meta flags — Has_SR, Has_IL, Has_MP, YTQuery, YTLinkType, Model, PromptVersion, GeneratedAt
+49. **LESSONS ADD** — Append lesson row — LessonsRowId
+50. **PROGRESS STAMP** — Update SubFocusProgress.LastSeen (YYYY-MM-DD) — ProgressRowId
 
 
 ## Validation checklist (before running)
@@ -94,6 +100,7 @@ Each line: **Canonical Name** — purpose — key outputs (vars).
 - [ ] `NextKey` pinned on reinforcement; rotated otherwise.
 - [ ] `historyAndFeedbackText` from last 14 Lessons rows.
 - [ ] JSON parser succeeds (no BOM; correct schema).
+- [ ] `ChordCodes[].status` is present; side path filter uses `status="NOT_FOUND"`; `NotFoundList` populated; `NotFoundNote` empty when `NotFoundCount = 0`.
 - [ ] After email: Lessons row added; `SubfocusProgress.LastSeen` updated via ProgressRowId.
 
 
