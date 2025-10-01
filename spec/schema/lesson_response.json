@@ -1,13 +1,75 @@
+FILE: spec/schema/lesson_response.json
 {
-  "Title": "string",
-  "Concept": "string",
-  "Exercise": ["string"],
-  "WhyItMatters": "string",
-  "JamPrompt": "string",
-  "SubFocusExplainer": "string",
-  "YouTubeSearchQuery": "string",
-  "ChordAscii": "string",
-  "ChordCodes": [
-    { "name": "string", "caged": "string", "fingering": "string", "position": "string", "usedInStep": 1 }
-  ]
+  "$id": "https://66fishmarket-droid.github.io/musiclessons/schema/lesson_response.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Lesson Response",
+  "version": "1.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "Title",
+    "Concept",
+    "Exercise",
+    "WhyItMatters",
+    "JamPrompt",
+    "SubFocusExplainer",
+    "YouTubeSearchQuery",
+    "ChordAscii",
+    "ChordCodes"
+  ],
+  "properties": {
+    "Title": { "type": "string", "maxLength": 80 },
+    "Concept": { "type": "string", "minLength": 1 },
+    "Exercise": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 6,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "WhyItMatters": { "type": "string", "minLength": 1 },
+    "JamPrompt": { "type": "string", "minLength": 1 },
+    "SubFocusExplainer": { "type": "string", "minLength": 1 },
+    "YouTubeSearchQuery": { "type": "string", "maxLength": 120 },
+    "ChordAscii": { "type": "string", "minLength": 1 },
+    "ChordCodes": {
+      "type": "array",
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "usedInStep"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1",
+            "description": "Requested chord name (never overwritten)"
+          },
+          "caged": { "type": "string", "minLength": 0 },
+          "fingering": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 6,
+            "pattern": "^[x0-9]{0,6}$",
+            "description": "EADGBE; x/0/number; may be empty if NOT_FOUND"
+          },
+          "position": {
+            "type": "string",
+            "minLength": 0,
+            "description": "open | low | mid (or empty if NOT_FOUND)"
+          },
+          "usedInStep": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Exercise step number where this chord is used"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["FOUND", "NOT_FOUND"],
+            "default": "FOUND",
+            "description": "Lookup result for this chord in the repository"
+          }
+        }
+      }
+    }
+  }
 }
