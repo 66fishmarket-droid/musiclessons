@@ -61,3 +61,30 @@ Process rule: Respond with one completeable chunk at a time. Do not jump ahead. 
 - `[SR]` Spaced Review
 - `[IL]` Interleave
 - `[MP]` Mental Practice
+
+## Variables map — v1.1 additions (ChordCodes.status)
+
+### New runtime variables (set in Make, after NOTFOUND aggregation)
+- **NotFoundCount** → `length(NOTFOUND_AGG[])`
+- **NotFoundList** → output of Text Aggregator (row separator `, `), e.g. `"Fmaj7#11, Bbm(add9)"`
+- **NotFoundNote** → 
+
+### Email field mappings
+If building the email body in Make:
+- Inject **NotFoundNote** directly into the HTML body below the chord list.
+
+If using the HTML template (`spec/email/template.html`) with placeholders:
+- Add a placeholder `{{NotFoundNote}}` in the template where you want the message to appear.
+- Map **NotFoundNote → {{NotFoundNote}}** in the send step.
+
+> Note: NotFoundNote is empty when `NotFoundCount = 0`, so no conditional is needed in the template.
+
+### Google Sheets logging (MissingChords)
+- **Sheet:** `MissingChords`
+- **Columns:** `Date`, `ChordName`, `LessonUID`, `Source`
+- **Mappings:**
+- `Date = formatDate(now; "YYYY-MM-DD")`
+- `ChordName = NotFoundList`   // grouped, comma-separated
+- `LessonUID = LessonUID` (or `GeneratedAt` if used)
+- `Source = "LessonGen"`
+
