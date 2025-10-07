@@ -2,6 +2,8 @@
 
 ## Canonical patterns
 - **Search rows → Text aggregator:** only ONE aggregator per source module. Duplicate the search if you need two formats.
+
+- For all expression syntax, supported operators, and function names, see [`make_functions_reference.md`](make_functions_reference.md).
 - **Pick oldest/blank:** Sort Asc by the column (e.g., LastSeen); blanks come first; then set Max rows = 1.
 - **Reinforcement pin:** Compute `needsReinforceOrLowConf` ONCE from UID-matched feedback; reuse that token everywhere.
 - **Cross-module variables:** You cannot reference a variable created in the **same** Set-vars module. Chain small Set-vars modules.
