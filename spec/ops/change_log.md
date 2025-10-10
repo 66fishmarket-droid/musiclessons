@@ -24,9 +24,11 @@ Use this file for high-level, human-readable entries whenever you change prompts
   - Data model:
   - Other:
 
-+### 2025-10-10 — Email-safe chord diagrams (tables)
-+- Replaced absolutely-positioned `<div>` chord diagrams with **table-based** diagrams for Outlook/Gmail reliability.
-+- Added **left fret gutter** using `sum(parseNumber(83.baseFret); k)` to avoid string concatenation bugs.
-+- Moved **O/× markers** to Row 2 (ivory “nut/marker row”), shown regardless of `baseFret`.
-+- Standardised Make variables: per-chord **`card_html`** and aggregated **`chords_html_joined`**.
-+- Defined input/normalised variables: `83.baseFret`, `83.voicingId`, `97.e1..e6`, `97.f1..f6`, `98.n1..n6`.
+
+### 2025-10-10 — Email-safe chord diagrams (tables)
+- Replaced absolutely positioned `<div>` chord diagrams with **table-based** diagrams for Outlook/Gmail reliability.
+- Added **left fret gutter** using `sum(parseNumber(83.baseFret); k)` to avoid string-concatenation bugs.
+- Moved **O/× markers** to Row 2 (ivory “nut/marker row”), shown regardless of `baseFret`.
+- Standardised Make variables: per-chord **card_html** and aggregated **chords_html_joined**.
+- Defined inputs/normalized values: `83.baseFret`, `83.voicingId`, `97.e1..e6`, `97.f1..f6`, `98.n1..n6`.
+
