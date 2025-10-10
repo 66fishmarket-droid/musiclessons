@@ -87,9 +87,8 @@ Pattern: D U D U D U
 - Use **ids and shapes verbatim**; do not invent new chords.
 - **If a requested chord is missing**, keep its `name` as requested but set `"status": "NOT_FOUND"` and leave other fields empty if necessary. Otherwise set `"status": "FOUND"`.
 
-
-+### Rendering notes (email)
-+- When a lesson includes chord diagrams, render them as **table-based HTML** blocks designed for email clients (Outlook/Gmail).  
-+- Avoid SVG/absolute positioning; use the project’s 13-column/7-row layout with an ivory marker row (O/×) and a left fret gutter.  
-+- The chord card title should use the `voicingId` (e.g., `D_open`, `B7_Eshape_7`).
+### Rendering notes (email)
+- When lessons include chord diagrams, render them as **table-based HTML** blocks designed for email clients (Outlook/Gmail).  
+- Avoid SVG or absolute positioning; use the project’s 13-column/7-row layout with an ivory marker row (O/×) and a left fret gutter.  
+- Use `voicingId` for the chord card title (e.g., `D_open`, `B7_Eshape_7`).
 
