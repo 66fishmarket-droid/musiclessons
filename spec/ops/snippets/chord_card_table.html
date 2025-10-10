@@ -1,0 +1,231 @@
+<!-- CHORD CARD — 13-col / 7-row, subtle palette, email-safe -->
+<!-- Inputs expected from Make:
+     83.baseFret (1=open), 83.voicingId
+     97.e1..e6 ("x" | 0 | blank), 97.f1..f6 (1..4)
+     98.n1..n6 (-1,0,1..5 relative rows)
+-->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="display:inline-block;vertical-align:top;margin:0 8px 12px 0;border:1px solid #d8d5d0;border-radius:10px;background:#fff;color:#111;font-family:ui-sans-serif,system-ui;font-size:12px;width:180px;">
+  <tr>
+    <td align="center" style="padding:6px 6px 4px 6px;font-weight:600;letter-spacing:.2px;">
+      {{83.voicingId}}
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:0 6px 8px 6px;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:100%;table-layout:fixed;border-collapse:collapse;background:#cbb199;">
+        <!-- ROW 1: string names ONLY -->
+        <tr>
+          <td style="height:16px;width:6px;border-top:1px solid #8f725b;background:#cbb199">&nbsp;</td>
+          <td align="center" style="width:12px;background:#d2b24b;border-left:1px solid #111;border-right:1px solid #111;line-height:14px;">E</td>
+          <td style="width:6px;border-top:1px solid #8f725b;background:#cbb199">&nbsp;</td>
+          <td align="center" style="width:12px;background:#cda84a;border-left:1px solid #111;border-right:1px solid #111;line-height:14px;">A</td>
+          <td style="width:6px;border-top:1px solid #8f725b;background:#cbb199">&nbsp;</td>
+          <td align="center" style="width:12px;background:#c79f49;border-left:1px solid #111;border-right:1px solid #111;line-height:14px;">D</td>
+          <td style="width:6px;border-top:1px solid #8f725b;background:#cbb199">&nbsp;</td>
+          <td align="center" style="width:12px;background:#c1bdb7;border-left:1px solid #111;border-right:1px solid #111;line-height:14px;">G</td>
+          <td style="width:6px;border-top:1px solid #8f725b;background:#cbb199">&nbsp;</td>
+          <td align="center" style="width:12px;background:#cfcfcf;border-left:1px solid #111;border-right:1px solid #111;line-height:14px;">B</td>
+          <td style="width:6px;border-top:1px solid #8f725b;background:#cbb199">&nbsp;</td>
+          <td align="center" style="width:12px;background:#d8d8d8;border-left:1px solid #111;border-right:1px solid #111;line-height:14px;">e</td>
+          <td style="width:6px;border-top:1px solid #8f725b;background:#cbb199">&nbsp;</td>
+        </tr>
+
+        <!-- ROW 2: Nut/marker row (ivory), thin borders top & bottom across ALL cells, O/X regardless of baseFret -->
+        <tr>
+          <!-- left badge when baseFret > 1 -->
+          <td style="height:14px;width:6px;background:#efe9e2;border-top:1px solid #111;border-bottom:1px solid #111;">
+            {{if(parseNumber(83.baseFret) > 1;
+              "<span style='display:inline-block;padding:1px 3px;border:1px solid #4a4a4a;border-radius:3px;background:#fff;font-weight:600;font-size:10px;line-height:12px;'>" & 83.baseFret & "fr</span>";
+              "&nbsp;")}}
+          </td>
+
+          <!-- strings: thin left/right; markers centered -->
+          <td align="center" style="background:#efe9e2;border-left:1px solid #111;border-right:1px solid #111;border-top:1px solid #111;border-bottom:1px solid #111;line-height:12px;">
+            {{if(97.e1 = "x"; "×"; if(97.e1 = 0; "○"; "&nbsp;"))}}
+          </td>
+          <td style="width:6px;background:#efe9e2;border-top:1px solid #111;border-bottom:1px solid #111;">&nbsp;</td>
+
+          <td align="center" style="background:#efe9e2;border-left:1px solid #111;border-right:1px solid #111;border-top:1px solid #111;border-bottom:1px solid #111;line-height:12px;">
+            {{if(97.e2 = "x"; "×"; if(97.e2 = 0; "○"; "&nbsp;"))}}
+          </td>
+          <td style="width:6px;background:#efe9e2;border-top:1px solid #111;border-bottom:1px solid #111;">&nbsp;</td>
+
+          <td align="center" style="background:#efe9e2;border-left:1px solid #111;border-right:1px solid #111;border-top:1px solid #111;border-bottom:1px solid #111;line-height:12px;">
+            {{if(97.e3 = "x"; "×"; if(97.e3 = 0; "○"; "&nbsp;"))}}
+          </td>
+          <td style="width:6px;background:#efe9e2;border-top:1px solid #111;border-bottom:1px solid #111;">&nbsp;</td>
+
+          <td align="center" style="background:#efe9e2;border-left:1px solid #111;border-right:1px solid #111;border-top:1px solid #111;border-bottom:1px solid #111;line-height:12px;">
+            {{if(97.e4 = "x"; "×"; if(97.e4 = 0; "○"; "&nbsp;"))}}
+          </td>
+          <td style="width:6px;background:#efe9e2;border-top:1px solid #111;border-bottom:1px solid #111;">&nbsp;</td>
+
+          <td align="center" style="background:#efe9e2;border-left:1px solid #111;border-right:1px solid #111;border-top:1px solid #111;border-bottom:1px solid #111;line-height:12px;">
+            {{if(97.e5 = "x"; "×"; if(97.e5 = 0; "○"; "&nbsp;"))}}
+          </td>
+          <td style="width:6px;background:#efe9e2;border-top:1px solid #111;border-bottom:1px solid #111;">&nbsp;</td>
+
+          <td align="center" style="background:#efe9e2;border-left:1px solid #111;border-right:1px solid #111;border-top:1px solid #111;border-bottom:1px solid #111;line-height:12px;">
+            {{if(97.e6 = "x"; "×"; if(97.e6 = 0; "○"; "&nbsp;"))}}
+          </td>
+          <td style="width:6px;background:#efe9e2;border-top:1px solid #111;border-bottom:1px solid #111;">&nbsp;</td>
+        </tr>
+
+        <!-- FRET 1 (row 3) -->
+        <tr>
+          <td align="center" style="height:22px;width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b;font-size:10px;font-weight:600;color:#3b2e25;">
+            {{ sum(parseNumber(83.baseFret); 0) }}
+          </td>
+          <td align="center" style="background:#d2b24b;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n1) = 1; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f1 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#cda84a;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n2) = 1; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f2 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#c79f49;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n3) = 1; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f3 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#c1bdb7;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n4) = 1; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f4 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#cfcfcf;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n5) = 1; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f5 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#d8d8d8;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n6) = 1; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f6 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+        </tr>
+
+        <!-- FRET 2 (row 4) -->
+        <tr>
+          <td align="center" style="height:22px;width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b;font-size:10px;font-weight:600;color:#3b2e25;">
+            {{ sum(parseNumber(83.baseFret); 1) }}
+          </td>
+          <td align="center" style="background:#d2b24b;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n1) = 2; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f1 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#cda84a;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n2) = 2; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f2 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#c79f49;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n3) = 2; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f3 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#c1bdb7;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n4) = 2; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f4 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#cfcfcf;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n5) = 2; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f5 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#d8d8d8;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n6) = 2; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f6 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+        </tr>
+
+        <!-- FRET 3 (row 5) -->
+        <tr>
+          <td align="center" style="height:22px;width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b;font-size:10px;font-weight:600;color:#3b2e25;">
+            {{ sum(parseNumber(83.baseFret); 2) }}
+          </td>
+          <td align="center" style="background:#d2b24b;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n1) = 3; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f1 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#cda84a;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n2) = 3; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f2 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#c79f49;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n3) = 3; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f3 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#c1bdb7;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n4) = 3; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f4 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#cfcfcf;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n5) = 3; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f5 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#d8d8d8;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n6) = 3; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f6 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+        </tr>
+
+        <!-- FRET 4 (row 6) -->
+        <tr>
+          <td align="center" style="height:22px;width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b;font-size:10px;font-weight:600;color:#3b2e25;">
+            {{ sum(parseNumber(83.baseFret); 3) }}
+          </td>
+          <td align="center" style="background:#d2b24b;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n1) = 4; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f1 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#cda84a;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n2) = 4; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f2 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#c79f49;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n3) = 4; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f3 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#c1bdb7;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n4) = 4; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f4 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#cfcfcf;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n5) = 4; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f5 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#d8d8d8;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n6) = 4; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f6 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+        </tr>
+
+        <!-- FRET 5 (row 7) -->
+        <tr>
+          <td align="center" style="height:22px;width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b;font-size:10px;font-weight:600;color:#3b2e25;">
+            {{ sum(parseNumber(83.baseFret); 4) }}
+          </td>
+          <td align="center" style="background:#d2b24b;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n1) = 5; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f1 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#cda84a;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n2) = 5; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f2 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#c79f49;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n3) = 5; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f3 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#c1bdb7;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n4) = 5; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f4 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#cfcfcf;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n5) = 5; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f5 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+          <td align="center" style="background:#d8d8d8;border-left:1px solid #111;border-right:1px solid #111;">
+            {{if(parseNumber(98.n6) = 5; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97.f6 + "</span>"; "&nbsp;")}}
+          </td>
+          <td style="width:6px;background:#cbb199;border-top:2px solid #8f725b;border-bottom:2px solid #8f725b">&nbsp;</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
