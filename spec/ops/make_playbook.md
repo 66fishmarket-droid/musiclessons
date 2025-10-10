@@ -118,23 +118,24 @@ Module settings:
 Outputs:
 - Response body → **CHORD_REPO_JSON**
 
-+## Chord Diagram Rendering (email-safe tables)
-+
-+**Modules (after `FINAL VARS`, before `EMAIL SEND`):**
-+1) **HTML CARD / per-chord** *(Set multiple variables)*  
-+   - **Inputs:** `83.baseFret`, `83.voicingId`, `97.e1..e6`, `97.f1..f6`, `98.n1..n6`.  
-+   - **Sets:** `card_html` = the full table HTML (see `variables_map.md` for expressions).  
-+   - **Notes:** Use `sum(parseNumber(83.baseFret); k)` for left gutter numbers (k ∈ 0..4).  
-+     Do **not** use `+` for math; in Make this risks string concatenation.
-+2) **CHORDS HTML JOIN** *(Text Aggregator)*  
-+   - **Source:** the set of `card_html` values (one per chord).  
-+   - **Output:** `chords_html_joined` (no separator or use `<br>` if desired).  
-+   - **In email template:** inject `{{chords_html_joined}}` where the chord shapes belong.
-+
-+**Design rules:**  
-+- 13 columns (6 strings at even indices, 7 gaps at odd indices).  
-+- Row 1: labels only. Row 2: ivory, thin full-row borders, shows O/× from `97.e*` and `{baseFret}fr` badge when `>1`.  
-+- Rows 3–7: fret gaps get `2px` top/bottom borders; string columns have only thin left/right borders; dots show using `98.n*` = 1..5.
+## Chord Diagram Rendering (email-safe tables)
+
+Modules (after `FINAL VARS`, before `EMAIL SEND`):
+
+1) HTML CARD / per-chord — Set multiple variables  
+   Inputs: `83.baseFret`, `83.voicingId`, `97.e1..e6`, `97.f1..f6`, `98.n1..n6`.  
+   Sets: `card_html` = full table HTML (see `variables_map.md`).  
+   Tip: Use `sum(parseNumber(83.baseFret); k)` for left gutter numbers (k ∈ 0..4). Do not use `+` for math.
+
+2) CHORDS HTML JOIN — Text Aggregator  
+   Source: the set of `card_html` values (one per chord).  
+   Output: `chords_html_joined` (no separator, or `<br>` if desired).  
+   Email: inject `{{chords_html_joined}}` where chord shapes belong.
+
+Design rules: 13 columns (6 strings at even indices, 7 gaps at odd indices).  
+Row 1 = labels only. Row 2 = ivory with thin full-row borders, O/× from `97.e*`, `{baseFret}fr` badge when `>1`.  
+Rows 3–7 = fret gaps with 2px top/bottom; string columns with thin left/right; dots shown using `98.n*` = 1..5.
+
 
 
 ## FAQ
