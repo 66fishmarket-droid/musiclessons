@@ -88,3 +88,39 @@ If using the HTML template (`spec/email/template.html`) with placeholders:
 - `LessonUID = LessonUID` (or `GeneratedAt` if used)
 - `Source = "LessonGen"`
 
++## Chord diagram (table-based, email-safe)
++
++**Purpose:** Render per-chord diagrams with HTML tables that are safe for Outlook/Gmail.  
++**Where:** `HTML CARD / per-chord` (Set variables) → `CHORDS HTML JOIN` (Text Aggregator).
++
++### Inputs
++- **83.baseFret** — integer. `1` = open position (nut row). `>1` shows a left badge "`{baseFret}fr`" and rows 3–7 display frets `baseFret ... baseFret+4`.
++- **83.voicingId** — string used as the chord card title (e.g., `D_open`, `B7_Eshape_7`).
++- **97.e1..e6** — per-string play state (low–>high): `"x"` muted, `0` open, otherwise omitted.
++- **97.f1..f6** — finger numbers to display in the black dots (1–4). Empty when not used.
++- **98.n1..n6** — normalized fret per string: `-1` for `"x"`, `0` for `open`, `1..5` for the row (relative to `baseFret`).
++
++> Note: We keep `97.*` as the *source* canonical values and `98.*` as the *normalized* “row index” used by the dot logic.
++
++### Derived/inline expressions (Make)
++- **Fret gutter numbers (left column):**
++  - Row 3: `{{ sum(parseNumber(83.baseFret); 0) }}`
++  - Row 4: `{{ sum(parseNumber(83.baseFret); 1) }}`
++  - Row 5: `{{ sum(parseNumber(83.baseFret); 2) }}`
++  - Row 6: `{{ sum(parseNumber(83.baseFret); 3) }}`
++  - Row 7: `{{ sum(parseNumber(83.baseFret); 4) }}`
++- **O/× header markers (Row 2, ivory):**  
++  `{{ if(97.eK = "x"; "×"; if(97.eK = 0; "○"; "&nbsp;")) }}` where **K ∈ {1..6}**.
++- **Dot span HTML (per string, per row):**  
++  `{{ if(parseNumber(98.nK) = ROW; "<span style='display:inline-block;min-width:16px;height:16px;border-radius:999px;background:#000;color:#fff;line-height:16px;font-weight:700;font-size:10px;'>" + 97["f"&K] + "</span>"; "&nbsp;") }}`
++
++### Outputs
++- **`card_html`** — full HTML table for the single chord (scoped to the Set-variables module `HTML CARD / per-chord`).
++- **`chords_html_joined`** — concatenation of all `card_html` tables via a Text Aggregator (`CHORDS HTML JOIN`) for embedding into the email body.
++
++### Rendering rules
++- 13 columns: odd columns are fret gaps (thicker top/bottom borders on rows 3–7); even columns are strings (thin left/right borders only).
++- Row 1: string names only.
++- Row 2: ivory “nut/marker” row, thin top/bottom borders across all cells, shows O/× markers regardless of `baseFret`; shows `{baseFret}fr` badge in col 1 when `baseFret > 1`.
++- Rows 3–7: playable rows with left gutter numbers and black numbered dots per `98.n*`.
+
