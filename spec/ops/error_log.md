@@ -47,3 +47,20 @@ Use this file to capture every time a function/feature I assumed existed in Make
   Bad advice: reuse one Text Aggregator twice
   Correct approach: duplicate the **Search rows** module; each feeds its own Text Aggregator
   Fix status: fixed
+
+## 2025-10-10 — Chord diagram rendering issues
+
+Symptoms  
+- Absolutely positioned `<div>` diagrams looked fine in web viewers but failed or collapsed in Outlook/Gmail.  
+- Using `{{parseNumber(83.baseFret)+1}}` produced string concatenation (e.g., `11`) instead of arithmetic.
+
+Root causes  
+- Email clients strip/rewrite CSS positioning/overflow and collapse empty divs.  
+- Make treats `+` as string concatenation unless both operands are strictly numeric.
+
+Fix  
+- Switched to **table-based** diagrams with inline styles only.  
+- Introduced an ivory **Row 2** for markers, thin full-row borders, and a left **fret gutter**.  
+- Replaced math with `sum(parseNumber(83.baseFret); k)` across rows.  
+- Standardised variables: `card_html`, `chords_html_joined`.  
+- Documented `baseFret` semantics: `1` = open (nut); `>1` shows `{baseFret}fr` and rows represent `baseFret..baseFret+4`.
