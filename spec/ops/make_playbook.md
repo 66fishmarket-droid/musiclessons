@@ -94,6 +94,33 @@ Each line: **Canonical Name** — purpose — key outputs (vars).
 49. **LESSONS ADD** — Append lesson row — LessonsRowId
 50. **PROGRESS STAMP** — Update SubFocusProgress.LastSeen (YYYY-MM-DD) — ProgressRowId
 
+## FEEDBACK INGESTOR (Scenario)
+
+Each line: Canonical Name — purpose — key outputs (vars)
+
+1 ) LESSON SEARCH — Find the lesson row matching the UID referenced in the new feedback — LessonRow, LessonUID
+2 ) CONTEXT SET — Set context variables from the lesson row (Focus, SubFocus, Tier, Key) — CtxFocus, CtxSubFocus, CtxTier, CtxKey
+3 ) FEEDBACK SEARCH — Pull the latest unprocessed feedback rows (Processed blank) — FeedbackRows
+4 ) FEEDBACK CHECK — Ensure at least one unprocessed feedback exists; branch otherwise — HasFeedback
+5 ) FEEDBACK PARSE — Parse feedback fields (confidence, reinforce flag, notes, suggested focus) — FbConfidence, FbNeedsReinforce, FbNotes, FbSuggestedFocus
+6 ) STATUS SET — Set lesson Status="Completed" for feedbacked UID — LessonStatus
+7 ) ROUTER MAIN — Filter: HAS FEEDBACK COMPLETED / NO FEEDBACK SKIPPED — routes logic
+8 ) LESSON UPDATE — Update the lesson row’s Status in Google Sheets — LessonUpdateResult
+9 ) PROGRESS SEARCH — Find SubFocusProgress row matching CtxSubFocus — ProgressRow
+10 ) PROGRESS VARS SET — Set helper vars for progress scoring — PrevScore, PrevTier, ScoreDelta
+11 ) SCORE CALC — Compute score delta per feedback (Tier rules) — NewScore, DeltaNote
+12 ) TIER DELTA — Compute Tier adjustments (Thresholds ±3) — TierDelta, TierDirection
+13 ) NEW TIER RAW — Apply clamping 1–5, compute next Tier — NewTierRaw
+14 ) FINAL VARS SET — Finalize Tier, Score, and display vars — FinalTier, FinalScore
+15 ) PROGRESS UPDATE — Write new Tier and Score back to SubFocusProgress sheet — ProgressRowUpdate
+16 ) FEEDBACK MARK PROCESSED — Mark the feedback row Processed="Yes" — FeedbackProcessed
+17 ) EXIT NO-OP (placeholder) — Router branch when no unprocessed feedback — (no vars)
+
+Notes:
+The scenario runs daily or on trigger. If no unprocessed feedback is found, the router exits via EXIT NO-OP cleanly—no downstream errors.
+All numeric calculations follow the Tier & Score rules defined earlier in this file.
+Lesson and Feedback sheets must use exact column headers Status and Processed.
+Context from LESSON SEARCH is reused to ensure feedback alignment by UID.
 
 ## Validation checklist (before running)
 - [ ] `needsReinforceOrLowConf` computed once from UID-matched feedback.
