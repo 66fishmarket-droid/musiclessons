@@ -32,3 +32,21 @@ Use this file for high-level, human-readable entries whenever you change prompts
 - Standardised Make variables: per-chord **card_html** and aggregated **chords_html_joined**.
 - Defined inputs/normalized values: `83.baseFret`, `83.voicingId`, `97.e1..e6`, `97.f1..f6`, `98.n1..n6`.
 
+## 2025-10-25 — Feedback Ingestor alignment (v1.5)
+
+What changed:
+- Make:
+  - Fully named all modules in the Feedback Ingestor scenario (LESSON SEARCH → EXIT NO-OP).
+  - Added router logic for HAS FEEDBACK COMPLETED / NO FEEDBACK SKIPPED.
+  - Documented full variable flow in make_playbook.md.
+  - Created new Feedback Ingestor variables section in variables_map.md.
+- Repo:
+  - Confirmed Feedback Ingestor blueprint synced with live Make scenario.
+  - Added state guards for missing feedback to prevent auto-deactivation.
+  - Introduced consistent ALL-CAPS module naming convention across all scenarios.
+- Policy:
+  - Formalised data flow between Lessons, Feedback, and SubFocusProgress sheets (Status/Processed columns).
+  - Reaffirmed Score→Tier delta thresholds (±3) for progress updates.
+
+Version tag:
+v1.5 — Stable Feedback Ingestor sync (blueprint and repo parity achieved).
