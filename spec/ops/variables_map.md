@@ -123,3 +123,73 @@ Note: `97.*` are canonical inputs; `98.*` are normalized “row index” values 
 - Row 1: string names only.
 - Row 2: ivory “nut/marker” row, thin top/bottom borders across all cells, shows O/× regardless of `baseFret`; shows `{baseFret}fr` badge in col 1 when `baseFret > 1`.
 - Rows 3–7: playable rows with left gutter numbers and black numbered dots per `98.n*`.
+
+## FEEDBACK INGESTOR — Variables Map
+
+Purpose:
+Defines variables created, transformed, or consumed inside the FEEDBACK INGESTOR scenario.
+Links to: spec/ops/make_playbook.md (Feedback Ingestor section)
+
+Sheets read/write:
+Lessons sheet:
+  Reads LessonUID, Status, FocusArea, SubFocus, Tier, Key
+  Writes Status = "Completed"
+
+Feedback sheet:
+  Reads UID, Processed, Confidence, NeedsReinforce, Notes, SuggestedFocus
+  Writes Processed = "Yes"
+
+SubFocusProgress sheet:
+  Reads Focus, SubFocus, Tier, Score, LastSeen
+  Writes updated Tier, Score
+
+Variables (in Make):
+
+1 ) Lesson context
+    LessonRow — full lesson record pulled by UID
+    LessonUID — unique identifier (YYYY-MM-DD-day-focus-key)
+    CtxFocus, CtxSubFocus, CtxTier, CtxKey — copied from LessonRow
+
+2 ) Feedback parsing
+    FeedbackRows — array of unprocessed rows from Feedback sheet
+    HasFeedback — boolean: true if unprocessed feedback exists
+    FbConfidence — integer 1–5
+    FbNeedsReinforce — boolean flag
+    FbNotes — string
+    FbSuggestedFocus — string
+
+3 ) Lesson status update
+    LessonStatus — set to "Completed"
+    LessonUpdateResult — Sheets write response
+
+4 ) Progress scoring
+    ProgressRow — row id for matching SubFocusProgress
+    PrevScore — current score (int)
+    PrevTier — current tier (int)
+    ScoreDelta — delta derived from feedback
+    NewScore — sum of PrevScore + ScoreDelta
+    DeltaNote — text note describing change
+
+5 ) Tier computation
+    TierDelta — +1, –1, or 0 depending on thresholds
+    TierDirection — up / down / hold
+    NewTierRaw — unclamped tier
+    FinalTier — clamped (1–5) tier value
+    FinalScore — reset or carried-over score after tier adjustment
+
+6 ) Progress update
+    ProgressRowUpdate — result of writing back to SubFocusProgress
+    ProgressRowId — optional row reference
+
+7 ) Feedback closure
+    FeedbackProcessed — confirmation flag "Yes"
+
+8 ) Routing & control
+    HasFeedbackCompleted — router condition output
+    NoFeedbackSkipped — boolean for clean exit branch
+
+Notes:
+Tier delta and score rules mirror those in make_playbook.md (Delta per feedback, thresholds ±3).
+Context variables are only used within the scenario; no publish downstream.
+All timestamp logic (LastSeen, ISO) handled by Progress Update module.
+Placeholder branch "EXIT NO-OP" produces no variables.
