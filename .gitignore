@@ -1,2 +1,8 @@
 # Local-only Obsidian vault (research + generated notes), same policy as Bill
 Music_Lessons Vault/
+node_modules/
+.env*
+!.env.example
+data/legacy/
+supabase/.temp/
+supabase/.branches/
