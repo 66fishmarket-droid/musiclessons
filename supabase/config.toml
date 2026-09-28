@@ -382,3 +382,8 @@ s3_region = "env(S3_REGION)"
 s3_access_key = "env(S3_ACCESS_KEY)"
 # Configures AWS_SECRET_ACCESS_KEY for S3 bucket
 s3_secret_key = "env(S3_SECRET_KEY)"
+
+# Auth signs ES256 tokens; the CLI 2.75 gateway only verifies HS256. The function verifies the caller itself
+# via auth.getUser(token) and returns 401 without a valid user.
+[functions.generate-lesson]
+verify_jwt = false
