@@ -42,7 +42,7 @@ async function main(): Promise<void> {
     .map((r: { lesson_date: string }) => r.lesson_date));
   const toWrite = lessons.filter(l => !appDates.has(l.lesson_date)).map(l => ({ ...l, user_id }));
   must(await db.from('lessons').upsert(toWrite, { onConflict: 'user_id,lesson_date' }));
-  must(await db.from('skill_progress').upsert(progress.map(p => ({ ...p, user_id })), { onConflict: 'user_id,skill_id' }));
+  must(await db.from('skill_progress').upsert(progress.map(p => ({ ...p, user_id })), { onConflict: 'user_id,skill_id', ignoreDuplicates: true }));
   must(await db.from('review_items').upsert(reviews.map(r => ({ ...r, user_id })), { onConflict: 'user_id,item_type,ref', ignoreDuplicates: true }));
   console.log(`Imported ${toWrite.length} lessons (${appDates.size} app dates kept), ${progress.length} progress rows, ${reviews.length} reviews for ${values.email}`);
 }
