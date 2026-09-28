@@ -29,7 +29,7 @@
 
 **Spec deviations (deliberate):**
 1. **Client:** plain `fetch` instead of the `openai` npm client. It needs no dependency, is identical in Node and Deno, and is trivial to stub. OpenRouter is OpenAI-compatible either way.
-2. **Allowed chords:** the chord check (spec §7.4) allows the plan's chords **plus chords named in the day's curriculum text**. For example, `fills.l1.sus_add_hammers` says "Dsus4–D–Dsus2", and without this the LLM would be rejected for quoting the skill.
+2. **Allowed chords:** the chord check (spec §7.4) allows the plan's chords **plus every chord named in the day's curriculum text**. A dash-joined progression such as "Dsus4–D–Dsus2" counts as three chords, and a plain letter counts inside a progression. Without this the LLM would be rejected for quoting the skill.
 3. **Songs:** `songs` are excluded from the chord check, because real songs have their own chords.
 
 ## Global Constraints
@@ -171,9 +171,15 @@ describe('chordKey', () => {
 
 describe('allowedChords', () => {
   it('is the plan progression plus voicings', () => expect(allowedChords(PLAN, SKILL_MAP)).toEqual(['G', 'C', 'D']));
-  it('adds chords named in the day\'s curriculum text', () => {
-    const plan = { ...PLAN, skill_id: 'fills.l1.sus_add_hammers' };
-    expect(allowedChords(plan, SKILL_MAP)).toEqual(expect.arrayContaining(['Dsus4', 'Dsus2']));
+  it('adds every chord of a progression named in the day\'s curriculum text, plain letters included', () => {
+    const sus = { ...PLAN, key: 'Bb', music: { ...PLAN.music, progression: { roman: ['I'], chords: ['Bb'] }, voicings: {} }, skill_id: 'fills.l1.sus_add_hammers' };
+    expect(allowedChords(sus, SKILL_MAP)).toEqual(['Bb', 'Dsus4', 'D', 'Dsus2']); // "Dsus4–D–Dsus2"
+    const walk = { ...sus, skill_id: 'fills.l2.bass_walks' };
+    expect(allowedChords(walk, SKILL_MAP)).toEqual(expect.arrayContaining(['G', 'G/F#', 'Em'])); // "G–G/F#–Em"
+  });
+  it('does not treat hyphenated words as progressions', () => {
+    const plan = { ...PLAN, skill_id: 'songwriting.l1.core_loops' }; // "I–IV–V–vi loops": numerals, not chords
+    expect(allowedChords(plan, SKILL_MAP)).toEqual(['G', 'C', 'D']);
   });
 });
 
@@ -271,11 +277,15 @@ export function chordKey(name: string): string | null {
   return c.empty || !c.tonic ? null : `${Note.chroma(c.tonic)}:${c.intervals.join(',')}`;
 }
 
-/** Chords the lesson may name: the plan's progression and voicings plus chords the day's curriculum text names. */
+// A progression written as dash-joined chords, e.g. "Dsus4–D–Dsus2" or "G–G/F#–Em" (bare letters count here).
+const RUN = /(?<![\w#/])[A-G][#b]?[\w#°ø]*(?:\/[A-G][#b]?)?(?:[–—-][A-G][#b]?[\w#°ø]*(?:\/[A-G][#b]?)?)+/g;
+
+/** Chords the lesson may name: the plan's progression and voicings plus every chord the day's curriculum text names. */
 export function allowedChords(plan: LessonPlan, skills: Map<string, Skill>): string[] {
   const text = [plan.skill_id, plan.retest?.skill_id, plan.theory_topic_id]
     .map(id => (id ? skills.get(id)?.description ?? '' : '')).join(' ');
-  const named = [...text.matchAll(BARE)].map(m => m[0]).filter(c => chordKey(c) !== null);
+  const inRuns = [...text.matchAll(RUN)].flatMap(m => m[0].split(/[–—-]/));
+  const named = [...inRuns, ...[...text.matchAll(BARE)].map(m => m[0])].filter(c => chordKey(c) !== null);
   return [...new Set([...plan.music.progression.chords, ...Object.keys(plan.music.voicings), ...named])];
 }
 
@@ -326,7 +336,7 @@ export function validateLesson(raw: unknown, plan: LessonPlan, skills: Map<strin
 - [ ] **Step 5: Run the tests to verify they pass**
 
 Run: `npx vitest run tests/lesson/contract.test.ts && npm run typecheck`
-Expected: PASS (13 tests), and `tsc` exits 0.
+Expected: PASS (14 tests), and `tsc` exits 0.
 - If `{Gmaj}` is rejected, `tonal` doesn't alias `maj` to a major triad. Change that test string to `{GM}`, and ledger it as a test-data fix; it isn't a validator change.
 - If the fixture-plan test fails, the Phase 1 planner changed. Read the actual `PLAN` and update only the fixture assertions.
 
