@@ -18,6 +18,7 @@ Deno.serve(async req => {
     const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!, {
       global: { headers: { Authorization: `Bearer ${token}` } }, auth: { persistSession: false },
     });
+    // The only auth gate: config.toml sets verify_jwt = false for this function (CLI gateway cannot verify ES256).
     const { data: { user } } = await db.auth.getUser(token);
     if (!user) return reply({ error: 'not signed in' }, 401);
     const complete = openRouterComplete({

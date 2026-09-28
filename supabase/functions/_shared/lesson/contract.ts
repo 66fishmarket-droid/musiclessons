@@ -30,9 +30,10 @@ export const LESSON_JSON_SCHEMA = {
 };
 
 const BRACED = /\{([^{}]+)\}/g;
-// Unbraced chord symbols must carry a quality or a chord number (5, 6, 7, 9, 11, 13, 69), so the article "A", note names
-// ("the E string") and notes with octaves ("A2", "E4" in a vocal range) never match.
-const BARE = /(?<![\w#])[A-G][#b]?(?:(?:maj|min|m|dim|aug|sus|add|°|ø)\d{0,2}|69|13|11|[5679])(?:b5|#5|b9|#9|#11)?(?:\/[A-G][#b]?)?(?![\w#])/g;
+// Unbraced chord symbols must carry a quality or a chord number (6, 7, 9, 11, 13, 69), so the article "A", note names
+// ("the E string") and notes with octaves ("A2", "E5" in a vocal range) never match. A bare "E5" power chord is
+// therefore unchecked; braced {E5} still is.
+const BARE = /(?<![\w#])[A-G][#b]?(?:(?:maj|min|m|dim|aug|sus|add|°|ø)\d{0,2}|69|13|11|[679])(?:b5|#5|b9|#9|#11)?(?:sus[24]?|add\d{1,2})?(?:\/[A-G][#b]?)?(?![\w#])/g;
 
 /** Spelling-independent chord identity: tonic pitch class + intervals ("A#m7" = "Bbm7" = "Bbmin7"); null if not a chord. */
 export function chordKey(name: string): string | null {

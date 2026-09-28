@@ -70,6 +70,14 @@ describe('validateLesson', () => {
     const c = { ...validContent(), why_it_matters: 'Sing between A2 and E4, then hold the {G}.' };
     expect(validateLesson(c, PLAN, SKILL_MAP)).toMatchObject({ ok: true });
   });
+  it('never mistakes a high vocal range (octave 5) for power chords', () => {
+    const c = { ...validContent(), why_it_matters: 'Stay within A3–E5 and sing up to G5 over the {G}.' };
+    expect(validateLesson(c, PLAN, SKILL_MAP)).toMatchObject({ ok: true });
+  });
+  it('catches unbraced chords with a suffix after the number', () => {
+    const c = { ...validContent(), why_it_matters: 'Try a C7sus4 or an E7#9 here.' };
+    expect(validateLesson(c, PLAN, SKILL_MAP)).toEqual({ ok: false, errors: ['chord not in plan: C7sus4', 'chord not in plan: E7#9'] });
+  });
   it('does not chord-check songs', () => {
     const c = validContent();
     const songs = [{ ...c.songs[0], why: 'Built on Am6 Dm6 E7.' }, ...c.songs.slice(1)];
