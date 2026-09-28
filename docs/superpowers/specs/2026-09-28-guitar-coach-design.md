@@ -18,7 +18,7 @@ A daily practice web app that turns one intermediate rhythm guitarist into a **s
 - Ear and voice trained with the guitar.
 - Songwriting harmony and form: sections, bridges, key changes.
 - Music theory that sticks.
-- Fluency in **styles** (folk, blues, funk, soul): their grooves, harmony and forms, so folk-style lyrics can be set in a funkier style.
+- Fluency in **all major guitar styles**: their grooves, harmony and forms, so folk-style lyrics can be set in any of them (e.g. funk or soul).
 
 **Success looks like:**
 - 20–40 min daily sessions the learner actually completes.
@@ -89,7 +89,23 @@ There are six **tracks**. Each track has five **levels**, and each level holds 2
 - **L4:** 9/11/13 extensions, slash chords, inversions.
 - **L5:** modes, chord-scale fit, harmonising a melody.
 
-**Styles.** A style is a dimension like key, not a 7th track. The four starting styles are **folk, blues, funk and soul** (soul includes gospel, Motown and Stax).
+**Styles.** A style is a dimension like key, not a 7th track. A style profile covers each major guitar genre, grouped by **family** (each family can have sub-styles):
+
+| Family | Styles |
+|---|---|
+| Folk & roots | folk, Americana/alt-country, Celtic (DADGAD) |
+| Blues | blues (country and electric) |
+| Soul & R&B | soul (gospel, Motown, Stax), R&B/neo-soul |
+| Funk | funk |
+| Rock | classic rock, hard rock, indie/alternative, punk/pop-punk, metal (rhythm fundamentals) |
+| Pop | pop / pop-rock |
+| Country | country, bluegrass |
+| Jazz | jazz comping, gypsy jazz |
+| Caribbean | reggae, ska/rocksteady |
+| Latin & Iberian | bossa nova/samba, Afro-Cuban/son, flamenco/rumba |
+| African | highlife, soukous |
+
+The list is data, so adding a style means adding one profile.
 - **Style profiles live in code as data** (`engine/styles.ts`), drafted from `Research/styles/style_profiles.draft.json`. Each profile holds:
   - feel (subdivision, tempo range, accents);
   - 16-slot rhythm patterns;
@@ -102,7 +118,10 @@ There are six **tracks**. Each track has five **levels**, and each level holds 2
   - lyric traits;
   - reference tracks;
   - a learning ladder.
-- **Style focus:** one style shapes the lessons for **two weeks at a time**. It rotates folk → blues → funk → soul by default, or you can pin a style in Settings. The focus sets:
+- **Style focus:** one style shapes the lessons for **two weeks at a time**. The rotation alternates between two editable lists:
+  - **Core** (default: folk, blues, funk, soul): the styles you write in.
+  - **Explore** (everything else).
+  - So your core styles come round every 16 weeks, and every other style gets its turn. You can pin a style in Settings. The focus sets:
   - the Apply progression and groove;
   - the fill vocabulary;
   - the Create prompt;
@@ -170,7 +189,7 @@ All tables have `user_id uuid references auth.users` plus RLS. Timestamps are `t
 | `review_items` | `user_id`, `item_type` (`skill`/`theory`), `ref`, `interval_days`, `next_due date`, `last_result` — unique `(user_id, item_type, ref)` |
 | `questions` | `user_id`, `lesson_id null`, `block_index null`, `question`, `answer`, `created_at` |
 | `songs` | `user_id`, `title`, `key`, `sections jsonb`, `central_idea`, `notes`, `updated_at` |
-| `settings` | `user_id pk`, `session_minutes` (25/30/40), `vocal_low`, `vocal_high`, `songwriting_weekday`, `style_pinned` (null = rotate), `style_cycle_start date` |
+| `settings` | `user_id pk`, `session_minutes` (25/30/40), `vocal_low`, `vocal_high`, `songwriting_weekday`, `style_pinned` (null = rotate), `style_core text[]`, `style_explore text[]`, `style_cycle_start date` |
 
 ---
 
@@ -203,7 +222,7 @@ All tables have `user_id uuid references auth.users` plus RLS. Timestamps are `t
 - When `score ≥ 3`, the skill becomes `mastered`, its score resets to 0, and a `review_items` row is created.
 - When `score ≤ −3`, the score resets to 0 and the target drops by 10%.
 
-**Style:** use `style_pinned` if set. Otherwise take the rotation `folk → blues → funk → soul`, advancing every 14 days from `style_cycle_start`. Skills from the style's profile are preferred in the skill pick, and its progression families drive the Apply block. On repeat days, style stays fixed along with skill and key.
+**Style:** use `style_pinned` if set. Otherwise the fortnight index `n = floor(days_since(style_cycle_start) / 14)` picks from core on even `n` and from explore on odd `n`, cycling through each list in order. Skills from the style's profile are preferred in the skill pick, and its progression families drive the Apply block. On repeat days, style stays fixed along with skill and key.
 
 **Review scheduling:**
 - Intervals are `1 → 3 → 7 → 14 → 30 → 60` days.
@@ -260,7 +279,7 @@ The output is `plan.music`, and it is the **only** chord and scale source the LL
 | **Progress** | Level per track plus the theory ladder, target history per skill, streak, lesson history (including 129 imported legacy lessons). |
 | **Songbook** | `songs` CRUD; the weekly session writes into it. |
 | **Asked** | Searchable list of `questions`. |
-| **Settings** | Session length, vocal range, songwriting weekday, style (rotate / pin). |
+| **Settings** | Session length, vocal range, songwriting weekday, style (pin, or edit the core and explore lists). |
 
 **PWA:** installable, and today's lesson is cached for offline use.
 
