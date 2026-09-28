@@ -118,18 +118,15 @@ The list is data, so adding a style means adding one profile.
   - lyric traits;
   - reference tracks;
   - a learning ladder.
-- **Style focus:** one style shapes the lessons for **two weeks at a time**. The rotation alternates between two editable lists:
-  - **Core** (default: folk, blues, funk, soul): the styles you write in.
-  - **Explore** (everything else).
-  - So your core styles come round every 16 weeks, and every other style gets its turn. You can pin a style in Settings. The focus sets:
-  - the Apply progression and groove;
-  - the fill vocabulary;
-  - the Create prompt;
-  - the song suggestions;
-  - the warm-up scale when the style has its own (e.g. the blues scale).
-- **Style-native skills** carry a `styles` tag (e.g. 12-bar shuffle, funk 16th scratch on 9th chords, Cropper/Mayfield soul double-stops, folk drone/open-tuning figures). Skills without a tag suit any style. The planner prefers skills tagged with the current style focus at the track's level.
+- **Style elements, not style weeks.** Each profile is broken into **elements**, each with an id: a rhythm pattern, a progression family, a fill figure or a form device (e.g. `flamenco.rumba_strum`, `blues.quick_change`, `funk.16th_chank`). Lessons mix styles freely. The Apply block puts today's skill into one style element, e.g. "play this D progression with a flamenco rumba strum, which looks like this…".
+  - **Style pick:** least recently used, with **core** styles (default folk, blues, funk, soul; editable in Settings) weighted ×2.
+  - **Element pick:** the next element on that style's learning ladder, or a spaced revisit of one already seen.
+  - **Load rule:** a *new* style element appears at most every other session. Other sessions revisit a known element, which keeps to "one new concept per session".
+  - **Tracked like everything else:** seen elements become `review_items` (`item_type = 'style'`), so the patterns are revisited on the normal spacing.
+- **Style-native skills** carry a `styles` tag (e.g. 12-bar shuffle, funk 16th scratch on 9th chords, Cropper/Mayfield soul double-stops, folk drone/open-tuning figures). Skills without a tag suit any style. The planner prefers skills whose style matches today's style element, at the track's level.
 - **Style theory** feeds the theory cards: why I7 can be home in blues, one-chord funk vamps and extensions, gospel IV–I and 6ths, modal folk.
-- **Style transplant** is a Songwriting exercise type. Take a lyric and progression (usually folk) and re-set it in the current style's groove, chord colours, harmonic rhythm and form, keeping the lyric and melody shape. It's available as a daily Create block and as a weekly-session option.
+- **Style transplant** is a Songwriting exercise type. Take a lyric and progression (usually folk) and re-set it in a style's groove, chord colours, harmonic rhythm and form, keeping the lyric and melody shape. Change one lever at a time, in this order: groove → chord colour → harmonic rhythm → mode → form and phrasing. Code handles the first four; the LLM handles phrasing. The daily Create block uses today's style element; the weekly session picks a style you've seen at least 3 elements of.
+- **Roman numeral convention:** minor chords are always written with an explicit `m` (`iim7` → Dm7 in C, `vim`, `ivm`). `tonal` ignores case, so `ii7` would silently give D7. The Phase 1 profile check converts every numeral in every key and flags any whose chord quality doesn't match the profile's intent.
 
 **Skill fields:**
 - `id`, `track`, `level`, `name`, `description`.
@@ -154,8 +151,8 @@ Session templates live in code as data (`engine/templates.ts`), so block order c
 | 3 | New skill | 9 | One concept: Hear → Learn → Play; tempo ladder from 60–70% of target; error loop |
 | — | Reset | 0.5 | Listen to the reference / visualise |
 | 4 | Mixed review | 5 | 2–3 due review items from other tracks (including theory quizzes), shuffled |
-| 5 | Apply | 6 | Today's skill in a song or progression **in the style focus**, singing over it |
-| 6 | Create | 3 | A songwriting micro-constraint in today's key; sometimes a style transplant |
+| 5 | Apply | 6 | Today's skill in a progression set in **one style element** (e.g. a rumba strum or a quick-change blues), singing over it |
+| 6 | Create | 3 | A songwriting micro-constraint in today's key, often using today's style element |
 | 7 | Record & rate | 2 | Record, listen back, rate, one-line "fix tomorrow" |
 
 **Other templates:**
@@ -184,12 +181,12 @@ All tables have `user_id uuid references auth.users` plus RLS. Timestamps are `t
 |---|---|
 | `skills` | `id text pk`, `track`, `level`, `name`, `description`, `pass_metric`, `default_target`, `allowed_keys text[]`, `theory_topic_id`, `styles text[]` — seeded; no `user_id` |
 | `skill_progress` | `user_id`, `skill_id`, `status` (`active`/`mastered`), `score int`, `current_target numeric`, `last_seen`, `last_key` — unique `(user_id, skill_id)` |
-| `lessons` | `id`, `user_id`, `lesson_date date`, `template`, `track`, `skill_id`, `key`, `style`, `plan jsonb`, `content jsonb`, `status` (`planned`/`completed`/`skipped`), `confidence 1–5`, `want_more_time bool`, `notes`, `llm_model`, `prompt_version`, `source` (`app`/`legacy`) — unique `(user_id, lesson_date)` |
+| `lessons` | `id`, `user_id`, `lesson_date date`, `template`, `track`, `skill_id`, `key`, `style_element`, `plan jsonb`, `content jsonb`, `status` (`planned`/`completed`/`skipped`), `confidence 1–5`, `want_more_time bool`, `notes`, `llm_model`, `prompt_version`, `source` (`app`/`legacy`) — unique `(user_id, lesson_date)` |
 | `exercise_logs` | `lesson_id`, `block_index`, `item_ref`, `passed bool`, `value_reached numeric`, `note` |
-| `review_items` | `user_id`, `item_type` (`skill`/`theory`), `ref`, `interval_days`, `next_due date`, `last_result` — unique `(user_id, item_type, ref)` |
+| `review_items` | `user_id`, `item_type` (`skill`/`theory`/`style`), `ref`, `interval_days`, `next_due date`, `last_result` — unique `(user_id, item_type, ref)` |
 | `questions` | `user_id`, `lesson_id null`, `block_index null`, `question`, `answer`, `created_at` |
 | `songs` | `user_id`, `title`, `key`, `sections jsonb`, `central_idea`, `notes`, `updated_at` |
-| `settings` | `user_id pk`, `session_minutes` (25/30/40), `vocal_low`, `vocal_high`, `songwriting_weekday`, `style_pinned` (null = rotate), `style_core text[]`, `style_explore text[]`, `style_cycle_start date` |
+| `settings` | `user_id pk`, `session_minutes` (25/30/40), `vocal_low`, `vocal_high`, `songwriting_weekday`, `style_core text[]` |
 
 ---
 
@@ -222,7 +219,10 @@ All tables have `user_id uuid references auth.users` plus RLS. Timestamps are `t
 - When `score ≥ 3`, the skill becomes `mastered`, its score resets to 0, and a `review_items` row is created.
 - When `score ≤ −3`, the score resets to 0 and the target drops by 10%.
 
-**Style:** use `style_pinned` if set. Otherwise the fortnight index `n = floor(days_since(style_cycle_start) / 14)` picks from core on even `n` and from explore on odd `n`, cycling through each list in order. Skills from the style's profile are preferred in the skill pick, and its progression families drive the Apply block. On repeat days, style stays fixed along with skill and key.
+**Style element:**
+- Style = the least recently used style (core styles weighted ×2), excluding yesterday's.
+- Element = the next element on that style's ladder if the last new element was ≥2 sessions ago; otherwise a due or seen element.
+- Repeat days keep the same element.
 
 **Review scheduling:**
 - Intervals are `1 → 3 → 7 → 14 → 30 → 60` days.
@@ -279,7 +279,7 @@ The output is `plan.music`, and it is the **only** chord and scale source the LL
 | **Progress** | Level per track plus the theory ladder, target history per skill, streak, lesson history (including 129 imported legacy lessons). |
 | **Songbook** | `songs` CRUD; the weekly session writes into it. |
 | **Asked** | Searchable list of `questions`. |
-| **Settings** | Session length, vocal range, songwriting weekday, style (pin, or edit the core and explore lists). |
+| **Settings** | Session length, vocal range, songwriting weekday, core styles. |
 
 **PWA:** installable, and today's lesson is cached for offline use.
 
@@ -363,7 +363,7 @@ The output is `plan.music`, and it is the **only** chord and scale source the LL
    - Supabase schema + RLS + `complete_lesson()`.
    - The engine with tests, and the curriculum seed.
    - The legacy import.
-   - Style profiles (`engine/styles.ts`) from the style research.
+   - Style profiles (`engine/styles.ts`), merged from the 5 research drafts, with the numeral check.
    - `vault-sync-curriculum`, `vault-sync-styles`, `vault-sync-dev`.
    - `vault-sync-code` + git hooks, set up **first**, so every later commit is mapped.
 2. **Generation.**
