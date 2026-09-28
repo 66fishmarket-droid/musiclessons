@@ -1,0 +1,6694 @@
+[
+  {
+    "id": "country",
+    "name": "Country (classic/Nashville + modern)",
+    "family": "country",
+    "feel": {
+      "subdivision": "straight 8ths or light swing/shuffle 8ths; ballads 3/4 or slow 12/8",
+      "meter": "4/4",
+      "tempo_range": [
+        70,
+        150
+      ],
+      "accents": "bass on 1 and 3, chord 'chick' on 2 and 4",
+      "swing_ratio": null,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "country.boom_chick_root_5th_alternating_bass",
+        "name": "Boom-chick (root-5th alternating bass)",
+        "grid": [
+          "B",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "B",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "country.boom_chicka",
+        "name": "Boom-chicka",
+        "grid": [
+          "B",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "B",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "country.train_beat_palm_muted",
+        "name": "Train beat (palm-muted)",
+        "grid": [
+          "B",
+          "-",
+          "x",
+          "-",
+          "D",
+          "-",
+          "x",
+          "-",
+          "B",
+          "-",
+          "x",
+          "-",
+          "D",
+          "-",
+          "x",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "country.hybrid_pinch",
+        "name": "Hybrid pinch",
+        "grid": [
+          "B",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "B",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "country.modern_pop_country_strum",
+        "name": "Modern pop-country strum",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "-",
+          "U",
+          "D",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "country.prog_three_chords_and_the_truth",
+        "name": "Three chords and the truth",
+        "roman": [
+          "I",
+          "IV",
+          "V7",
+          "I"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "country.prog_honky_tonk_with_i7",
+        "name": "Honky-tonk with I7",
+        "roman": [
+          "I",
+          "I7",
+          "IV",
+          "I",
+          "V7",
+          "I"
+        ],
+        "bars": 8,
+        "verified": true
+      },
+      {
+        "id": "country.prog_ragtime_circle_turnaround",
+        "name": "Ragtime circle turnaround",
+        "roman": [
+          "I",
+          "VI7",
+          "II7",
+          "V7"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "country.prog_modern_nashville",
+        "name": "Modern Nashville",
+        "roman": [
+          "I",
+          "V",
+          "VIm",
+          "IV"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "country.prog_ballad_lift",
+        "name": "Ballad lift",
+        "roman": [
+          "I",
+          "IIIm",
+          "IV",
+          "V"
+        ],
+        "bars": 4,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "triads",
+      "dominant 7ths",
+      "6ths (western swing)",
+      "sus2/add9 (modern)"
+    ],
+    "forms": [
+      "verse-chorus (title closes chorus)",
+      "verse-pre-chorus-chorus-bridge (modern)",
+      "2-bar turnaround intro"
+    ],
+    "fill_vocabulary": [
+      "2-beat diatonic bass walks into each chord",
+      "hybrid-picked 3rd/6th double-stops",
+      "B-string pedal-steel bends",
+      "minor-3rd to major-3rd hammer-on in open shapes"
+    ],
+    "scales": [
+      "major",
+      "major pentatonic",
+      "mixolydian",
+      "major blues"
+    ],
+    "keys_common": [
+      "G",
+      "C",
+      "D",
+      "A",
+      "E"
+    ],
+    "tunings": [
+      "standard"
+    ],
+    "lyric_traits": [
+      "title-first writing",
+      "title within first 60s, closes chorus",
+      "double-meaning twist across verses",
+      "concrete nouns, places, conversational sentences"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Folsom Prison Blues",
+        "artist": "Johnny Cash",
+        "why": "train beat / boom-chicka archetype"
+      },
+      {
+        "title": "Mama Tried",
+        "artist": "Merle Haggard",
+        "why": "Bakersfield boom-chick with bass runs"
+      },
+      {
+        "title": "Coat of Many Colors",
+        "artist": "Dolly Parton",
+        "why": "story song, picked acoustic accompaniment"
+      },
+      {
+        "title": "He Stopped Loving Her Today",
+        "artist": "George Jones",
+        "why": "ballad, twist-ending lyric model"
+      },
+      {
+        "title": "Tennessee Whiskey",
+        "artist": "Chris Stapleton",
+        "why": "slow 12/8 modern soul-country"
+      }
+    ],
+    "transplant_levers": [
+      "boom-chick with alternating root-5th bass",
+      "2-beat bass walks into every change",
+      "V to V7; I7 before IV",
+      "title closes chorus with double meaning",
+      "2 bars per chord + I-VI7-II7-V7 turnaround intro"
+    ],
+    "ladder": [
+      "boom-chick G-C-D at 80 bpm",
+      "boom-chicka + one 2-beat bass run per change",
+      "palm-muted train beat 120+ bpm full song",
+      "hybrid pinches then 3rd/6th double-stop fills",
+      "write a verse-chorus with a title twist"
+    ]
+  },
+  {
+    "id": "bluegrass",
+    "name": "Bluegrass (guitar rhythm role)",
+    "family": "country",
+    "feel": {
+      "subdivision": "cut-time feel, straight to lightly swung 8ths; waltzes in 3/4",
+      "meter": "4/4 (felt in 2); 3/4 waltz",
+      "tempo_range": [
+        110,
+        180
+      ],
+      "accents": "guitar bass on 1 and 3; strum locks with mandolin chop on 2 and 4",
+      "swing_ratio": null,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "bluegrass.boom_chuck",
+        "name": "Boom-chuck",
+        "grid": [
+          "B",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "B",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "bluegrass.boom_chuck_with_upstrokes",
+        "name": "Boom-chuck with upstrokes",
+        "grid": [
+          "B",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "B",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "bluegrass.bass_strum_up_down_up",
+        "name": "Bass-strum-up-down-up",
+        "grid": [
+          "B",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "B",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "bluegrass.carter_scratch_b_melody_on_strings_6_4",
+        "name": "Carter scratch (B = melody on strings 6-4)",
+        "grid": [
+          "B",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "B",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "bluegrass.waltz_boom_chuck_chuck_3_4_12_slots",
+        "name": "Waltz boom-chuck-chuck (3/4, 12 slots)",
+        "grid": [
+          "B",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "bluegrass.prog_basic",
+        "name": "Basic",
+        "roman": [
+          "I",
+          "IV",
+          "I",
+          "V",
+          "I"
+        ],
+        "bars": 8,
+        "verified": true
+      },
+      {
+        "id": "bluegrass.prog_three_chord_with_v7",
+        "name": "Three-chord with V7",
+        "roman": [
+          "I",
+          "IV",
+          "V7",
+          "I"
+        ],
+        "bars": 8,
+        "verified": true
+      },
+      {
+        "id": "bluegrass.prog_salty_dog_circle",
+        "name": "Salty Dog circle",
+        "roman": [
+          "I",
+          "VI7",
+          "II7",
+          "V7",
+          "I"
+        ],
+        "bars": 8,
+        "verified": true
+      },
+      {
+        "id": "bluegrass.prog_mountain_modal",
+        "name": "Mountain modal",
+        "roman": [
+          "I",
+          "bVII",
+          "I"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "bluegrass.prog_iii7_colour_old_home_place",
+        "name": "III7 colour (Old Home Place)",
+        "roman": [
+          "I",
+          "III7",
+          "IV",
+          "I"
+        ],
+        "bars": 8,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "major triads",
+      "dominant 7ths",
+      "passing colour chords (G7, Cadd9, Dsus2)",
+      "one-chord modal/minor pentatonic ballads"
+    ],
+    "forms": [
+      "verse-chorus alternating with instrumental breaks on verse chords",
+      "chorus in 2-3 part harmony",
+      "fiddle tune AABB 8-bar parts"
+    ],
+    "fill_vocabulary": [
+      "G-run (E on D-string 2nd fret to open G; full: G A B D E D G)",
+      "1/2/4-beat bass runs by destination",
+      "shave-and-a-haircut ending",
+      "triplet runs with slurs in shuffle waltzes"
+    ],
+    "scales": [
+      "major",
+      "major pentatonic",
+      "minor pentatonic",
+      "mixolydian"
+    ],
+    "keys_common": [
+      "G",
+      "C",
+      "D",
+      "A",
+      "B"
+    ],
+    "tunings": [
+      "standard",
+      "dropped-D"
+    ],
+    "lyric_traits": [
+      "home, mother, trains, death, lost love, murder ballads",
+      "gospel themes",
+      "short 4-line verses",
+      "harmony-sung chorus refrain as hook"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Salty Dog Blues",
+        "artist": "Flatt & Scruggs",
+        "why": "circle-of-fifths, G-run"
+      },
+      {
+        "title": "Old Home Place",
+        "artist": "J.D. Crowe & the New South",
+        "why": "Tony Rice rhythm, III7 colour, 4-beat runs"
+      },
+      {
+        "title": "Wildwood Flower",
+        "artist": "The Carter Family",
+        "why": "Carter scratch"
+      },
+      {
+        "title": "Blue Moon of Kentucky",
+        "artist": "Bill Monroe",
+        "why": "waltz to 4/4, mandolin chop"
+      },
+      {
+        "title": "Church Street Blues",
+        "artist": "Tony Rice",
+        "why": "capo-7 C shapes, ringing strums"
+      }
+    ],
+    "transplant_levers": [
+      "capo to G-shape, boom-chuck, tempo +20-40%",
+      "G-run at every verse/chorus end",
+      "instrumental break on verse chords",
+      "tenor harmony on chorus",
+      "swap one I-V for VI7-II7-V7"
+    ],
+    "ladder": [
+      "rest-stroke boom-chuck with click on 2 and 4",
+      "G-run at every phrase end",
+      "2-beat bass runs then waltz boom-chuck-chuck",
+      "Carter scratch melody (Wildwood Flower)",
+      "capo to A/B, hold 140 bpm full song"
+    ]
+  },
+  {
+    "id": "americana",
+    "name": "Americana / roots (country-blues, alt-country)",
+    "family": "folk_roots",
+    "feel": {
+      "subdivision": "straight 8ths (alt-country) or shuffle 12/8 (country-blues); 3/4 ballads",
+      "meter": "4/4",
+      "tempo_range": [
+        65,
+        140
+      ],
+      "accents": "backbeat 2 and 4; steady quarter-note thumb in fingerpicked blues",
+      "swing_ratio": null,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "americana.alternating_thumb_piedmont",
+        "name": "Alternating thumb (Piedmont)",
+        "grid": [
+          "B",
+          "-",
+          "-",
+          "-",
+          "B",
+          "-",
+          "U",
+          "-",
+          "B",
+          "-",
+          "-",
+          "-",
+          "B",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "americana.neil_young_medium_strum",
+        "name": "Neil Young medium strum",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "-",
+          "U",
+          "D",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "americana.anticipated_change",
+        "name": "Anticipated change",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "D"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "americana.alt_country_straight_8s",
+        "name": "Alt-country straight 8s",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "americana.country_blues_shuffle_12_8_12_slots",
+        "name": "Country-blues shuffle (12/8, 12 slots)",
+        "grid": [
+          "B",
+          "-",
+          "D",
+          "B",
+          "-",
+          "D",
+          "B",
+          "-",
+          "D",
+          "B",
+          "-",
+          "D"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "americana.prog_folk_country",
+        "name": "Folk-country",
+        "roman": [
+          "I",
+          "IV",
+          "I",
+          "V"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "americana.prog_roots_rock_mixolydian",
+        "name": "Roots-rock Mixolydian",
+        "roman": [
+          "I",
+          "bVII",
+          "IV",
+          "I"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "americana.prog_ragtime_piedmont",
+        "name": "Ragtime/Piedmont",
+        "roman": [
+          "I",
+          "VI7",
+          "II7",
+          "V7"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "americana.prog_12_bar_country_blues",
+        "name": "12-bar country blues",
+        "roman": [
+          "I7",
+          "I7",
+          "I7",
+          "I7",
+          "IV7",
+          "IV7",
+          "I7",
+          "I7",
+          "V7",
+          "IV7",
+          "I7",
+          "V7"
+        ],
+        "bars": 12,
+        "verified": true
+      },
+      {
+        "id": "americana.prog_alt_country_ballad",
+        "name": "Alt-country ballad",
+        "roman": [
+          "VIm",
+          "IV",
+          "I",
+          "V"
+        ],
+        "bars": 4,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "open-string drones",
+      "sus2/add9",
+      "dominant 7ths",
+      "major/minor 3rd blur",
+      "bVII"
+    ],
+    "forms": [
+      "verse-chorus",
+      "strophic with one-line refrain",
+      "12-bar blues",
+      "story song with riff interludes"
+    ],
+    "fill_vocabulary": [
+      "riff doubling vocal line as intro/interlude/line-end fill",
+      "alternating-thumb with treble melody",
+      "open-string hammer-on/pull-off figures",
+      "hybrid picking imitating fingerpicking"
+    ],
+    "scales": [
+      "major pentatonic",
+      "minor pentatonic",
+      "minor blues",
+      "major blues",
+      "mixolydian"
+    ],
+    "keys_common": [
+      "E",
+      "A",
+      "D",
+      "G",
+      "C"
+    ],
+    "tunings": [
+      "standard",
+      "dropped-D",
+      "open G",
+      "open D"
+    ],
+    "lyric_traits": [
+      "character sketches",
+      "working-class and place detail",
+      "literary imagery over punchline hooks",
+      "single restated refrain line"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Angel from Montgomery",
+        "artist": "John Prine",
+        "why": "medium strum + anticipated changes"
+      },
+      {
+        "title": "Someday",
+        "artist": "Steve Earle",
+        "why": "riff-as-fill, straight-8s groove"
+      },
+      {
+        "title": "Candy Man",
+        "artist": "Mississippi John Hurt",
+        "why": "alternating-thumb country-blues"
+      },
+      {
+        "title": "Car Wheels on a Gravel Road",
+        "artist": "Lucinda Williams",
+        "why": "alt-country groove, place detail"
+      },
+      {
+        "title": "Look at Miss Ohio",
+        "artist": "Gillian Welch",
+        "why": "two-guitar roots texture"
+      }
+    ],
+    "transplant_levers": [
+      "pick a parent blend and commit groove",
+      "signature riff doubling a vocal line",
+      "V to V7 or IV to bVII",
+      "concrete place/character detail, one-line refrain",
+      "arrangement arc solo acoustic to band"
+    ],
+    "ladder": [
+      "medium strum with anticipated changes",
+      "riff inserted at vocal line ends",
+      "alternating thumb + one treble pluck per beat",
+      "12-bar shuffle in E with hammer-on 3rds",
+      "rearrange a folk song as alt-country"
+    ]
+  },
+  {
+    "id": "celtic",
+    "name": "Celtic / Irish (DADGAD accompaniment)",
+    "family": "folk_roots",
+    "feel": {
+      "subdivision": "jig 6/8 dotted-quarter pulse; reel straight 8ths felt in 2; slip jig 9/8; waltz 3/4",
+      "meter": "6/8 (jig) | 4/4 (reel)",
+      "tempo_range": [
+        90,
+        130
+      ],
+      "accents": "jig: 1 and 4 of 6/8; reel: 1 and 3 with offbeat lift",
+      "swing_ratio": null,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "celtic.jig_d_u_d_d_u_d_6_8_12_slots",
+        "name": "Jig D-U-D D-U-D (6/8, 12 slots)",
+        "grid": [
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "celtic.jig_octave_drone_6_8_12_slots",
+        "name": "Jig octave drone (6/8, 12 slots)",
+        "grid": [
+          "B",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "B",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "celtic.reel_basic",
+        "name": "Reel basic",
+        "grid": [
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "celtic.reel_syncopated_up_accent",
+        "name": "Reel syncopated up-accent",
+        "grid": [
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "U",
+          "-",
+          "U",
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "celtic.waltz_rolling_strum_3_4_12_slots",
+        "name": "Waltz rolling strum (3/4, 12 slots)",
+        "grid": [
+          "B",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "celtic.prog_major",
+        "name": "Major",
+        "roman": [
+          "I",
+          "IV",
+          "V",
+          "I"
+        ],
+        "bars": 8,
+        "verified": true
+      },
+      {
+        "id": "celtic.prog_mixolydian",
+        "name": "Mixolydian",
+        "roman": [
+          "I",
+          "bVII",
+          "IV",
+          "I"
+        ],
+        "bars": 8,
+        "verified": true
+      },
+      {
+        "id": "celtic.prog_mixolydian_simple",
+        "name": "Mixolydian simple",
+        "roman": [
+          "I",
+          "bVII",
+          "I"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "celtic.prog_dorian",
+        "name": "Dorian",
+        "roman": [
+          "Im",
+          "bVII",
+          "IV",
+          "Im"
+        ],
+        "bars": 8,
+        "verified": true
+      },
+      {
+        "id": "celtic.prog_relative_minor_shift",
+        "name": "Relative-minor shift",
+        "roman": [
+          "I",
+          "VIm",
+          "I",
+          "V"
+        ],
+        "bars": 8,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "5 chords (no 3rd) over open drones",
+      "sus2/sus4",
+      "slash chords D/F#, G/B",
+      "high-D drone shapes"
+    ],
+    "forms": [
+      "AABB, 8-bar parts, tune x3",
+      "sets of 2-3 tunes",
+      "strophic ballad"
+    ],
+    "fill_vocabulary": [
+      "diatonic bass line I up to IV with chord per step",
+      "sliding shapes over open drones",
+      "hammer-on ornaments",
+      "crosspicked rolling strum",
+      "drone substitutions (D for Am, G/B)"
+    ],
+    "scales": [
+      "major",
+      "mixolydian",
+      "dorian",
+      "minor",
+      "major pentatonic"
+    ],
+    "keys_common": [
+      "D",
+      "G",
+      "A",
+      "Em",
+      "Am",
+      "Bm"
+    ],
+    "tunings": [
+      "DADGAD",
+      "dropped-D",
+      "standard"
+    ],
+    "lyric_traits": [
+      "ballad narrative: emigration, love, rebellion, sea",
+      "place names",
+      "vocable refrains",
+      "quatrains ABCB"
+    ],
+    "reference_tracks": [
+      {
+        "title": "The Kesh",
+        "artist": "The Bothy Band",
+        "why": "jig drive (guitar personnel inferred)"
+      },
+      {
+        "title": "Arthur McBride",
+        "artist": "Paul Brady",
+        "why": "folk-song accompaniment model"
+      },
+      {
+        "title": "(reel set, Daithi Sproule guitar)",
+        "artist": "Altan",
+        "why": "session reel backup (track inferred)"
+      },
+      {
+        "title": "Out on the Ocean",
+        "artist": "trad. (OAIM lesson)",
+        "why": "advanced jig strumming"
+      },
+      {
+        "title": "(DADGAD song accompaniment)",
+        "artist": "Dick Gaughan / Pierre Bensusan",
+        "why": "DADGAD voicings (inferred; verify)"
+      }
+    ],
+    "transplant_levers": [
+      "retune DADGAD/dropped-D, 5/sus shapes over drones",
+      "re-meter to 6/8 jig or 3/4 rolling strum",
+      "modalise: V to bVII or major IV in minor",
+      "pedal bass line I up to IV",
+      "write an AABB instrumental interlude"
+    ],
+    "ladder": [
+      "dropped-D D5/G/A with reel strum",
+      "jig D-U-D D-U-D accents 1 and 4",
+      "ear: hear I-IV, I-V, I-bVII",
+      "DADGAD shapes, capo 2 for Em",
+      "bass lines + drone subs across an AABB set"
+    ]
+  },
+  {
+    "id": "folk",
+    "name": "Folk",
+    "family": "folk_roots",
+    "feel": {
+      "subdivision": "straight 8ths (also 3/4, 6/8)",
+      "meter": "4/4",
+      "tempo_range": [
+        70,
+        130
+      ],
+      "accents": "bass on 1 and 3, strum on 2 and 4; Travis thumb on every quarter, fingers between",
+      "swing_ratio": 1,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "folk.boom_chick",
+        "name": "Boom-chick",
+        "grid": [
+          "B",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "B",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "folk.old_faithful_strum",
+        "name": "Old-faithful strum",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "-",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "folk.travis_alternating_thumb",
+        "name": "Travis alternating thumb",
+        "grid": [
+          "P",
+          "-",
+          "-",
+          "-",
+          "B",
+          "-",
+          "P",
+          "-",
+          "B",
+          "-",
+          "P",
+          "-",
+          "B",
+          "-",
+          "P",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "folk.drone_3_3_2_arpeggio",
+        "name": "Drone 3-3-2 arpeggio",
+        "grid": [
+          "B",
+          "-",
+          "-",
+          "P",
+          "-",
+          "-",
+          "P",
+          "-",
+          "B",
+          "-",
+          "-",
+          "P",
+          "-",
+          "-",
+          "P",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "folk.prog_three_chord",
+        "name": "Three-chord",
+        "roman": [
+          "I",
+          "IV",
+          "I",
+          "V"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "folk.prog_mixolydian",
+        "name": "Mixolydian",
+        "roman": [
+          "I",
+          "bVII",
+          "IV",
+          "I"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "folk.prog_dorian_vamp",
+        "name": "Dorian vamp",
+        "roman": [
+          "Im",
+          "IV",
+          "Im",
+          "IV"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "folk.prog_modal_minor_aeolian_dorian",
+        "name": "Modal minor (Aeolian/Dorian)",
+        "roman": [
+          "Im",
+          "bVII",
+          "Im",
+          "bVII"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "folk.prog_drone_pedal_with_colours",
+        "name": "Drone pedal with colours",
+        "roman": [
+          "I",
+          "Isus4",
+          "Iadd9",
+          "I"
+        ],
+        "bars": 4,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "",
+      "add9",
+      "sus2",
+      "sus4",
+      "6"
+    ],
+    "forms": [
+      "strophic ballad (AAAA) with refrain line",
+      "verse-chorus",
+      "instrumental intro/interlude/coda"
+    ],
+    "fill_vocabulary": [
+      "hammer-on into open chord",
+      "bass run between chords",
+      "open-string drone",
+      "melody on top string over alternating thumb",
+      "DADGAD sus4 drone voicings"
+    ],
+    "scales": [
+      "major",
+      "major pentatonic",
+      "mixolydian",
+      "dorian",
+      "minor"
+    ],
+    "keys_common": [
+      "G",
+      "D",
+      "C",
+      "A",
+      "E",
+      "D (DADGAD / drop D)"
+    ],
+    "tunings": [],
+    "lyric_traits": [
+      "narrative stanzas",
+      "dense, clever wording",
+      "meaning accumulates across verses",
+      "syllabic melody serving text",
+      "refrain line"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Don't Think Twice, It's All Right",
+        "artist": "Bob Dylan",
+        "why": "Travis picking under narrative lyric"
+      },
+      {
+        "title": "Scarborough Fair",
+        "artist": "Simon & Garfunkel",
+        "why": "Dorian melody, modal picked accompaniment"
+      },
+      {
+        "title": "1952 Vincent Black Lightning",
+        "artist": "Richard Thompson",
+        "why": "Clever narrative ballad, driving thumb-picked part"
+      },
+      {
+        "title": "Big Yellow Taxi",
+        "artist": "Joni Mitchell",
+        "why": "Open tuning, strummed, lyric wit"
+      },
+      {
+        "title": "Pink Moon",
+        "artist": "Nick Drake",
+        "why": "Alternate tuning, hypnotic picked ostinato"
+      }
+    ],
+    "transplant_levers": [],
+    "ladder": [
+      "Boom-chick + bass runs on I-IV-V",
+      "Old-faithful strum with dynamics; picked verse / strummed chorus",
+      "Travis picking, thumb autopilot first",
+      "Modal vamps (I-bVII-IV, im-IV) with drones",
+      "Drop D then DADGAD re-voicing of an own song"
+    ]
+  },
+  {
+    "id": "blues",
+    "name": "Blues",
+    "family": "blues",
+    "feel": {
+      "subdivision": "shuffle (triplet-swung 8ths); 12/8 slow blues; straight 8ths for boogie/rock-blues",
+      "meter": "4/4",
+      "tempo_range": [
+        50,
+        140
+      ],
+      "accents": "backbeat on 2 and 4; stop-time hits on 1",
+      "swing_ratio": 2.03,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "blues.shuffle_boogie_root_5_root_6",
+        "name": "Shuffle boogie (root-5/root-6)",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "blues.backbeat_chop",
+        "name": "Backbeat chop",
+        "grid": [
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "blues.stop_time",
+        "name": "Stop-time",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "blues.prog_12_bar_slow_change",
+        "name": "12-bar slow change",
+        "roman": [
+          "I7",
+          "I7",
+          "I7",
+          "I7",
+          "IV7",
+          "IV7",
+          "I7",
+          "I7",
+          "V7",
+          "IV7",
+          "I7",
+          "V7"
+        ],
+        "bars": 12,
+        "verified": true
+      },
+      {
+        "id": "blues.prog_12_bar_quick_change",
+        "name": "12-bar quick change",
+        "roman": [
+          "I7",
+          "IV7",
+          "I7",
+          "I7",
+          "IV7",
+          "IV7",
+          "I7",
+          "I7",
+          "V7",
+          "IV7",
+          "I7",
+          "V7"
+        ],
+        "bars": 12,
+        "verified": true
+      },
+      {
+        "id": "blues.prog_8_bar_key_to_the_highway",
+        "name": "8-bar (Key to the Highway)",
+        "roman": [
+          "I7",
+          "V7",
+          "IV7",
+          "IV7",
+          "I7",
+          "V7",
+          "I7",
+          "V7"
+        ],
+        "bars": 8,
+        "verified": true
+      },
+      {
+        "id": "blues.prog_minor_blues",
+        "name": "Minor blues",
+        "roman": [
+          "Im7",
+          "Im7",
+          "Im7",
+          "Im7",
+          "IVm7",
+          "IVm7",
+          "Im7",
+          "Im7",
+          "bVI7",
+          "V7",
+          "Im7",
+          "V7"
+        ],
+        "bars": 12,
+        "verified": true
+      },
+      {
+        "id": "blues.prog_one_chord_boogie",
+        "name": "One-chord boogie",
+        "roman": [
+          "I7"
+        ],
+        "bars": 1,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "7",
+      "9",
+      "13",
+      "6",
+      "7#9",
+      "m7",
+      "m9"
+    ],
+    "forms": [
+      "12-bar AAB",
+      "8-bar blues",
+      "16-bar / refrain blues",
+      "one-chord boogie",
+      "stop-time verse into full-band refrain"
+    ],
+    "fill_vocabulary": [
+      "minor pentatonic + b5",
+      "b3-to-3 bend (blue third)",
+      "major/minor pentatonic mix",
+      "turnaround lick (chromatic descent over I-V)",
+      "double-stop 6ths and 3rds",
+      "call-and-response answers in 2-bar vocal gaps"
+    ],
+    "scales": [
+      "minor pentatonic",
+      "minor blues",
+      "major pentatonic",
+      "major blues",
+      "mixolydian"
+    ],
+    "keys_common": [
+      "E",
+      "A",
+      "G",
+      "Bb",
+      "F",
+      "C"
+    ],
+    "tunings": [],
+    "lyric_traits": [
+      "AAB: statement, repeat, twist",
+      "call and response voice/guitar",
+      "first-person trouble, humour, double entendre",
+      "short lines leaving 2-bar gaps"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Sweet Home Chicago",
+        "artist": "Robert Johnson",
+        "why": "Quick-change shuffle, boogie figure"
+      },
+      {
+        "title": "Hoochie Coochie Man",
+        "artist": "Muddy Waters",
+        "why": "Stop-time riff, AAB + refrain"
+      },
+      {
+        "title": "Key to the Highway",
+        "artist": "Big Bill Broonzy",
+        "why": "8-bar blues"
+      },
+      {
+        "title": "The Thrill Is Gone",
+        "artist": "B.B. King",
+        "why": "Minor blues, bVI7-V7"
+      },
+      {
+        "title": "Boogie Chillen'",
+        "artist": "John Lee Hooker",
+        "why": "One-chord boogie"
+      }
+    ],
+    "transplant_levers": [],
+    "ladder": [
+      "Shuffle feel with backbeat chops on I7/IV7/V7 in E and A",
+      "Boogie figure through slow-change 12-bar",
+      "Quick change + turnaround lick",
+      "Minor-pentatonic answers in vocal gaps",
+      "Write an AAB verse; then minor blues and 8-bar"
+    ]
+  },
+  {
+    "id": "funk",
+    "name": "Funk",
+    "family": "funk",
+    "feel": {
+      "subdivision": "16ths, straight or lightly swung",
+      "meter": "4/4",
+      "tempo_range": [
+        90,
+        115
+      ],
+      "accents": "The One (beat 1) heavy; syncopated 16th stabs; chank on 2 and 4",
+      "swing_ratio": 1.22,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "funk.the_one_scratch",
+        "name": "The One + scratch",
+        "grid": [
+          "D",
+          "u",
+          "d",
+          "u",
+          "d",
+          "u",
+          "d",
+          "u",
+          "d",
+          "u",
+          "d",
+          "u",
+          "d",
+          "u",
+          "d",
+          "u"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "funk.chank_on_2_and_4",
+        "name": "Chank on 2 and 4",
+        "grid": [
+          "d",
+          "u",
+          "d",
+          "u",
+          "D",
+          "u",
+          "d",
+          "u",
+          "d",
+          "u",
+          "d",
+          "u",
+          "D",
+          "u",
+          "d",
+          "u"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "funk.syncopated_stabs",
+        "name": "Syncopated stabs",
+        "grid": [
+          "D",
+          "u",
+          "d",
+          "U",
+          "d",
+          "u",
+          "D",
+          "u",
+          "d",
+          "u",
+          "D",
+          "U",
+          "d",
+          "u",
+          "d",
+          "u"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "funk.single_note_16th_riff_nolen",
+        "name": "Single-note 16th riff (Nolen)",
+        "grid": [
+          "N",
+          "-",
+          "N",
+          "-",
+          "N",
+          "N",
+          "-",
+          "N",
+          "-",
+          "N",
+          "-",
+          "N",
+          "N",
+          "-",
+          "N",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "funk.prog_dorian_one_chord_vamp",
+        "name": "Dorian one-chord vamp",
+        "roman": [
+          "Im7"
+        ],
+        "bars": 8,
+        "verified": true
+      },
+      {
+        "id": "funk.prog_mixolydian_9th_vamp",
+        "name": "Mixolydian 9th vamp",
+        "roman": [
+          "I9"
+        ],
+        "bars": 8,
+        "verified": true
+      },
+      {
+        "id": "funk.prog_dorian_two_chord_vamp",
+        "name": "Dorian two-chord vamp",
+        "roman": [
+          "Im7",
+          "IV7"
+        ],
+        "bars": 2,
+        "verified": true
+      },
+      {
+        "id": "funk.prog_vamp_bridge_lift",
+        "name": "Vamp + bridge lift",
+        "roman": [
+          "I9",
+          "I9",
+          "I9",
+          "I9",
+          "IV9",
+          "IV9",
+          "bVII9",
+          "bVII9"
+        ],
+        "bars": 8,
+        "verified": true
+      },
+      {
+        "id": "funk.prog_mixolydian_riff",
+        "name": "Mixolydian riff",
+        "roman": [
+          "I7",
+          "bVII",
+          "IV",
+          "I7"
+        ],
+        "bars": 4,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "9",
+      "13",
+      "7#9",
+      "m7",
+      "m9",
+      "m11",
+      "7"
+    ],
+    "forms": [
+      "groove intro -> vamp verse -> hook/chorus -> breakdown -> bridge (only real change) -> vamp out",
+      "call-and-response vamp",
+      "one-chord through-groove"
+    ],
+    "fill_vocabulary": [
+      "9th-chord half-step slide-in (bII9 -> I9)",
+      "Nolen single-note 16th riffs",
+      "Rodgers triad inversions on strings 1-3",
+      "muted scratch fills",
+      "Dorian/Mixolydian double-stops"
+    ],
+    "scales": [
+      "dorian",
+      "mixolydian",
+      "minor pentatonic",
+      "minor blues"
+    ],
+    "keys_common": [
+      "E",
+      "A",
+      "D",
+      "Em",
+      "Am",
+      "Bbm"
+    ],
+    "tunings": [],
+    "lyric_traits": [
+      "minimal lyric",
+      "chantable riff-hook / repeated title",
+      "voice as percussion, syncopated placement",
+      "call and response with band"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Papa's Got a Brand New Bag",
+        "artist": "James Brown",
+        "why": "Nolen chank, The One"
+      },
+      {
+        "title": "Sex Machine",
+        "artist": "James Brown",
+        "why": "One-chord 9th vamp, minimal lyric"
+      },
+      {
+        "title": "Good Times",
+        "artist": "Chic",
+        "why": "Rodgers constant-16ths triad comping"
+      },
+      {
+        "title": "Cissy Strut",
+        "artist": "The Meters",
+        "why": "Syncopated riff funk, space"
+      },
+      {
+        "title": "Thank You (Falettinme Be Mice Elf Agin)",
+        "artist": "Sly & the Family Stone",
+        "why": "Vamp with clever wordplay"
+      }
+    ],
+    "transplant_levers": [],
+    "ladder": [
+      "Constant muted 16ths on one chord to a click",
+      "Open one slot per beat: chank on 2 and 4, then The One",
+      "E9/D9 shape with half-step slide-in over a vamp",
+      "Two-chord Dorian vamp with top-string triads",
+      "Nolen single-note riff + breakdown/bridge arrangement of an own song"
+    ]
+  },
+  {
+    "id": "soul",
+    "name": "Soul (gospel / Motown / Stax)",
+    "family": "soul_rnb",
+    "feel": {
+      "subdivision": "straight 8ths (Motown/Stax); 12/8 triplet (gospel ballad); 16ths (later soul)",
+      "meter": "4/4",
+      "tempo_range": [
+        60,
+        130
+      ],
+      "accents": "hard backbeat on 2 and 4 with snare/handclaps",
+      "swing_ratio": 1,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "soul.backbeat_stab",
+        "name": "Backbeat stab",
+        "grid": [
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "soul.cropper_push",
+        "name": "Cropper push",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "U",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "soul.12_8_gospel_ballad_swing_to_triplets",
+        "name": "12/8 gospel ballad (swing to triplets)",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "soul.16th_soul_comp",
+        "name": "16th soul comp",
+        "grid": [
+          "D",
+          "-",
+          "d",
+          "U",
+          "D",
+          "-",
+          "d",
+          "U",
+          "D",
+          "-",
+          "d",
+          "U",
+          "D",
+          "-",
+          "d",
+          "U"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "soul.prog_amen_plagal",
+        "name": "Amen (plagal)",
+        "roman": [
+          "IV",
+          "I"
+        ],
+        "bars": 2,
+        "verified": true
+      },
+      {
+        "id": "soul.prog_gospel_minor_iv",
+        "name": "Gospel minor-iv",
+        "roman": [
+          "IV",
+          "IVm",
+          "I",
+          "I"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "soul.prog_double_plagal",
+        "name": "Double plagal",
+        "roman": [
+          "bVII",
+          "IV",
+          "I",
+          "I"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "soul.prog_motown_doo_wop",
+        "name": "Motown / doo-wop",
+        "roman": [
+          "I",
+          "VIm",
+          "IV",
+          "V"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "soul.prog_gospel_ii_v",
+        "name": "Gospel ii-V",
+        "roman": [
+          "IIm9",
+          "V11",
+          "Imaj9",
+          "Imaj9"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "soul.prog_ad_lib_vamp",
+        "name": "Ad-lib vamp",
+        "roman": [
+          "I",
+          "IV"
+        ],
+        "bars": 2,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "",
+      "maj7",
+      "9",
+      "13",
+      "m7",
+      "6",
+      "add9",
+      "9sus4",
+      "7"
+    ],
+    "forms": [
+      "verse-pre-chorus-chorus",
+      "AABA (early soul)",
+      "vamp / ad-lib outro",
+      "breakdown to drums + claps",
+      "key-change lift"
+    ],
+    "fill_vocabulary": [
+      "Cropper sixth-interval fills between vocal lines",
+      "Mayfield double-stops, sus-to-major hammer-ons",
+      "Hendrix-style triad embellishments",
+      "top-string triad stabs",
+      "gospel walking bass line on low strings"
+    ],
+    "scales": [
+      "major pentatonic",
+      "major blues",
+      "mixolydian",
+      "major",
+      "dorian"
+    ],
+    "keys_common": [
+      "Bb",
+      "Eb",
+      "F",
+      "C",
+      "G",
+      "A",
+      "D"
+    ],
+    "tunings": [],
+    "lyric_traits": [
+      "first-person testimony",
+      "repetition that builds",
+      "call and response lead/backing vocals",
+      "melisma and ad-libs in outro",
+      "sing-back chorus phrase"
+    ],
+    "reference_tracks": [
+      {
+        "title": "(Sittin' On) The Dock of the Bay",
+        "artist": "Otis Redding",
+        "why": "Folk-adjacent lyric, Cropper fills"
+      },
+      {
+        "title": "In the Midnight Hour",
+        "artist": "Wilson Pickett",
+        "why": "Stax backbeat stabs with horns"
+      },
+      {
+        "title": "People Get Ready",
+        "artist": "The Impressions",
+        "why": "Mayfield gospel chordal fills"
+      },
+      {
+        "title": "I Heard It Through the Grapevine",
+        "artist": "Marvin Gaye / Gladys Knight & the Pips",
+        "why": "Same song, two grooves and modes"
+      },
+      {
+        "title": "Respect",
+        "artist": "Aretha Franklin",
+        "why": "Transplanted song, call and response"
+      }
+    ],
+    "transplant_levers": [],
+    "ladder": [
+      "Backbeat stabs on 2 and 4 with top-string triads over I-IV-V",
+      "Gospel cadences IV-I, IV-ivm-I, bVII-IV-I",
+      "Cropper sixths fills between vocal lines",
+      "Mayfield/Hendrix hammer-on triad comping",
+      "12/8 gospel ballad, then I-IV vamp outro with ad-libs"
+    ]
+  },
+  {
+    "id": "jazz_swing",
+    "name": "Jazz (swing comping)",
+    "family": "jazz",
+    "feel": {
+      "subdivision": "8th swing",
+      "meter": "4/4",
+      "tempo_range": [
+        60,
+        280
+      ],
+      "accents": "1 and 3 long; 2 and 4 short, slight accent",
+      "swing_ratio": 2,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "jazz_swing.freddie_green_4_to_the_bar",
+        "name": "Freddie Green 4-to-the-bar",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "jazz_swing.charleston",
+        "name": "Charleston",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "jazz_swing.shifted_charleston",
+        "name": "Shifted Charleston",
+        "grid": [
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "jazz_swing.anticipation_and_of_4_push",
+        "name": "Anticipation (and-of-4 push)",
+        "grid": [
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "jazz_swing.offbeat_stabs",
+        "name": "Offbeat stabs",
+        "grid": [
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "jazz_swing.prog_major_ii_v_i",
+        "name": "Major ii-V-I",
+        "roman": [
+          "IIm7",
+          "V7",
+          "Imaj7",
+          "Imaj7"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "jazz_swing.prog_minor_ii_v_i",
+        "name": "Minor ii-V-i",
+        "roman": [
+          "IIm7b5",
+          "V7b9",
+          "Im6",
+          "Im6"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "jazz_swing.prog_i_vi_ii_v_turnaround",
+        "name": "I-vi-ii-V turnaround",
+        "roman": [
+          "Imaj7",
+          "VIm7",
+          "IIm7",
+          "V7"
+        ],
+        "bars": 2,
+        "verified": true
+      },
+      {
+        "id": "jazz_swing.prog_rhythm_changes_bridge",
+        "name": "Rhythm changes bridge",
+        "roman": [
+          "III7",
+          "III7",
+          "VI7",
+          "VI7",
+          "II7",
+          "II7",
+          "V7",
+          "V7"
+        ],
+        "bars": 8,
+        "verified": true
+      },
+      {
+        "id": "jazz_swing.prog_jazz_blues",
+        "name": "Jazz blues",
+        "roman": [
+          "I7",
+          "IV7",
+          "I7",
+          "Vm7",
+          "I7",
+          "IV7",
+          "#IVo7",
+          "I7",
+          "VI7",
+          "IIm7",
+          "V7",
+          "I7",
+          "VI7",
+          "IIm7",
+          "V7"
+        ],
+        "bars": 12,
+        "verified": true
+      },
+      {
+        "id": "jazz_swing.prog_tritone_sub_cadence",
+        "name": "Tritone-sub cadence",
+        "roman": [
+          "IIm7",
+          "bII7",
+          "Imaj7",
+          "Imaj7"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "jazz_swing.prog_backdoor",
+        "name": "Backdoor",
+        "roman": [
+          "IVm7",
+          "bVII7",
+          "Imaj7",
+          "Imaj7"
+        ],
+        "bars": 4,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "maj7",
+      "6",
+      "m7",
+      "m6",
+      "7",
+      "m7b5",
+      "dim7",
+      "9",
+      "13",
+      "6/9",
+      "7b9",
+      "7#9",
+      "7alt"
+    ],
+    "forms": [
+      "32-bar AABA",
+      "32-bar ABAC",
+      "12-bar jazz blues",
+      "head-solos-head"
+    ],
+    "fill_vocabulary": [
+      "guide-tone lines (7->3)",
+      "chromatic approach chords",
+      "Wes-style octaves",
+      "bebop enclosures",
+      "drop-2 chord melody"
+    ],
+    "scales": [
+      "major",
+      "dorian",
+      "mixolydian",
+      "bebop",
+      "melodic minor",
+      "altered",
+      "lydian dominant",
+      "diminished",
+      "minor blues"
+    ],
+    "keys_common": [
+      "F",
+      "Bb",
+      "Eb",
+      "C",
+      "G",
+      "Ab"
+    ],
+    "tunings": [
+      "standard"
+    ],
+    "lyric_traits": [
+      "conversational wit",
+      "internal rhyme",
+      "title as hook in A section",
+      "bridge shifts perspective"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Corner Pocket",
+        "artist": "Count Basie Orchestra (Freddie Green)",
+        "why": "4-to-the-bar big band comping"
+      },
+      {
+        "title": "My Funny Valentine",
+        "artist": "Bill Evans & Jim Hall",
+        "why": "interactive duo comping"
+      },
+      {
+        "title": "Take Love Easy (album)",
+        "artist": "Ella Fitzgerald & Joe Pass",
+        "why": "guitar alone behind a singer"
+      },
+      {
+        "title": "Chitlins con Carne",
+        "artist": "Kenny Burrell",
+        "why": "blues-in-jazz comping"
+      },
+      {
+        "title": "Full House",
+        "artist": "Wes Montgomery",
+        "why": "small-group comping and octaves"
+      }
+    ],
+    "transplant_levers": [
+      "swing the 8ths; comp 4-to-the-bar on shells",
+      "turn each V into ii-V; I->IV becomes I-I7-IV",
+      "upgrade triads to 7th/6th chords",
+      "add I-vi-ii-V turnarounds; tritone-sub the last V",
+      "recast into AABA with a dominant-cycle bridge"
+    ],
+    "ladder": [
+      "shells on 6th/5th roots + Freddie Green on ii-V-I round the cycle of 4ths",
+      "jazz blues in F and Bb with Charleston",
+      "drop-2 top-four voicings and guide-tone voice leading",
+      "rhythm changes / one AABA standard, comping own vocal",
+      "tritone subs, altered dominants, chromatic approach chords"
+    ]
+  },
+  {
+    "id": "gypsy_jazz",
+    "name": "Gypsy jazz (manouche)",
+    "family": "jazz",
+    "feel": {
+      "subdivision": "8th swing",
+      "meter": "4/4",
+      "tempo_range": [
+        80,
+        280
+      ],
+      "accents": "1 and 3 broad downstroke; 2 and 4 clipped, not louder",
+      "swing_ratio": 1.5,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "gypsy_jazz.la_pompe",
+        "name": "La pompe",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "U",
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "U",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "gypsy_jazz.pompe_no_ghost",
+        "name": "Pompe, no ghost",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "gypsy_jazz.rake_into_beat",
+        "name": "Rake into beat",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "U",
+          "D",
+          "-",
+          "-",
+          "U",
+          "D",
+          "-",
+          "-",
+          "U",
+          "D",
+          "-",
+          "-",
+          "U"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "gypsy_jazz.charleston_bridges",
+        "name": "Charleston (bridges)",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "gypsy_jazz.valse_musette_3_4_12_slots",
+        "name": "Valse musette (3/4, 12 slots)",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "gypsy_jazz.prog_minor_swing",
+        "name": "Minor Swing",
+        "roman": [
+          "Im6",
+          "Im6",
+          "IVm6",
+          "Im6",
+          "V7",
+          "V7",
+          "Im6",
+          "Im6"
+        ],
+        "bars": 8,
+        "verified": true
+      },
+      {
+        "id": "gypsy_jazz.prog_minor_ii_v_i",
+        "name": "Minor ii-V-i",
+        "roman": [
+          "IIm7b5",
+          "V7",
+          "Im6",
+          "Im6"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "gypsy_jazz.prog_major_turnaround",
+        "name": "Major turnaround",
+        "roman": [
+          "I6",
+          "VI7",
+          "IIm7",
+          "V7"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "gypsy_jazz.prog_dominant_chain",
+        "name": "Dominant chain",
+        "roman": [
+          "III7",
+          "VI7",
+          "II7",
+          "V7"
+        ],
+        "bars": 8,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "m6",
+      "6",
+      "6/9",
+      "7",
+      "9",
+      "dim7",
+      "m7b5",
+      "maj7"
+    ],
+    "forms": [
+      "32-bar AABA",
+      "32-bar ABAC",
+      "16-bar minor tune",
+      "valse musette 3/4"
+    ],
+    "fill_vocabulary": [
+      "string rakes",
+      "diminished arpeggios",
+      "chromatic runs",
+      "tremolo",
+      "harmonic-minor arpeggios"
+    ],
+    "scales": [
+      "harmonic minor",
+      "dorian",
+      "diminished",
+      "phrygian dominant",
+      "major"
+    ],
+    "keys_common": [
+      "Am",
+      "Dm",
+      "Gm",
+      "Em",
+      "G",
+      "C",
+      "D",
+      "Bb"
+    ],
+    "tunings": [
+      "standard"
+    ],
+    "lyric_traits": [
+      "mostly instrumental",
+      "minor-key romance",
+      "nostalgia",
+      "road/travel imagery",
+      "waltz-time narrative"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Minor Swing",
+        "artist": "Quintette du Hot Club de France",
+        "why": "the Am6-Dm6-E7 pompe workout"
+      },
+      {
+        "title": "Nuages",
+        "artist": "Django Reinhardt",
+        "why": "ballad-tempo pompe"
+      },
+      {
+        "title": "Dinah",
+        "artist": "Quintette du Hot Club de France",
+        "why": "early swing standard, classic lineup"
+      },
+      {
+        "title": "Limehouse Blues",
+        "artist": "Quintette du Hot Club de France",
+        "why": "up-tempo standard"
+      },
+      {
+        "title": "Les Yeux Noirs (Dark Eyes)",
+        "artist": "Django Reinhardt",
+        "why": "minor tune, tempo shifts"
+      }
+    ],
+    "transplant_levers": [
+      "replace the strum with la pompe at brisk swing",
+      "re-set in relative minor; minor chords -> m6",
+      "major -> 6 or 6/9, dominants -> 7/9, passing dim7",
+      "minor ii-V-i (m7b5-7-m6) at cadences",
+      "3/4 folk tunes -> valse musette"
+    ],
+    "ladder": [
+      "all-downstroke pompe on one Gm6 shape at 80 bpm",
+      "add ghost upstroke/rake; relax; toward 140",
+      "Minor Swing changes with m6 shapes",
+      "major swing standard with 6/9, 7, dim7; Charleston on bridge",
+      "minor ii-V-i and a valse; push to 180"
+    ]
+  },
+  {
+    "id": "neo_soul",
+    "name": "R&B / neo-soul",
+    "family": "soul_rnb",
+    "feel": {
+      "subdivision": "16th swing",
+      "meter": "4/4",
+      "tempo_range": [
+        60,
+        95
+      ],
+      "accents": "backbeat 2 and 4; stabs follow kick drum",
+      "swing_ratio": 1.4,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "neo_soul.backbeat_stab",
+        "name": "Backbeat stab",
+        "grid": [
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "neo_soul.kick_follow_staccato",
+        "name": "Kick-follow staccato",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "neo_soul.ghost_scratch_16ths",
+        "name": "Ghost-scratch 16ths",
+        "grid": [
+          "D",
+          "-",
+          "x",
+          "U",
+          "-",
+          "x",
+          "D",
+          "-",
+          "x",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "x",
+          "U"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "neo_soul.arpeggio_hammer",
+        "name": "Arpeggio + hammer",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "neo_soul.prog_two_chord_vamp",
+        "name": "Two-chord vamp",
+        "roman": [
+          "Imaj7",
+          "IVmaj7"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "neo_soul.prog_extended_i_vi_iv_v",
+        "name": "Extended I-vi-IV-V",
+        "roman": [
+          "Imaj7",
+          "VIm7",
+          "IVmaj7",
+          "V7"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "neo_soul.prog_borrowed_minor_iv",
+        "name": "Borrowed minor iv",
+        "roman": [
+          "IVmaj7",
+          "IVm7",
+          "Imaj7",
+          "Imaj7"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "neo_soul.prog_iii_vi_ii_v",
+        "name": "iii-vi-ii-V",
+        "roman": [
+          "IIIm7",
+          "VIm7",
+          "IIm7",
+          "V7"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "neo_soul.prog_nothing_even_matters_loop",
+        "name": "Nothing Even Matters loop",
+        "roman": [
+          "Vmaj7",
+          "IIm7",
+          "Imaj7",
+          "IIm7"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "neo_soul.prog_untitled_style_verse",
+        "name": "Untitled-style verse",
+        "roman": [
+          "Iadd9",
+          "V7sus4",
+          "IV6",
+          "bVII9"
+        ],
+        "bars": 4,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "maj7",
+      "maj9",
+      "6",
+      "m7",
+      "m9",
+      "m11",
+      "9",
+      "11",
+      "13",
+      "13b9",
+      "add9",
+      "7sus4",
+      "quartal"
+    ],
+    "forms": [
+      "verse-chorus-bridge over loops",
+      "vamp outro for ad-libs"
+    ],
+    "fill_vocabulary": [
+      "thumb-over bass + top-string double-stops",
+      "hammer 6->maj7 inside chord",
+      "sus->3 hammer",
+      "pentatonic double-stops",
+      "slides into chords",
+      "chord planing",
+      "plucked harmonics"
+    ],
+    "scales": [
+      "major pentatonic",
+      "minor pentatonic",
+      "dorian",
+      "mixolydian",
+      "major"
+    ],
+    "keys_common": [
+      "Db",
+      "Ab",
+      "Eb",
+      "E",
+      "A",
+      "D",
+      "Bm"
+    ],
+    "tunings": [
+      "standard"
+    ],
+    "lyric_traits": [
+      "intimate and sensual",
+      "conversational",
+      "spiritual/social consciousness",
+      "vulnerable blurred narrative",
+      "short repeated hook + ad-libs"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Little Wing",
+        "artist": "Jimi Hendrix",
+        "why": "source of thumb-over embellishment vocabulary"
+      },
+      {
+        "title": "Untitled (How Does It Feel)",
+        "artist": "D'Angelo",
+        "why": "extended voicings to 13ths, inversions"
+      },
+      {
+        "title": "On & On",
+        "artist": "Erykah Badu",
+        "why": "minimal loop groove and pocket"
+      },
+      {
+        "title": "Gravity",
+        "artist": "John Mayer",
+        "why": "Hendrix/Mayfield fills in a singer-songwriter song"
+      },
+      {
+        "title": "Pink Matter",
+        "artist": "Frank Ocean",
+        "why": "guitar-led neo-soul in B minor"
+      }
+    ],
+    "transplant_levers": [
+      "extend every chord (maj9, m9, 11/sus, 13)",
+      "half-time 16th-swing feel behind the beat; stabs/arpeggios not strums",
+      "reduce to a 2-4 chord loop; add borrowed iv",
+      "thumb-over double-stop fills between vocal lines",
+      "syncopate and repeat melody phrases; leave ad-lib space"
+    ],
+    "ladder": [
+      "maj7/m7/9 shapes; Imaj7-IVmaj7 vamp with backbeat stab",
+      "maj9/m9/m11 plus hammered colour tones",
+      "thumb-over shapes with pentatonic double-stops",
+      "16th-swing ghost-scratch groove at 70 bpm",
+      "chord planing and reharmonising a folk song as an extended loop"
+    ]
+  },
+  {
+    "id": "rock_classic",
+    "name": "Classic rock",
+    "family": "rock",
+    "feel": {
+      "subdivision": "straight 8ths (occasional shuffle)",
+      "meter": "4/4",
+      "tempo_range": [
+        90,
+        140
+      ],
+      "accents": "snare backbeat on 2 and 4; chord pushes on the & of 4 anticipating the next bar",
+      "swing_ratio": null,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "rock_classic.eighth_note_drive",
+        "name": "Eighth-note drive",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [
+          4,
+          12
+        ],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "rock_classic.old_faithful_d_du_udu",
+        "name": "Old faithful (D DU UDU)",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "-",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [
+          0,
+          12
+        ],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "rock_classic.push_into_the_next_bar",
+        "name": "Push into the next bar",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [
+          0,
+          14
+        ],
+        "verified": true,
+        "note": "slot 14 chord is the NEXT bar's chord, tied over"
+      },
+      {
+        "id": "rock_classic.stab_and_space",
+        "name": "Stab and space",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "x",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "x",
+          "-",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [
+          0,
+          8
+        ],
+        "verified": true,
+        "note": "x = fret-hand choke; the silence is the point"
+      }
+    ],
+    "progressions": [
+      {
+        "id": "rock_classic.prog_mixolydian_loop_sweet_home_alabama",
+        "name": "Mixolydian loop (Sweet Home Alabama)",
+        "roman": [
+          "I",
+          "bVII",
+          "IV"
+        ],
+        "bars": 2,
+        "verified": true
+      },
+      {
+        "id": "rock_classic.prog_double_plagal_cadence",
+        "name": "Double plagal cadence",
+        "roman": [
+          "I",
+          "bVII",
+          "IV",
+          "I"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "rock_classic.prog_three_chord_rock",
+        "name": "Three-chord rock",
+        "roman": [
+          "I",
+          "IV",
+          "V",
+          "IV"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "rock_classic.prog_riff_over_the_tonic",
+        "name": "Riff over the tonic",
+        "roman": [
+          "I",
+          "I",
+          "IV",
+          "I"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "rock_classic.prog_descending_mixolydian",
+        "name": "Descending Mixolydian",
+        "roman": [
+          "I",
+          "V",
+          "bVII",
+          "IV"
+        ],
+        "bars": 4,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "major triads (open)",
+      "5 (power)",
+      "sus4 / add9 hammer-on decorations",
+      "dominant 7 (bluesy)"
+    ],
+    "forms": [
+      "verse-chorus with instrumental riff intro",
+      "intro riff - V - C - V - C - solo - C - outro riff"
+    ],
+    "fill_vocabulary": [
+      "sus4/sus2 hammer-ons on open chords",
+      "Keith Richards IV-shape over I (open G)",
+      "major pentatonic double-stops",
+      "chromatic walk-ups into the IV",
+      "single-note riff answers between chord stabs"
+    ],
+    "scales": [
+      "mixolydian",
+      "major pentatonic",
+      "minor pentatonic",
+      "blues"
+    ],
+    "keys_common": [
+      "E",
+      "A",
+      "D",
+      "G"
+    ],
+    "tunings": [
+      "standard",
+      "open G (5-string)",
+      "Eb standard"
+    ],
+    "lyric_traits": [
+      "concrete place and road imagery",
+      "boasts, freedom, working-life grievance",
+      "chorus = one repeated hooky line"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Sweet Home Alabama",
+        "artist": "Lynyrd Skynyrd",
+        "why": "I-bVII-IV loop for the whole song; fills between chords"
+      },
+      {
+        "title": "Start Me Up",
+        "artist": "The Rolling Stones",
+        "why": "open-G IV-shape-over-I riff, syncopated pushes"
+      },
+      {
+        "title": "Fortunate Son",
+        "artist": "Creedence Clearwater Revival",
+        "why": "I-bVII-IV-I verse, straight-8th drive"
+      },
+      {
+        "title": "You Really Got Me",
+        "artist": "The Kinks",
+        "why": "power-chord riff with a whole-step shift; foundational power-chord hit"
+      },
+      {
+        "title": "Hey Jude (coda)",
+        "artist": "The Beatles",
+        "why": "the textbook double plagal cadence I-bVII-IV-I"
+      }
+    ],
+    "transplant_levers": [
+      "straight-8th electric drive with backbeat accents",
+      "swap V for bVII (Mixolydian)",
+      "add a signature intro riff built on the I chord",
+      "power chords/open chords with sus decorations",
+      "solo section over the verse changes"
+    ],
+    "ladder": [
+      "8th-note downstroke drive on open E/A/D with backbeat accent",
+      "I-bVII-IV loop in D and A with sus4 hammer-ons",
+      "open-G IV-shape-over-I riffs (Stones)",
+      "chord-stab + space + single-note answer riff",
+      "arrange a folk song: riff intro, Mixolydian chorus, solo over verse"
+    ]
+  },
+  {
+    "id": "rock_hard",
+    "name": "Hard rock",
+    "family": "rock",
+    "feel": {
+      "subdivision": "straight 8ths, some swing in the backbeat",
+      "meter": "4/4",
+      "tempo_range": [
+        90,
+        150
+      ],
+      "accents": "heavy 2 and 4 backbeat; riff accents lock with kick drum",
+      "swing_ratio": null,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "rock_hard.malcolm_stab_chord_choke_space",
+        "name": "Malcolm stab (chord, choke, space)",
+        "grid": [
+          "D",
+          "-",
+          "x",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "x",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [
+          0,
+          8,
+          12
+        ],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "rock_hard.palm_muted_8ths_with_open_accent",
+        "name": "Palm-muted 8ths with open accent",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [
+          0,
+          12
+        ],
+        "verified": true,
+        "note": "accented hits un-muted"
+      },
+      {
+        "id": "rock_hard.all_down_16th_chug",
+        "name": "All-down 16th chug",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "D",
+          "D",
+          "-",
+          "D",
+          "D",
+          "D",
+          "-",
+          "D",
+          "D",
+          "D",
+          "-",
+          "D",
+          "D"
+        ],
+        "accents": [
+          0,
+          8
+        ],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "rock_hard.shuffle_boogie_swung",
+        "name": "Shuffle boogie (swung)",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "D",
+          "D",
+          "-",
+          "-",
+          "D",
+          "D",
+          "-",
+          "-",
+          "D",
+          "D",
+          "-",
+          "-",
+          "D"
+        ],
+        "accents": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "verified": true,
+        "note": "12/8 feel approximated; render with swing"
+      }
+    ],
+    "progressions": [
+      {
+        "id": "rock_hard.prog_double_plagal_sweet_child_verse",
+        "name": "Double plagal (Sweet Child verse)",
+        "roman": [
+          "I",
+          "bVII",
+          "IV",
+          "I"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "rock_hard.prog_party_chorus",
+        "name": "Party chorus",
+        "roman": [
+          "I",
+          "IV",
+          "V",
+          "IV"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "rock_hard.prog_riff_pedal_on_i",
+        "name": "Riff pedal on I",
+        "roman": [
+          "I5",
+          "I5",
+          "bVII5",
+          "IV5"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "rock_hard.prog_minor_rock",
+        "name": "Minor rock",
+        "roman": [
+          "Im",
+          "bVI",
+          "bVII",
+          "Im"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "rock_hard.prog_chromatic_approach",
+        "name": "Chromatic approach",
+        "roman": [
+          "I5",
+          "bIII5",
+          "IV5",
+          "I5"
+        ],
+        "bars": 4,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "5 (power)",
+      "open major triads",
+      "dominant 7",
+      "sus4"
+    ],
+    "forms": [
+      "riff intro - V - C - V - C - solo - C",
+      "breakdown/stop-time before last chorus"
+    ],
+    "fill_vocabulary": [
+      "single-note open-string licks between chords (Back in Black)",
+      "minor pentatonic riffs on low strings",
+      "stop-time hits",
+      "bends on the 3rd string answering the vocal"
+    ],
+    "scales": [
+      "minor pentatonic",
+      "blues",
+      "mixolydian",
+      "aeolian"
+    ],
+    "keys_common": [
+      "E",
+      "A",
+      "D"
+    ],
+    "tunings": [
+      "standard",
+      "Eb standard"
+    ],
+    "lyric_traits": [
+      "bravado, desire, nightlife",
+      "short punchy lines, shout-along chorus",
+      "double entendre"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Back in Black",
+        "artist": "AC/DC",
+        "why": "open E-D-A stabs + single-note licks; space as rhythm"
+      },
+      {
+        "title": "You Shook Me All Night Long",
+        "artist": "AC/DC",
+        "why": "I-IV-V-IV chorus, open-chord drive"
+      },
+      {
+        "title": "Highway to Hell",
+        "artist": "AC/DC",
+        "why": "chord stabs with rests; downpicked open chords"
+      },
+      {
+        "title": "Sweet Child O' Mine",
+        "artist": "Guns N' Roses",
+        "why": "I-bVII-IV-I verse, Eb tuning"
+      },
+      {
+        "title": "Whole Lotta Love",
+        "artist": "Led Zeppelin",
+        "why": "riff over I; I-bVII chorus"
+      }
+    ],
+    "transplant_levers": [
+      "replace strummed chords with a tonic riff + stabs",
+      "overdriven power chords/open chords, downpicked",
+      "insert rests and chokes between hits",
+      "shout-along chorus hook",
+      "stop-time breakdown before final chorus"
+    ],
+    "ladder": [
+      "downpicked open E/A/D stabs with fret-hand chokes",
+      "Back in Black-style chord + single-note answer",
+      "palm-muted 8ths with un-muted accents",
+      "minor-pentatonic riff on the low strings over I",
+      "build a riff from the folk melody's first phrase"
+    ]
+  },
+  {
+    "id": "rock_indie_alt",
+    "name": "Indie / alternative rock",
+    "family": "rock",
+    "feel": {
+      "subdivision": "straight 8ths or 16ths",
+      "meter": "4/4",
+      "tempo_range": [
+        90,
+        160
+      ],
+      "accents": "even, driving downstrokes; dynamic contrast between sections more than within the bar",
+      "swing_ratio": null,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "rock_indie_alt.motorik_all_down_8ths",
+        "name": "Motorik all-down 8ths",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": "even, no accents; Strokes-style (inferred)"
+      },
+      {
+        "id": "rock_indie_alt.chord_muted_scratch",
+        "name": "Chord + muted scratch",
+        "grid": [
+          "D",
+          "-",
+          "x",
+          "U",
+          "D",
+          "-",
+          "x",
+          "U",
+          "D",
+          "-",
+          "x",
+          "U",
+          "D",
+          "-",
+          "x",
+          "U"
+        ],
+        "accents": [
+          0,
+          8
+        ],
+        "verified": false,
+        "note": "x = muted scratch, keeps hand moving in 16ths"
+      },
+      {
+        "id": "rock_indie_alt.jangle_arpeggio",
+        "name": "Jangle arpeggio",
+        "grid": [
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U"
+        ],
+        "accents": [
+          0,
+          8
+        ],
+        "verified": true,
+        "note": "alternate-picked across the chord shape, clean tone"
+      },
+      {
+        "id": "rock_indie_alt.quiet_verse_sparse_pick",
+        "name": "Quiet verse sparse pick",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": "clean single notes/dyads; contrast with loud chorus"
+      }
+    ],
+    "progressions": [
+      {
+        "id": "rock_indie_alt.prog_grunge_chromatic_loop_teen_spirit",
+        "name": "Grunge chromatic loop (Teen Spirit)",
+        "roman": [
+          "I5",
+          "IV5",
+          "bIII5",
+          "bVI5"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "rock_indie_alt.prog_major_with_borrowed_iv_creep",
+        "name": "Major with borrowed iv (Creep)",
+        "roman": [
+          "I",
+          "III",
+          "IV",
+          "IVm"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "rock_indie_alt.prog_pixies_loop",
+        "name": "Pixies loop",
+        "roman": [
+          "I",
+          "VIm",
+          "IIIm",
+          "IV"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "rock_indie_alt.prog_minor_modal_loop",
+        "name": "Minor modal loop",
+        "roman": [
+          "Im",
+          "bIII",
+          "bVII",
+          "Im"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "rock_indie_alt.prog_mixolydian_minor_v",
+        "name": "Mixolydian minor-v",
+        "roman": [
+          "I",
+          "Vm",
+          "bVII",
+          "I"
+        ],
+        "bars": 4,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "5 (power)",
+      "add9",
+      "maj7",
+      "open-string drones",
+      "borrowed minor iv",
+      "chromatic mediants (III, bVI)"
+    ],
+    "forms": [
+      "quiet verse - loud chorus (loud-quiet-loud)",
+      "verse-chorus with instrumental hook riff",
+      "repetitive two-chord vamp with building layers"
+    ],
+    "fill_vocabulary": [
+      "open-string drone riffs",
+      "octave melodies",
+      "feedback/noise swells",
+      "single-note hook riffs doubling the vocal melody"
+    ],
+    "scales": [
+      "major",
+      "aeolian",
+      "mixolydian",
+      "minor pentatonic"
+    ],
+    "keys_common": [
+      "E",
+      "A",
+      "D",
+      "F",
+      "G"
+    ],
+    "tunings": [
+      "standard",
+      "drop D",
+      "Eb standard"
+    ],
+    "lyric_traits": [
+      "oblique, image-led, deliberately ambiguous",
+      "alienation, depression, social concern",
+      "irony and deadpan"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Smells Like Teen Spirit",
+        "artist": "Nirvana",
+        "why": "the quiet verse / loud chorus template; power-chord loop with muted scratches"
+      },
+      {
+        "title": "Where Is My Mind?",
+        "artist": "Pixies",
+        "why": "source of the loud-quiet dynamic; I-vi-iii-IV"
+      },
+      {
+        "title": "Creep",
+        "artist": "Radiohead",
+        "why": "I-III-IV-iv borrowed chord; muted 'chunk' before the chorus"
+      },
+      {
+        "title": "This Charming Man",
+        "artist": "The Smiths",
+        "why": "jangle arpeggio picking, clean tone"
+      },
+      {
+        "title": "Last Nite",
+        "artist": "The Strokes",
+        "why": "interlocking all-down 8th guitars (inferred)"
+      }
+    ],
+    "transplant_levers": [
+      "quiet clean verse vs loud distorted chorus",
+      "swap diatonic chords for chromatic mediants or borrowed iv",
+      "turn chords into power chords with muted scratches",
+      "add an instrumental single-note hook riff",
+      "keep lyrics but make imagery more oblique"
+    ],
+    "ladder": [
+      "even all-down 8ths at 120-150 bpm for 2 minutes",
+      "quiet/loud: same progression clean-picked then distorted strum",
+      "16th chord + muted-scratch pattern",
+      "I-III-IV-iv and I5-IV5-bIII5-bVI5 in E and F",
+      "re-set a folk song with a quiet verse and loud chorus"
+    ]
+  },
+  {
+    "id": "pop",
+    "name": "Pop / singer-songwriter pop",
+    "family": "pop",
+    "feel": {
+      "subdivision": "16ths (syncopated) or straight 8ths",
+      "meter": "4/4",
+      "tempo_range": [
+        70,
+        130
+      ],
+      "accents": "backbeat 2 and 4 (percussive slap on acoustic); syncopated 16th pushes",
+      "swing_ratio": null,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "pop.pop_standard_d_du_udu",
+        "name": "Pop standard (D DU UDU)",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "-",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [
+          4,
+          12
+        ],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "pop.acoustic_slap_backbeat",
+        "name": "Acoustic slap backbeat",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "U",
+          "x",
+          "-",
+          "D",
+          "U",
+          "D",
+          "-",
+          "D",
+          "U",
+          "x",
+          "-",
+          "D",
+          "U"
+        ],
+        "accents": [
+          4,
+          12
+        ],
+        "verified": true,
+        "note": "x = percussive palm slap on 2 and 4"
+      },
+      {
+        "id": "pop.palm_muted_8th_pulse_verse",
+        "name": "Palm-muted 8th pulse (verse)",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "pop.syncopated_16th_push",
+        "name": "Syncopated 16th push",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "U",
+          "D",
+          "-",
+          "D",
+          "U",
+          "-",
+          "U",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "U"
+        ],
+        "accents": [
+          0,
+          6,
+          10
+        ],
+        "verified": false,
+        "note": "inferred composite"
+      },
+      {
+        "id": "pop.half_time_ballad",
+        "name": "Half-time ballad",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [
+          8
+        ],
+        "verified": true,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "pop.prog_axis",
+        "name": "Axis",
+        "roman": [
+          "I",
+          "V",
+          "VIm",
+          "IV"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "pop.prog_axis_pessimistic_rotation",
+        "name": "Axis, pessimistic rotation",
+        "roman": [
+          "VIm",
+          "IV",
+          "I",
+          "V"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "pop.prog_axis_iv_start_viva_la_vida",
+        "name": "Axis, IV start (Viva La Vida)",
+        "roman": [
+          "IV",
+          "V",
+          "I",
+          "VIm"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "pop.prog_50s_doo_wop",
+        "name": "'50s / doo-wop",
+        "roman": [
+          "I",
+          "VIm",
+          "IV",
+          "V"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "pop.prog_pre_chorus_lift",
+        "name": "Pre-chorus lift",
+        "roman": [
+          "IIm",
+          "IV",
+          "V",
+          "V"
+        ],
+        "bars": 4,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "major/minor triads",
+      "add9",
+      "sus2/sus4",
+      "maj7 (softer pop)",
+      "slash chords for bass walks"
+    ],
+    "forms": [
+      "V - PC - C - V - PC - C - bridge - C",
+      "intro hook - verse - chorus with post-chorus hook"
+    ],
+    "fill_vocabulary": [
+      "sus/add9 hammer-ons at chord changes",
+      "bass walk-ups to IV and vi",
+      "drop-out bars (stop strumming before chorus)",
+      "single-note hook doubling vocal"
+    ],
+    "scales": [
+      "major",
+      "major pentatonic",
+      "minor"
+    ],
+    "keys_common": [
+      "G",
+      "C",
+      "D",
+      "E",
+      "A"
+    ],
+    "tunings": [
+      "standard (capo common)"
+    ],
+    "lyric_traits": [
+      "one clear emotional idea per song",
+      "conversational second-person address",
+      "title in chorus, repeated",
+      "love/relationships dominant"
+    ],
+    "reference_tracks": [
+      {
+        "title": "I'm Yours",
+        "artist": "Jason Mraz",
+        "why": "I-V-vi-IV all song; offbeat-accented strum"
+      },
+      {
+        "title": "The Story",
+        "artist": "Brandi Carlile",
+        "why": "I-V-vi-IV singer-songwriter build from quiet to full"
+      },
+      {
+        "title": "Hey There Delilah",
+        "artist": "Plain White T's",
+        "why": "fingerpicked/strummed acoustic pop, I-iii verse"
+      },
+      {
+        "title": "Viva La Vida",
+        "artist": "Coldplay",
+        "why": "IV-V-I-vi loop; the chorus is the strum"
+      },
+      {
+        "title": "Free Fallin'",
+        "artist": "Tom Petty",
+        "why": "three-chord pop loop, capo, 16th strum"
+      }
+    ],
+    "transplant_levers": [
+      "add a pre-chorus that climbs to the chorus",
+      "put the title in the chorus and repeat it",
+      "reharmonise to a four-chord loop (Axis family)",
+      "tighten to ~3 minutes, cut verse count",
+      "syncopated 16th strum with backbeat slap"
+    ],
+    "ladder": [
+      "D DU UDU with accents on 2 and 4 on I-V-vi-IV",
+      "all four Axis rotations in G, C, D",
+      "acoustic slap backbeat pattern",
+      "verse (muted 8ths) vs chorus (open 16ths) dynamic build",
+      "rewrite a folk song with pre-chorus and title-hook chorus"
+    ]
+  },
+  {
+    "id": "pop_rock",
+    "name": "Pop-rock",
+    "family": "pop",
+    "feel": {
+      "subdivision": "straight 8ths or driving 16ths",
+      "meter": "4/4",
+      "tempo_range": [
+        90,
+        150
+      ],
+      "accents": "backbeat; big open chorus vs tighter verse",
+      "swing_ratio": null,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "pop_rock.driving_16ths_mr_brightside",
+        "name": "Driving 16ths (Mr. Brightside)",
+        "grid": [
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U"
+        ],
+        "accents": [
+          0,
+          8
+        ],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "pop_rock.wonderwall_style_16th_strum",
+        "name": "Wonderwall-style 16th strum",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "U",
+          "D",
+          "-",
+          "D",
+          "U",
+          "D",
+          "-",
+          "D",
+          "U",
+          "D",
+          "-",
+          "D",
+          "U"
+        ],
+        "accents": [
+          4,
+          12
+        ],
+        "verified": false,
+        "note": "inferred approximation"
+      },
+      {
+        "id": "pop_rock.palm_muted_8th_verse",
+        "name": "Palm-muted 8th verse",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "pop_rock.open_chorus_8ths",
+        "name": "Open chorus 8ths",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "U",
+          "D",
+          "-",
+          "D",
+          "U",
+          "D",
+          "-",
+          "D",
+          "U",
+          "D",
+          "-",
+          "D",
+          "U"
+        ],
+        "accents": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "verified": true,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "pop_rock.prog_axis",
+        "name": "Axis",
+        "roman": [
+          "I",
+          "V",
+          "VIm",
+          "IV"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "pop_rock.prog_minor_start_axis_save_tonight",
+        "name": "Minor-start Axis (Save Tonight)",
+        "roman": [
+          "VIm",
+          "IV",
+          "I",
+          "V"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "pop_rock.prog_britpop_mixolydian",
+        "name": "Britpop Mixolydian",
+        "roman": [
+          "I",
+          "bVII",
+          "IV",
+          "V"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "pop_rock.prog_wonderwall_style_sus_loop",
+        "name": "Wonderwall-style sus loop",
+        "roman": [
+          "VIm",
+          "I",
+          "V",
+          "II7sus4"
+        ],
+        "bars": 4,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "sus4/add9 with common top notes (capo shapes)",
+      "7sus4",
+      "power chords in choruses",
+      "maj7"
+    ],
+    "forms": [
+      "V - PC - C - V - PC - C - bridge/solo - C x2"
+    ],
+    "fill_vocabulary": [
+      "shared top-note drones (G/Cadd9/Dsus4 shapes)",
+      "octave lead lines",
+      "chorus-to-verse riff turnaround"
+    ],
+    "scales": [
+      "major",
+      "major pentatonic",
+      "mixolydian"
+    ],
+    "keys_common": [
+      "G",
+      "D",
+      "E",
+      "A"
+    ],
+    "tunings": [
+      "standard (capo)",
+      "Eb standard"
+    ],
+    "lyric_traits": [
+      "universal, anthemic 'we/you' statements",
+      "big singable chorus",
+      "yearning, nostalgia"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Wonderwall",
+        "artist": "Oasis",
+        "why": "capo-2 shapes with shared top notes, busy 16th strum"
+      },
+      {
+        "title": "Mr. Brightside",
+        "artist": "The Killers",
+        "why": "relentless 16th drive; verse/chorus same energy different register"
+      },
+      {
+        "title": "With or Without You",
+        "artist": "U2",
+        "why": "I-V-vi-IV built from pedal-note textures"
+      },
+      {
+        "title": "Save Tonight",
+        "artist": "Eagle-Eye Cherry",
+        "why": "vi-IV-I-V loop, simple acoustic/electric drive"
+      },
+      {
+        "title": "Champagne Supernova",
+        "artist": "Oasis",
+        "why": "I-bVII-IV-V Britpop Mixolydian"
+      }
+    ],
+    "transplant_levers": [
+      "folk chords -> capo shapes with shared drone top notes",
+      "palm-muted verse, open anthem chorus",
+      "Axis or Mixolydian loop under the chorus",
+      "add a lead octave hook",
+      "lyric widened from 'I' to 'we'"
+    ],
+    "ladder": [
+      "G-Cadd9-Dsus4-Em7 shared-top-note shapes",
+      "continuous 16th hand motion with accents",
+      "palm-muted verse to open chorus switch in one bar",
+      "Britpop I-bVII-IV-V in E and A",
+      "re-set a folk song as a capo-2 anthem"
+    ]
+  },
+  {
+    "id": "punk",
+    "name": "Punk rock",
+    "family": "rock",
+    "feel": {
+      "subdivision": "straight 8ths, fast",
+      "meter": "4/4",
+      "tempo_range": [
+        150,
+        220
+      ],
+      "accents": "almost none - even buzzsaw wall; drums carry backbeat",
+      "swing_ratio": null,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "punk.buzzsaw_all_down_8ths_ramones",
+        "name": "Buzzsaw all-down 8ths (Ramones)",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "punk.palm_muted_verse_8ths",
+        "name": "Palm-muted verse 8ths",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "punk.alternate_picked_8ths_speed_relief",
+        "name": "Alternate-picked 8ths (speed relief)",
+        "grid": [
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [
+          0,
+          8
+        ],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "punk.stop_hit_ending",
+        "name": "Stop-hit ending",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [
+          0,
+          4,
+          8
+        ],
+        "verified": true,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "punk.prog_three_chord_punk",
+        "name": "Three-chord punk",
+        "roman": [
+          "I5",
+          "IV5",
+          "V5",
+          "I5"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "punk.prog_mixolydian_punk",
+        "name": "Mixolydian punk",
+        "roman": [
+          "I5",
+          "bVII5",
+          "IV5",
+          "I5"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "punk.prog_minor_punk",
+        "name": "Minor punk",
+        "roman": [
+          "I5",
+          "bVI5",
+          "bVII5",
+          "I5"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "punk.prog_chromatic_climb",
+        "name": "Chromatic climb",
+        "roman": [
+          "I5",
+          "bIII5",
+          "IV5",
+          "V5"
+        ],
+        "bars": 4,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "5 (power) only",
+      "occasional full barre in chorus"
+    ],
+    "forms": [
+      "V - C - V - C - C, under 3 minutes",
+      "count-in, no intro, abrupt end"
+    ],
+    "fill_vocabulary": [
+      "power-chord slides into the next chord",
+      "single-string octave riffs",
+      "rests/stops as fills"
+    ],
+    "scales": [
+      "major",
+      "minor pentatonic",
+      "aeolian"
+    ],
+    "keys_common": [
+      "E",
+      "A",
+      "D",
+      "G",
+      "B"
+    ],
+    "tunings": [
+      "standard",
+      "Eb standard"
+    ],
+    "lyric_traits": [
+      "blunt, confrontational, first person",
+      "social/political grievance, alienation",
+      "short slogans, shouted chorus"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Blitzkrieg Bop",
+        "artist": "Ramones",
+        "why": "all-downstroke power-chord buzzsaw"
+      },
+      {
+        "title": "I Wanna Be Sedated",
+        "artist": "Ramones",
+        "why": "three-chord pop-structured punk; downstroke stamina"
+      },
+      {
+        "title": "Anarchy in the U.K.",
+        "artist": "Sex Pistols",
+        "why": "open/barre chords, snarl, mid-tempo punk"
+      },
+      {
+        "title": "London Calling",
+        "artist": "The Clash",
+        "why": "minor punk with space and stabs"
+      },
+      {
+        "title": "Ever Fallen in Love (With Someone You Shouldn't've)",
+        "artist": "Buzzcocks",
+        "why": "proto pop-punk melody over fast 8ths"
+      }
+    ],
+    "transplant_levers": [
+      "double the tempo",
+      "convert every chord to a power chord, all downstrokes",
+      "cut intro/solos; under 3 minutes",
+      "flatten dynamics: constant wall",
+      "sharpen lyric into a blunt slogan chorus"
+    ],
+    "ladder": [
+      "all-down 8ths on one power chord, 1 min at 140 then 160 bpm",
+      "I5-IV5-V5 with minimal shifts (fret-hand shape locked)",
+      "palm-muted verse vs open chorus",
+      "stamina: 2 min continuous at 180+ bpm, switch to alternate picking if tense",
+      "rewrite a folk protest song as a 2-minute punk song"
+    ]
+  },
+  {
+    "id": "pop_punk",
+    "name": "Pop-punk",
+    "family": "rock",
+    "feel": {
+      "subdivision": "straight 8ths, fast",
+      "meter": "4/4",
+      "tempo_range": [
+        140,
+        200
+      ],
+      "accents": "chord pushes before downbeats; verse chug vs chorus open strum",
+      "swing_ratio": null,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "pop_punk.palm_muted_chug_verse",
+        "name": "Palm-muted chug verse",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [
+          0
+        ],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "pop_punk.open_chorus_8ths",
+        "name": "Open chorus 8ths",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "pop_punk.push_anticipation",
+        "name": "Push/anticipation",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "U"
+        ],
+        "accents": [
+          0,
+          14
+        ],
+        "verified": true,
+        "note": "chord on 14 belongs to next bar"
+      },
+      {
+        "id": "pop_punk.muted_to_open_alternation",
+        "name": "Muted-to-open alternation",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [
+          0,
+          8
+        ],
+        "verified": true,
+        "note": "beats 1 and 3 open, rest muted (inferred)"
+      }
+    ],
+    "progressions": [
+      {
+        "id": "pop_punk.prog_axis_in_power_chords",
+        "name": "Axis in power chords",
+        "roman": [
+          "I5",
+          "V5",
+          "VI5",
+          "IV5"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "pop_punk.prog_blink_loop",
+        "name": "Blink loop",
+        "roman": [
+          "I5",
+          "V5",
+          "IV5",
+          "V5"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "pop_punk.prog_minor_start",
+        "name": "Minor start",
+        "roman": [
+          "VI5",
+          "IV5",
+          "I5",
+          "V5"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "pop_punk.prog_american_idiot_arch",
+        "name": "American Idiot arch",
+        "roman": [
+          "I5",
+          "V5",
+          "bVII5",
+          "IV5"
+        ],
+        "bars": 4,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "5 (power)",
+      "octave-doubled power chords",
+      "sus2/add9 clean intros"
+    ],
+    "forms": [
+      "V - PC - C - V - PC - C - bridge/half-time - C x2",
+      "gang-vocal outro"
+    ],
+    "fill_vocabulary": [
+      "single-note melodic intro riffs",
+      "octave lines",
+      "drum-break stops",
+      "half-time breakdown"
+    ],
+    "scales": [
+      "major",
+      "major pentatonic"
+    ],
+    "keys_common": [
+      "C",
+      "D",
+      "E",
+      "Eb",
+      "F"
+    ],
+    "tunings": [
+      "standard",
+      "Eb standard",
+      "drop D"
+    ],
+    "lyric_traits": [
+      "suburban adolescence, heartbreak, boredom",
+      "self-deprecating humour",
+      "sweet melody vs bratty delivery"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Basket Case",
+        "artist": "Green Day",
+        "why": "I-V-vi-iii-IV-I-V power-chord pop-punk; muted verse"
+      },
+      {
+        "title": "When I Come Around",
+        "artist": "Green Day",
+        "why": "I-V-vi-IV at mid tempo, palm-muted chugs"
+      },
+      {
+        "title": "All the Small Things",
+        "artist": "Blink-182",
+        "why": "I-V-IV-V, palm-muted riff vs open chorus"
+      },
+      {
+        "title": "Dammit",
+        "artist": "Blink-182",
+        "why": "fast 8th drive, melodic power-chord loop"
+      },
+      {
+        "title": "Self Esteem",
+        "artist": "The Offspring",
+        "why": "quiet verse, loud chorus in punk form"
+      }
+    ],
+    "transplant_levers": [
+      "power-chord Axis loop at 150+ bpm",
+      "palm-muted verse, open chorus",
+      "add a pre-chorus and half-time bridge",
+      "keep melody sweet, make delivery bratty",
+      "recast lyric in teen-suburban voice"
+    ],
+    "ladder": [
+      "palm-muted 8ths on I5-V5-vi5-IV5 at 140 bpm",
+      "mute/unmute switch every bar",
+      "anticipated push into chorus",
+      "octave-riff intro over the loop",
+      "re-set a folk love song as pop-punk with half-time bridge"
+    ]
+  },
+  {
+    "id": "metal",
+    "name": "Metal (rhythm fundamentals)",
+    "family": "rock",
+    "feel": {
+      "subdivision": "16ths (gallops) and 8ths; triplet gallops occasional",
+      "meter": "4/4",
+      "tempo_range": [
+        90,
+        200
+      ],
+      "accents": "riff accents with kick drum; open power chord hits over muted chugs",
+      "swing_ratio": null,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "metal.gallop_8th_two_16ths",
+        "name": "Gallop (8th + two 16ths)",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "U",
+          "D",
+          "-",
+          "D",
+          "U",
+          "D",
+          "-",
+          "D",
+          "U",
+          "D",
+          "-",
+          "D",
+          "U"
+        ],
+        "accents": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "verified": true,
+        "note": "downpick variant: D-DD"
+      },
+      {
+        "id": "metal.reverse_gallop_two_16ths_8th",
+        "name": "Reverse gallop (two 16ths + 8th)",
+        "grid": [
+          "D",
+          "U",
+          "D",
+          "-",
+          "D",
+          "U",
+          "D",
+          "-",
+          "D",
+          "U",
+          "D",
+          "-",
+          "D",
+          "U",
+          "D",
+          "-"
+        ],
+        "accents": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "metal.downpicked_8th_chug",
+        "name": "Downpicked 8th chug",
+        "grid": [
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "metal.16th_chug_with_open_hits",
+        "name": "16th chug with open hits",
+        "grid": [
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U",
+          "D",
+          "U"
+        ],
+        "accents": [
+          0,
+          6,
+          12
+        ],
+        "verified": true,
+        "note": "accented slots = un-muted power chord"
+      },
+      {
+        "id": "metal.half_time_riff_sabbath",
+        "name": "Half-time riff (Sabbath)",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [
+          0
+        ],
+        "verified": true,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "metal.prog_aeolian_rock",
+        "name": "Aeolian rock",
+        "roman": [
+          "I5",
+          "bVI5",
+          "bVII5",
+          "I5"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "metal.prog_pedal_chug_with_climbs",
+        "name": "Pedal chug with climbs",
+        "roman": [
+          "I5",
+          "I5",
+          "bVI5",
+          "bVII5"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "metal.prog_phrygian_half_step",
+        "name": "Phrygian half-step",
+        "roman": [
+          "I5",
+          "bII5",
+          "I5",
+          "bII5"
+        ],
+        "bars": 2,
+        "verified": true
+      },
+      {
+        "id": "metal.prog_tritone_tension",
+        "name": "Tritone tension",
+        "roman": [
+          "I5",
+          "bV5",
+          "I5",
+          "bVII5"
+        ],
+        "bars": 4,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "5 (power)",
+      "octave",
+      "b5 / tritone dyad",
+      "minor (no major 3rd over root)"
+    ],
+    "forms": [
+      "riff A (intro) - V - C - riff B - solo - V - C - outro riff",
+      "sections defined by riffs, not by chords"
+    ],
+    "fill_vocabulary": [
+      "open low-E pedal with fretted notes on the A string",
+      "chromatic passing power chords",
+      "pick slides",
+      "pinch harmonics (later stage)"
+    ],
+    "scales": [
+      "aeolian",
+      "phrygian",
+      "minor pentatonic",
+      "blues",
+      "harmonic minor"
+    ],
+    "keys_common": [
+      "Em",
+      "Dm",
+      "Bm",
+      "F#m"
+    ],
+    "tunings": [
+      "standard",
+      "drop D",
+      "Eb standard",
+      "D standard",
+      "drop C"
+    ],
+    "lyric_traits": [
+      "mythic, war, horror, apocalyptic imagery",
+      "social/personal struggle in epic register",
+      "narrative verses"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Paranoid",
+        "artist": "Black Sabbath",
+        "why": "E5 riff + power chords at medium-fast tempo"
+      },
+      {
+        "title": "Iron Man",
+        "artist": "Black Sabbath",
+        "why": "slow power-chord riff; perfect first metal riff"
+      },
+      {
+        "title": "Run to the Hills",
+        "artist": "Iron Maiden",
+        "why": "the gallop rhythm (cited in Wikipedia)"
+      },
+      {
+        "title": "Master of Puppets",
+        "artist": "Metallica",
+        "why": "palm-muted downpicked E-pedal riffing"
+      },
+      {
+        "title": "Killing in the Name",
+        "artist": "Rage Against the Machine",
+        "why": "drop-D one-finger power chords"
+      }
+    ],
+    "transplant_levers": [
+      "move to minor (Aeolian/Phrygian) and power chords",
+      "replace strum with a palm-muted pedal-note riff",
+      "gallop rhythm under verse",
+      "drop D for one-finger chord moves",
+      "riff-defined sections, darker epic lyric register"
+    ],
+    "ladder": [
+      "palm-muted 8th downpicks on open low E, even volume",
+      "gallop and reverse gallop at 100 bpm, then 140",
+      "E-pedal riffs with power-chord climbs (i5-bVI5-bVII5)",
+      "drop D one-finger power chords",
+      "turn a folk melody into a minor pedal riff"
+    ]
+  },
+  {
+    "id": "reggae",
+    "name": "Reggae (incl. ska, rocksteady)",
+    "family": "caribbean",
+    "feel": {
+      "subdivision": "16th",
+      "meter": "4/4",
+      "tempo_range": [
+        60,
+        85
+      ],
+      "accents": "chord stabs on the offbeats (the ands); beat 1 empty in one drop; drums kick+snare on 3",
+      "swing_ratio": null,
+      "clave": null
+    },
+    "rhythm_patterns": [
+      {
+        "id": "reggae.offbeat_skank_8th_ands",
+        "name": "Offbeat skank (8th ands)",
+        "grid": [
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "reggae.one_drop_skank_2_and_4_half_time_count",
+        "name": "One-drop skank (2 and 4, half-time count)",
+        "grid": [
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "reggae.double_chop",
+        "name": "Double chop",
+        "grid": [
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "U",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "U",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "reggae.ska_upstroke",
+        "name": "Ska upstroke",
+        "grid": [
+          "-",
+          "-",
+          "U",
+          "-",
+          "-",
+          "-",
+          "U",
+          "-",
+          "-",
+          "-",
+          "U",
+          "-",
+          "-",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "reggae.rocksteady_bass_double",
+        "name": "Rocksteady bass-double",
+        "grid": [
+          "P",
+          "-",
+          "-",
+          "P",
+          "-",
+          "-",
+          "U",
+          "-",
+          "P",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "reggae.prog_two_chord_vamp",
+        "name": "Two-chord vamp",
+        "roman": [
+          "I",
+          "IV"
+        ],
+        "bars": 2,
+        "verified": true
+      },
+      {
+        "id": "reggae.prog_no_woman_no_cry_family",
+        "name": "No Woman No Cry family",
+        "roman": [
+          "I",
+          "V",
+          "VIm",
+          "IV"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "reggae.prog_minor_vamp",
+        "name": "Minor vamp",
+        "roman": [
+          "Im",
+          "IVm"
+        ],
+        "bars": 2,
+        "verified": true
+      },
+      {
+        "id": "reggae.prog_ska_rocksteady_doo_wop",
+        "name": "Ska/rocksteady doo-wop",
+        "roman": [
+          "I",
+          "VIm",
+          "IIm",
+          "V"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "reggae.prog_three_chord",
+        "name": "Three-chord",
+        "roman": [
+          "I",
+          "IV",
+          "V",
+          "I"
+        ],
+        "bars": 4,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "M",
+      "m",
+      "m7",
+      "7"
+    ],
+    "forms": [
+      "verse-chorus",
+      "dub version (drums+bass strip-down)"
+    ],
+    "fill_vocabulary": [
+      "bass-line doubling in muted single notes/octaves",
+      "short muted picked licks",
+      "echo/wah scratch (dub)"
+    ],
+    "scales": [
+      "major pentatonic",
+      "minor pentatonic",
+      "major",
+      "dorian"
+    ],
+    "keys_common": [
+      "A",
+      "C",
+      "G",
+      "D",
+      "Am",
+      "Cm"
+    ],
+    "tunings": [
+      "standard"
+    ],
+    "lyric_traits": [
+      "spiritual/Rastafari and social justice (roots)",
+      "love songs and rude-boy stories (rocksteady)",
+      "communal 'we' address",
+      "harmony-trio call and response"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Stir It Up",
+        "artist": "Bob Marley and the Wailers",
+        "why": "two-chord skank"
+      },
+      {
+        "title": "Three Little Birds",
+        "artist": "Bob Marley and the Wailers",
+        "why": "one-drop feel"
+      },
+      {
+        "title": "Rock Steady",
+        "artist": "Alton Ellis",
+        "why": "defines rocksteady tempo"
+      },
+      {
+        "title": "Guns of Navarone",
+        "artist": "The Skatalites",
+        "why": "ska tempo upstrokes (inferred)"
+      },
+      {
+        "title": "Pressure Drop",
+        "artist": "Toots and the Maytals",
+        "why": "ska-to-reggae bridge (inferred)"
+      }
+    ],
+    "transplant_levers": [
+      "move chord attacks to the offbeats, leave beat 1 silent",
+      "halve felt tempo into one drop",
+      "choke chords short (fretting-hand release)",
+      "reduce harmony to 2-3 chord vamp plus bass riff",
+      "reframe lyric to communal uplift/protest"
+    ],
+    "ladder": [
+      "offbeat skank with muting on one chord, click on 2 and 4",
+      "I-IV vamp while singing",
+      "one-drop count and double chop",
+      "ska upstrokes at speed; rocksteady bass doubling",
+      "transplant a folk song over a one-drop loop"
+    ]
+  },
+  {
+    "id": "bossa_samba",
+    "name": "Bossa Nova and Samba",
+    "family": "latin_iberian",
+    "feel": {
+      "subdivision": "16th",
+      "meter": "2/4",
+      "tempo_range": [
+        110,
+        150
+      ],
+      "accents": "thumb on beats 1 and 2 (2/4) alternating root-5th; fingers syncopated; no swing; bossa soft dynamics",
+      "swing_ratio": null,
+      "clave": "bossa clave"
+    },
+    "rhythm_patterns": [
+      {
+        "id": "bossa_samba.gilberto_basic_batida",
+        "name": "Gilberto basic batida",
+        "grid": [
+          "BP",
+          "-",
+          "P",
+          "-",
+          "B",
+          "P",
+          "-",
+          "-",
+          "BP",
+          "-",
+          "P",
+          "-",
+          "B",
+          "P",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "bossa_samba.bossa_clave_comp",
+        "name": "Bossa clave comp",
+        "grid": [
+          "BP",
+          "-",
+          "-",
+          "P",
+          "B",
+          "-",
+          "P",
+          "-",
+          "B",
+          "-",
+          "P",
+          "-",
+          "B",
+          "P",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "bossa_samba.samba_surdo_thumb_tamborim_fingers",
+        "name": "Samba surdo thumb + tamborim fingers",
+        "grid": [
+          "B",
+          "-",
+          "P",
+          "B",
+          "B",
+          "P",
+          "P",
+          "B",
+          "B",
+          "-",
+          "P",
+          "B",
+          "B",
+          "P",
+          "P",
+          "B"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "bossa_samba.partido_alto",
+        "name": "Partido alto",
+        "grid": [
+          "B",
+          "P",
+          "-",
+          "P",
+          "B",
+          "-",
+          "P",
+          "-",
+          "B",
+          "-",
+          "P",
+          "-",
+          "B",
+          "P",
+          "-",
+          "P"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "bossa_samba.fingers_only_training_wheels",
+        "name": "Fingers-only training wheels",
+        "grid": [
+          "P",
+          "-",
+          "P",
+          "-",
+          "-",
+          "P",
+          "-",
+          "-",
+          "P",
+          "-",
+          "P",
+          "-",
+          "-",
+          "P",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "bossa_samba.prog_jens_larsen_bossa_loop",
+        "name": "Jens Larsen bossa loop",
+        "roman": [
+          "I69",
+          "I69",
+          "II7",
+          "II7",
+          "IIm7",
+          "V7",
+          "I69",
+          "V7"
+        ],
+        "bars": 8,
+        "verified": true
+      },
+      {
+        "id": "bossa_samba.prog_ipanema_opening_tritone_descent",
+        "name": "Ipanema opening (tritone descent)",
+        "roman": [
+          "Imaj7",
+          "II7",
+          "IIm7",
+          "bII7"
+        ],
+        "bars": 8,
+        "verified": true
+      },
+      {
+        "id": "bossa_samba.prog_iv_to_iv_interchange",
+        "name": "IV to iv interchange",
+        "roman": [
+          "IVmaj7",
+          "IVm7",
+          "Imaj7"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "bossa_samba.prog_minor_ii_v_i",
+        "name": "Minor ii-V-i",
+        "roman": [
+          "IIm7b5",
+          "V7b9",
+          "Im7"
+        ],
+        "bars": 4,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "maj7",
+      "6/9",
+      "m7",
+      "m9",
+      "m11",
+      "7",
+      "9",
+      "13",
+      "7b9",
+      "7#5",
+      "m7b5"
+    ],
+    "forms": [
+      "AABA 32-bar",
+      "ABAC 32-bar"
+    ],
+    "fill_vocabulary": [
+      "chromatic inner-voice movement",
+      "bass walk root-5th",
+      "voice-leading top note stepwise"
+    ],
+    "scales": [
+      "major",
+      "dorian",
+      "lydian",
+      "mixolydian",
+      "melodic minor"
+    ],
+    "keys_common": [
+      "F",
+      "C",
+      "D",
+      "G",
+      "Am",
+      "Dm"
+    ],
+    "tunings": [
+      "standard (nylon-string)"
+    ],
+    "lyric_traits": [
+      "love, longing (saudade), homesickness, nature",
+      "apolitical, intimate",
+      "soft conversational delivery",
+      "melody holding a note while harmony moves"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Chega de Saudade",
+        "artist": "João Gilberto",
+        "why": "the original batida (1958)"
+      },
+      {
+        "title": "Garota de Ipanema",
+        "artist": "Stan Getz / João Gilberto",
+        "why": "Imaj7-II7-ii7-bII7 colour"
+      },
+      {
+        "title": "Desafinado",
+        "artist": "João Gilberto / Tom Jobim",
+        "why": "chromatic harmony under melody"
+      },
+      {
+        "title": "Corcovado",
+        "artist": "Tom Jobim / João Gilberto",
+        "why": "slow soft batida (inferred)"
+      },
+      {
+        "title": "Mas Que Nada",
+        "artist": "Jorge Ben",
+        "why": "samba strum contrast"
+      }
+    ],
+    "transplant_levers": [
+      "replace strum with thumb 1&3 + finger plucks",
+      "recolour triads to maj7/6/9/m7/9",
+      "insert II7 or bII7 before V; IV to iv",
+      "drop dynamics and vocal volume",
+      "lyric toward saudade/nature imagery"
+    ],
+    "ladder": [
+      "thumb root-5th half notes counting 2/4",
+      "Gilberto batida on one chord",
+      "six grips: maj7, 6/9, m7, 7, m7b5, 7b9",
+      "I6/9-II7-ii7-V7 with bossa clave comp",
+      "samba surdo thumb then partido alto"
+    ]
+  },
+  {
+    "id": "son_salsa",
+    "name": "Afro-Cuban Son and Salsa",
+    "family": "latin_iberian",
+    "feel": {
+      "subdivision": "8th",
+      "meter": "4/4",
+      "tempo_range": [
+        90,
+        120
+      ],
+      "accents": "tumbao on 2& and 4; everything aligned to clave direction",
+      "swing_ratio": null,
+      "clave": "son 2-3"
+    },
+    "rhythm_patterns": [
+      {
+        "id": "son_salsa.tumbao_strum_2_and_4",
+        "name": "Tumbao strum (2& and 4)",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "U",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "son_salsa.tresillo_son_strum",
+        "name": "Tresillo son strum",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "son_salsa.guajeo_2_3",
+        "name": "Guajeo 2-3",
+        "grid": [
+          "-",
+          "-",
+          "P",
+          "-",
+          "-",
+          "-",
+          "P",
+          "-",
+          "P",
+          "-",
+          "-",
+          "-",
+          "P",
+          "-",
+          "-",
+          "-",
+          "P",
+          "-",
+          "-",
+          "-",
+          "P",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "P",
+          "-",
+          "-",
+          "-",
+          "P",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "son_salsa.guajeo_3_2",
+        "name": "Guajeo 3-2",
+        "grid": [
+          "P",
+          "-",
+          "-",
+          "-",
+          "P",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "P",
+          "-",
+          "-",
+          "-",
+          "P",
+          "-",
+          "-",
+          "-",
+          "P",
+          "-",
+          "-",
+          "-",
+          "P",
+          "-",
+          "P",
+          "-",
+          "-",
+          "-",
+          "P",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "son_salsa.octave_montuno",
+        "name": "Octave montuno",
+        "grid": [
+          "P",
+          "-",
+          "P",
+          "P",
+          "-",
+          "P",
+          "-",
+          "P",
+          "-",
+          "P",
+          "P",
+          "-",
+          "P",
+          "-",
+          "P",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "son_salsa.prog_montuno_vamp",
+        "name": "Montuno vamp",
+        "roman": [
+          "I",
+          "IV",
+          "V",
+          "IV"
+        ],
+        "bars": 2,
+        "verified": true
+      },
+      {
+        "id": "son_salsa.prog_minor_montuno_premier_ex_4",
+        "name": "Minor montuno (Premier Ex.4)",
+        "roman": [
+          "Im",
+          "bVI",
+          "V",
+          "bVI"
+        ],
+        "bars": 2,
+        "verified": true
+      },
+      {
+        "id": "son_salsa.prog_minor_two_chord",
+        "name": "Minor two-chord",
+        "roman": [
+          "Im",
+          "V7"
+        ],
+        "bars": 2,
+        "verified": true
+      },
+      {
+        "id": "son_salsa.prog_chan_chan",
+        "name": "Chan Chan",
+        "roman": [
+          "Im",
+          "bIII",
+          "IVm",
+          "V"
+        ],
+        "bars": 4,
+        "verified": false
+      },
+      {
+        "id": "son_salsa.prog_son_two_chord_vamp",
+        "name": "Son two-chord vamp",
+        "roman": [
+          "V7",
+          "I"
+        ],
+        "bars": 2,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "M",
+      "m",
+      "7",
+      "m7"
+    ],
+    "forms": [
+      "largo/song section -> montuno (coro + pregón call-and-response)",
+      "montuno-first cyclic (Arsenio Rodríguez)"
+    ],
+    "fill_vocabulary": [
+      "guajeo variation",
+      "3rds/6ths above vocal line",
+      "octave doubling of triad top note",
+      "half-step passing chords"
+    ],
+    "scales": [
+      "major",
+      "minor",
+      "harmonic minor",
+      "mixolydian"
+    ],
+    "keys_common": [
+      "A",
+      "D",
+      "G",
+      "C",
+      "Am",
+      "Dm"
+    ],
+    "tunings": [
+      "standard",
+      "tres G-C-E (paired)"
+    ],
+    "lyric_traits": [
+      "short repeated coro hook",
+      "improvised pregón answers",
+      "rural/place imagery, love, dance",
+      "call-and-response as structure"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Chan Chan",
+        "artist": "Buena Vista Social Club (Compay Segundo)",
+        "why": "i-bIII-iv-V guitar loop"
+      },
+      {
+        "title": "El Cuarto de Tula",
+        "artist": "Buena Vista Social Club",
+        "why": "long montuno/coro (inferred)"
+      },
+      {
+        "title": "Son de la Loma",
+        "artist": "Trio Matamoros",
+        "why": "guitar-trio son (inferred)"
+      },
+      {
+        "title": "Bruca Maniguá",
+        "artist": "Arsenio Rodríguez",
+        "why": "tres guajeo (inferred)"
+      },
+      {
+        "title": "Guantanamera",
+        "artist": "Joseíto Fernández",
+        "why": "I-IV-V guajira-son (inferred)"
+      }
+    ],
+    "transplant_levers": [
+      "choose clave direction and lock strum/guajeo to it",
+      "turn chorus into repeated coro over I-IV-V-IV montuno",
+      "tresillo strum then single-note guajeo",
+      "accent 2& and 4",
+      "call-and-response outro"
+    ],
+    "ladder": [
+      "clap son clave 2-3 and 3-2",
+      "tresillo strum over I-IV-V-IV in A",
+      "tumbao strum against clave loop",
+      "2-bar octave guajeo",
+      "minor montuno with passing chords; lead a coro"
+    ]
+  },
+  {
+    "id": "rumba_flamenca",
+    "name": "Flamenco Rumba (accompaniment)",
+    "family": "latin_iberian",
+    "feel": {
+      "subdivision": "8th",
+      "meter": "4/4",
+      "tempo_range": [
+        100,
+        120
+      ],
+      "accents": "3+3+2 (tresillo): 1, 2&, 4; slap/golpe on 3; accents on 2 and 4 per Wikipedia",
+      "swing_ratio": null,
+      "clave": "tresillo"
+    },
+    "rhythm_patterns": [
+      {
+        "id": "rumba_flamenca.classic_rumba_fingers_down_thumb_up_slap",
+        "name": "Classic rumba (fingers down, thumb up, slap 3)",
+        "grid": [
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "x",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "rumba_flamenca.barebones_ghost_3",
+        "name": "Barebones (ghost 3)",
+        "grid": [
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "-",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "rumba_flamenca.tresillo_accents",
+        "name": "Tresillo accents",
+        "grid": [
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "D",
+          "-",
+          "-",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "rumba_flamenca.catalan_skip_the_1",
+        "name": "Catalan skip-the-1",
+        "grid": [
+          "x",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "x",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "rumba_flamenca.muted_string_groove_drill",
+        "name": "Muted-string groove drill",
+        "grid": [
+          "x",
+          "-",
+          "x",
+          "-",
+          "x",
+          "-",
+          "x",
+          "-",
+          "x",
+          "-",
+          "x",
+          "-",
+          "x",
+          "-",
+          "x",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "rumba_flamenca.prog_andalusian_cadence",
+        "name": "Andalusian cadence",
+        "roman": [
+          "Im",
+          "bVII",
+          "bVI",
+          "V"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "rumba_flamenca.prog_two_chord_rumba",
+        "name": "Two-chord rumba",
+        "roman": [
+          "Im",
+          "bVII"
+        ],
+        "bars": 2,
+        "verified": true
+      },
+      {
+        "id": "rumba_flamenca.prog_phrygian_close",
+        "name": "Phrygian close",
+        "roman": [
+          "bII",
+          "I"
+        ],
+        "bars": 2,
+        "verified": true
+      },
+      {
+        "id": "rumba_flamenca.prog_major_rumba",
+        "name": "Major rumba",
+        "roman": [
+          "I",
+          "IV",
+          "V7",
+          "I"
+        ],
+        "bars": 4,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "M",
+      "m",
+      "7",
+      "7b9",
+      "m7",
+      "m9"
+    ],
+    "forms": [
+      "verse on Andalusian cadence -> chorus (often relative major) -> guitar break"
+    ],
+    "fill_vocabulary": [
+      "Phrygian descending run to the V/I chord",
+      "open-string ornaments over barre shapes",
+      "rasgueado flourish (optional)"
+    ],
+    "scales": [
+      "phrygian",
+      "phrygian dominant",
+      "harmonic minor",
+      "minor"
+    ],
+    "keys_common": [
+      "Am (E phrygian)",
+      "Dm (A phrygian)",
+      "capo for other keys"
+    ],
+    "tunings": [
+      "standard",
+      "capo essential"
+    ],
+    "lyric_traits": [
+      "party and romance",
+      "Spanish/Catalan",
+      "clap-along chorus hooks",
+      "open vowels for belting"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Bamboléo",
+        "artist": "Gipsy Kings",
+        "why": "Catalan rumba strum"
+      },
+      {
+        "title": "Djobi Djoba",
+        "artist": "Gipsy Kings",
+        "why": "fast rumba (inferred)"
+      },
+      {
+        "title": "Entre dos aguas",
+        "artist": "Paco de Lucía",
+        "why": "Andalusian cadence + Cuban percussion"
+      },
+      {
+        "title": "Borriquito",
+        "artist": "Peret",
+        "why": "Catalan rumba origin (inferred)"
+      },
+      {
+        "title": "Volare",
+        "artist": "Gipsy Kings",
+        "why": "pop standard transplanted to rumba (inferred)"
+      }
+    ],
+    "transplant_levers": [
+      "classic rumba strum in place of folk strum",
+      "recast minor sections as Andalusian cadence ending on V",
+      "accent 1, 2&, 4",
+      "capo to keep Am/Dm shapes",
+      "palmas and sing-along hook"
+    ],
+    "ladder": [
+      "doorknob wrist D-fingers/U-thumb at 60 bpm, muted",
+      "slap on 3 via the 8 part-exercises",
+      "full pattern over Am-G-F-E",
+      "tresillo accents and Catalan variant",
+      "capo a folk song to Am shapes and rumba it"
+    ]
+  },
+  {
+    "id": "west_african",
+    "name": "West African Guitar (highlife, palm-wine, soukous)",
+    "family": "african",
+    "feel": {
+      "subdivision": "8th",
+      "meter": "4/4",
+      "tempo_range": [
+        110,
+        140
+      ],
+      "accents": "two-finger picking, thumb on beats, index on offbeats; bell/clave timeline; soukous sebene faster with interlocking guitars",
+      "swing_ratio": null,
+      "clave": "3-2 bell (highlife)"
+    },
+    "rhythm_patterns": [
+      {
+        "id": "west_african.two_finger_highlife",
+        "name": "Two-finger highlife",
+        "grid": [
+          "B",
+          "-",
+          "P",
+          "-",
+          "B",
+          "-",
+          "P",
+          "P",
+          "B",
+          "-",
+          "P",
+          "-",
+          "B",
+          "-",
+          "P",
+          "-"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "west_african.highlife_8th_strum",
+        "name": "Highlife 8th strum",
+        "grid": [
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-",
+          "D",
+          "-",
+          "U",
+          "-"
+        ],
+        "accents": [],
+        "verified": true,
+        "note": null
+      },
+      {
+        "id": "west_african.12_8_bell_timeline",
+        "name": "12/8 bell timeline",
+        "grid": [
+          "P",
+          "-",
+          "P",
+          "-",
+          "P",
+          "P",
+          "-",
+          "P",
+          "-",
+          "P",
+          "-",
+          "P"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "west_african.soukous_accompaniment_arpeggio",
+        "name": "Soukous accompaniment arpeggio",
+        "grid": [
+          "P",
+          "-",
+          "P",
+          "P",
+          "-",
+          "P",
+          "-",
+          "P",
+          "P",
+          "-",
+          "P",
+          "P",
+          "-",
+          "P",
+          "-",
+          "P"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      },
+      {
+        "id": "west_african.mi_solo_interlock",
+        "name": "Mi-solo interlock",
+        "grid": [
+          "-",
+          "P",
+          "-",
+          "P",
+          "-",
+          "P",
+          "-",
+          "P",
+          "-",
+          "P",
+          "-",
+          "P",
+          "-",
+          "P",
+          "-",
+          "P"
+        ],
+        "accents": [],
+        "verified": false,
+        "note": null
+      }
+    ],
+    "progressions": [
+      {
+        "id": "west_african.prog_highlife_i_iv_v",
+        "name": "Highlife I-IV-V",
+        "roman": [
+          "I",
+          "IV",
+          "V",
+          "I"
+        ],
+        "bars": 8,
+        "verified": true
+      },
+      {
+        "id": "west_african.prog_highlife_i_vi_iv_v",
+        "name": "Highlife I-vi-IV-V",
+        "roman": [
+          "I",
+          "VIm",
+          "IV",
+          "V"
+        ],
+        "bars": 4,
+        "verified": true
+      },
+      {
+        "id": "west_african.prog_sebene_demi_temps",
+        "name": "Sebene demi-temps",
+        "roman": [
+          "I",
+          "IV",
+          "I",
+          "V"
+        ],
+        "bars": 2,
+        "verified": true
+      },
+      {
+        "id": "west_african.prog_sebene_2_temps",
+        "name": "Sebene 2 temps",
+        "roman": [
+          "I",
+          "IV",
+          "V",
+          "IV"
+        ],
+        "bars": 2,
+        "verified": true
+      },
+      {
+        "id": "west_african.prog_sebene_3_temps",
+        "name": "Sebene 3 temps",
+        "roman": [
+          "I",
+          "V",
+          "IV",
+          "V"
+        ],
+        "bars": 2,
+        "verified": true
+      },
+      {
+        "id": "west_african.prog_sebene_4_temps_source_says_vii_verify_bv",
+        "name": "Sebene 4 temps (source says VII; verify bVII)",
+        "roman": [
+          "I",
+          "bVII",
+          "IV",
+          "V"
+        ],
+        "bars": 2,
+        "verified": true
+      }
+    ],
+    "chord_colours": [
+      "M",
+      "7",
+      "m"
+    ],
+    "forms": [
+      "song section -> sebene instrumental dance section (soukous)",
+      "verse-chorus with guitar/horn interludes (highlife)"
+    ],
+    "fill_vocabulary": [
+      "high-register fast picked lines",
+      "3rds/6ths runs",
+      "repeating arpeggio cells"
+    ],
+    "scales": [
+      "major",
+      "major pentatonic",
+      "mixolydian"
+    ],
+    "keys_common": [
+      "C",
+      "G",
+      "F",
+      "D"
+    ],
+    "tunings": [
+      "standard",
+      "open 'dagomba' tunings (unverified)"
+    ],
+    "lyric_traits": [
+      "storytelling and proverbs",
+      "social commentary, everyday life",
+      "love, struggle and success",
+      "multilingual (Twi, Lingala, French, English)"
+    ],
+    "reference_tracks": [
+      {
+        "title": "Yaa Amponsah",
+        "artist": "Kumasi Trio",
+        "why": "foundational highlife guitar progression (1928)"
+      },
+      {
+        "title": "All for You",
+        "artist": "E.T. Mensah",
+        "why": "dance-band highlife (inferred)"
+      },
+      {
+        "title": "My Lovely Elizabeth",
+        "artist": "S.E. Rogie",
+        "why": "palm-wine two-finger picking (inferred)"
+      },
+      {
+        "title": "Marie-Louise",
+        "artist": "Wendo Kolosoy",
+        "why": "early Congolese rumba"
+      },
+      {
+        "title": "Mario",
+        "artist": "Franco & TPOK Jazz",
+        "why": "sebene guitar interlock (inferred)"
+      }
+    ],
+    "transplant_levers": [
+      "thumb bass + index offbeat plucks instead of strumming",
+      "chords as repeating arpeggio cells",
+      "reduce to I-IV-V cycles; sebene cadence outro",
+      "add a faster instrumental sebene section",
+      "reframe lyric as story/proverb"
+    ],
+    "ladder": [
+      "thumb-index two-finger picking on one chord",
+      "I-IV-V-I in C, 70 -> 110 bpm",
+      "clap 12/8 bell while strumming dotted quarters",
+      "soukous arpeggio over demi-temps",
+      "layer mi-solo 3rds over looped accompaniment"
+    ]
+  }
+]
