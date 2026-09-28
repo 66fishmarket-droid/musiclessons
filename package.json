@@ -14,7 +14,8 @@
     "styles:merge": "node scripts/merge-styles.ts",
     "seed:sql": "node scripts/gen-seed-sql.ts",
     "import:legacy": "node --env-file=.env.local scripts/import-legacy.ts",
-    "dev:session": "node --env-file=.env.local scripts/dev-session.ts"
+    "dev:session": "node --env-file=.env.local scripts/dev-session.ts",
+    "compare:models": "node --env-file=supabase/functions/.env scripts/compare-models.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
