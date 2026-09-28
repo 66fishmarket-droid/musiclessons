@@ -1,7 +1,7 @@
 # Session Handoff — 2026-09-28b (Phase 2 build)
 
 ## What we did this session
-Phase 2 of `docs/superpowers/plans/2026-09-28-phase2-generation.md` is complete on `dev` (13 commits, `48e33af..`). Nothing has been pushed.
+Phase 2 of `docs/superpowers/plans/2026-09-28-phase2-generation.md` is complete. It is **merged to `main`** through PR #2 (merge commit `bde326e`), and Phase 1 was merged earlier through PR #1 (`8c28e49`). `dev` and `main` are in sync, apart from this handoff edit.
 
 **Lesson layer** (`supabase/functions/_shared/lesson/`). It is Deno-safe and shared with the Node scripts.
 - `contract.ts`:
@@ -36,19 +36,23 @@ Phase 2 of `docs/superpowers/plans/2026-09-28-phase2-generation.md` is complete 
 - One part deliberately not fixed; see the decisions below.
 
 ## What's next
-1. Glance at today's lesson text (`select content from lessons where lesson_date = current_date`). Is the tone right for you? (2 min)
-2. Decide whether to push `dev` and open a PR to `main`.
-3. Phase 3 plan (the practice app):
-   - the Today player, with the metronome, drone and SVG diagrams;
-   - `{Chord}` chips you can tap for voicings;
-   - auth UI, PWA and Netlify deploy.
-   - The client sends the **local date** and allows more than 115 s for `generate-lesson`.
-   - **Before any hosted deploy: turn off open signup or restrict it to an allowlist.** An open signup lets strangers spend LLM credit.
-4. Phase 3 addition from the user: link each suggested song to an Ultimate Guitar search (`ultimate-guitar.com/search.php?search_type=title&value=<title artist>`). UG has no public API.
-5. New idea for a later phase: a **tab library**. See memory `project_tab_library.md`.
-   - `tabs/` holds UG PDFs exported by the user's Cowork process. They are **image-only**, with no text layer.
-   - The plan is vision-LLM transcription to structured sections and chords-over-lyrics, stored per user.
-   - The goals are interactive play-along tabs, and lessons that reuse a song's chord structure in other positions, as barres or as triads.
+1. **Start Phase 3:** say "plan Phase 3".
+   - The scope is spec §8 (the Today screen) and §12 Phase 3: the Today player (metronome, drone, SVG fretboard and chord diagrams, pass/fail logging, record & rate), auth UI, PWA and Netlify deploy.
+   - It also covers the Theory Explorer's chord chips. Tapping a `{Chord}` shows its voicings.
+   - The client must send the user's **local date** to `generate-lesson` and allow more than 115 s for a reply.
+2. Glance at today's real lesson (`select content from lessons where lesson_date = '2026-09-28'` in local Studio, http://127.0.0.1:55323). Is the tone right? (2 min)
+3. **Phase 3 deploy checklist, in this order:**
+   1. **Ask the user**, then pause the idle `4n4l-engine` Supabase project. The org is on the free plan, capped at 2 active projects: BillD'Bettabody and 4n4l-engine. The user confirmed 4n4l-engine isn't in use.
+   2. Create the hosted `musiclessons` project, then push the migrations and seed.
+   3. Set the secrets: `supabase secrets set LLM_API_KEY=… LLM_MODEL=qwen/qwen3.7-plus LLM_FALLBACK_MODEL=moonshotai/kimi-k2.6 LLM_BASE_URL=https://openrouter.ai/api/v1`.
+   4. Create the user's account first (Dashboard → Authentication → Users → Add user → invite 66Fishmarket@gmail.com).
+   5. **Then** turn off "Allow new users to sign up" (Authentication → Sign In / Providers).
+   6. Re-run the legacy import against the hosted project, or move the local data across.
+4. **Phase 3 addition from the user:** link each suggested song to an Ultimate Guitar search (`https://www.ultimate-guitar.com/search.php?search_type=title&value=<title artist>`). UG has no public API.
+5. **Later phase, the tab library** (see memory `project_tab_library.md`):
+   - `tabs/` holds UG PDFs exported by the user's Cowork job. They are **image-only**, but they are clean prints of the chords view.
+   - The plan is vision-LLM transcription to sections and chords-over-lyrics, stored per user.
+   - The goals are interactive play-along tabs, and lessons that reuse a song's chord structure as barres, as triads or in other positions.
 
 ## Design decisions already made
 - **Reasoning is off** for lesson writing. With it on, both models took about 100 s and up to 20k tokens.
