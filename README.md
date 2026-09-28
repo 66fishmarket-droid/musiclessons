@@ -13,3 +13,15 @@ git config core.hooksPath .githooks   # background Obsidian code-graph sync afte
 supabase start                        # needs Docker Desktop running
 npm test && npm run test:db
 ```
+
+## LLM setup (Phase 2)
+`supabase/functions/.env` (gitignored, never commit it):
+```
+LLM_BASE_URL=https://openrouter.ai/api/v1
+LLM_API_KEY=sk-or-...
+LLM_MODEL=<default model id>
+LLM_FALLBACK_MODEL=<fallback model id>
+```
+Run locally: `supabase functions serve`, then `TOKEN=$(npm run -s dev:session -- --email you@example.com)` and
+`curl -X POST http://127.0.0.1:55321/functions/v1/generate-lesson -H "Authorization: Bearer $TOKEN" -d '{"date":"YYYY-MM-DD"}'`.
+Compare models: `npm run compare:models -- --models a,b` (paid, a few cents).
