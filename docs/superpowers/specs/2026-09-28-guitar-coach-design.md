@@ -389,5 +389,5 @@ The output is `plan.music`, and it is the **only** chord and scale source the LL
 
 ## 13. Open decisions
 
-1. Default LLM: decided by the Phase 2 side-by-side.
+1. Default LLM: **decided 2026-09-28** by the Phase 2 side-by-side (`docs/superpowers/model-comparison-2026-09-28.html`): default `qwen/qwen3.7-plus`, fallback `moonshotai/kimi-k2.6`, both with reasoning off (with it on, each took ~100 s per lesson).
 2. Direct provider vs OpenRouter: OpenRouter assumed. A direct provider only changes `LLM_BASE_URL` and the key.
