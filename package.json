@@ -1,0 +1,31 @@
+{
+  "name": "guitar-coach",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "test": "vitest run --exclude \"tests/db/**\"",
+    "test:db": "vitest run tests/db",
+    "typecheck": "tsc --noEmit",
+    "vault:code": "node scripts/vault-sync-code.ts",
+    "vault:sync": "node scripts/vault-sync-code.ts && node scripts/vault-sync-styles.ts && node scripts/vault-sync-dev.ts && node --env-file-if-exists=.env.local scripts/vault-sync-curriculum.ts",
+    "styles:merge": "node scripts/merge-styles.ts",
+    "seed:sql": "node scripts/gen-seed-sql.ts",
+    "import:legacy": "node --env-file=.env.local scripts/import-legacy.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.117.2",
+    "@tombatossals/chords-db": "^0.5.1",
+    "tonal": "^6.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.0",
+    "@types/pg": "^8.23.1",
+    "csv-parse": "^6.2.1",
+    "pg": "^8.23.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.7"
+  }
+}
