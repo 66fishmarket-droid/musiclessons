@@ -1,0 +1,10 @@
+#!/bin/sh
+# Refresh the Obsidian code graph (scripts/vault-sync-code.ts) in the background.
+# Never blocks or fails a git operation; errors land in Codebase/_meta/hook.err.
+root=$(git rev-parse --show-toplevel) || exit 0
+[ -d "$root/Music_Lessons Vault" ] || exit 0
+command -v node >/dev/null 2>&1 || exit 0
+meta="$root/Music_Lessons Vault/Codebase/_meta"
+mkdir -p "$meta"
+nohup node "$root/scripts/vault-sync-code.ts" --quiet >/dev/null 2>>"$meta/hook.err" &
+exit 0
