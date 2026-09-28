@@ -89,6 +89,8 @@ begin
   for v_log in select * from jsonb_array_elements(coalesce(p_logs, '[]'::jsonb)) loop
     v_ref := v_log->>'item_ref';
     continue when v_ref is null or position(':' in v_ref) = 0;
+    -- no pass/fail recorded (ran out of time): don't score it, except that "more time" still applies its -2
+    continue when v_log->>'passed' is null and not (p_want_more_time and v_log->>'block_kind' = 'new_skill');
     v_type := split_part(v_ref, ':', 1);
     v_id := substr(v_ref, length(v_type) + 2);
     if v_log->>'block_kind' = 'new_skill' and v_type = 'skill' then

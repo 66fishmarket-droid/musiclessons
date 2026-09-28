@@ -31,7 +31,7 @@ const newLesson = async (q: Q, plan: object = {}) => (await q(
   [JSON.stringify(plan)])).rows[0].id as string;
 const complete = (q: Q, id: string, logs: object[], wantMore = false) =>
   q('select public.complete_lesson($1, $2::jsonb, 4::smallint, $3, null)', [id, JSON.stringify(logs), wantMore]);
-const newSkill = (passed: boolean, value: number | null = null) =>
+const newSkill = (passed: boolean | null, value: number | null = null) =>
   ({ block_index: 1, block_kind: 'new_skill', item_ref: 'skill:rhythm.l1.locked_8ths', passed, value_reached: value });
 const progress = async (q: Q) => (await q(`select status, score, current_target::float as target, last_seen, last_key
   from public.skill_progress where skill_id = 'rhythm.l1.locked_8ths'`)).rows[0];
@@ -96,6 +96,17 @@ describe('complete_lesson', () => {
       { item_type: 'style', ref: 'folk.boom_chick', next_due: '2026-10-02' },
       { item_type: 'theory', ref: 'theory.l2.triads', next_due: '2026-10-02' },
     ]);
+  }));
+
+  it('leaves scores and review intervals alone for blocks logged without a result', () => asUser(async q => {
+    await q(`insert into public.skill_progress (skill_id, score, current_target) values ('rhythm.l1.locked_8ths', 1, 70)`);
+    await q(`insert into public.review_items (item_type, ref, interval_days, next_due) values ('style', 'folk.boom_chick', 7, '2026-10-01')`);
+    await complete(q, await newLesson(q), [
+      newSkill(null),
+      { block_index: 4, block_kind: 'review', item_ref: 'style:folk.boom_chick', passed: null },
+    ]);
+    expect(await progress(q)).toMatchObject({ score: 1, target: 70 });
+    expect((await q(`select interval_days from public.review_items where ref = 'folk.boom_chick'`)).rows[0].interval_days).toBe(7);
   }));
 
   it('is a no-op when called twice (offline retry)', () => asUser(async q => {
