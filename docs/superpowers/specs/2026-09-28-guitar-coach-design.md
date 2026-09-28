@@ -1,7 +1,7 @@
 # Guitar Coach — Design Spec
 
 - **Date:** 2026-09-28
-- **Status:** Draft for review
+- **Status:** Approved 2026-09-28
 - **Replaces:** Make.com "Daily Lesson Generator" + "Feedback Ingestor" (dormant since 2026-02-21). Specs move to `legacy/make/`.
 - **Research base:** `Music_Lessons Vault/Research/` (58 notes + style research) and `Pedagogy/_notes/Lesson Anatomy.md`.
 
@@ -127,6 +127,7 @@ The list is data, so adding a style means adding one profile.
 - **Style theory** feeds the theory cards: why I7 can be home in blues, one-chord funk vamps and extensions, gospel IV–I and 6ths, modal folk.
 - **Style transplant** is a Songwriting exercise type. Take a lyric and progression (usually folk) and re-set it in a style's groove, chord colours, harmonic rhythm and form, keeping the lyric and melody shape. Change one lever at a time, in this order: groove → chord colour → harmonic rhythm → mode → form and phrasing. Code handles the first four; the LLM handles phrasing. The daily Create block uses today's style element; the weekly session picks a style you've seen at least 3 elements of.
 - **Roman numeral convention:** minor chords are always written with an explicit `m` (`iim7` → Dm7 in C, `vim`, `ivm`). `tonal` ignores case, so `ii7` would silently give D7. The Phase 1 profile check converts every numeral in every key and flags any whose chord quality doesn't match the profile's intent.
+- **Verified flag:** every rhythm pattern and element has `verified: boolean`. Research marked `inferred` merges as `verified: false`, and the planner only picks verified elements. You can flip the flag after checking a pattern by ear.
 
 **Skill fields:**
 - `id`, `track`, `level`, `name`, `description`.
