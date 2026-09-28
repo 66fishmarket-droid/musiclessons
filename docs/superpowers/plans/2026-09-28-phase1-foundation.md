@@ -2096,7 +2096,7 @@ describe('planLesson', () => {
     expect(plan.style_element).toEqual({ style: 'funk', element_id: 'funk.p1', kind: 'rhythm', is_new: false });
   });
 
-  it('reviews due items oldest first, max three, never from today\'s track or today\'s element', () => {
+  it('reviews due items oldest first, max three, never from today\'s track or today\'s theory card', () => {
     const due = (item_type: 'skill' | 'theory' | 'style', ref: string, next_due: string) => ({ item_type, ref, interval_days: 3, next_due, last_result: true });
     const plan = planLesson(state({ reviewItems: [
       due('skill', 'rhythm.l1.b', '2026-10-01'),      // today's track → excluded
