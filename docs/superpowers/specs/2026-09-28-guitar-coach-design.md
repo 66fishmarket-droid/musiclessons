@@ -3,7 +3,7 @@
 - **Date:** 2026-09-28
 - **Status:** Draft for review
 - **Replaces:** Make.com "Daily Lesson Generator" + "Feedback Ingestor" (dormant since 2026-02-21). Specs move to `legacy/make/`.
-- **Research base:** `Music_Lessons Vault/Research/` (58 notes) and `Pedagogy/_notes/Lesson Anatomy.md`.
+- **Research base:** `Music_Lessons Vault/Research/` (58 notes + style research) and `Pedagogy/_notes/Lesson Anatomy.md`.
 
 ---
 
@@ -18,6 +18,7 @@ A daily practice web app that turns one intermediate rhythm guitarist into a **s
 - Ear and voice trained with the guitar.
 - Songwriting harmony and form: sections, bridges, key changes.
 - Music theory that sticks.
+- Fluency in **styles** (folk, blues, funk, soul): their grooves, harmony and forms, so folk-style lyrics can be set in a funkier style.
 
 **Success looks like:**
 - 20–40 min daily sessions the learner actually completes.
@@ -88,12 +89,36 @@ There are six **tracks**. Each track has five **levels**, and each level holds 2
 - **L4:** 9/11/13 extensions, slash chords, inversions.
 - **L5:** modes, chord-scale fit, harmonising a melody.
 
+**Styles.** A style is a dimension like key, not a 7th track. The four starting styles are **folk, blues, funk and soul** (soul includes gospel, Motown and Stax).
+- **Style profiles live in code as data** (`engine/styles.ts`), drafted from `Research/styles/style_profiles.draft.json`. Each profile holds:
+  - feel (subdivision, tempo range, accents);
+  - 16-slot rhythm patterns;
+  - chord colours;
+  - progression families as Roman numerals, so they can be put into any key;
+  - forms;
+  - fill vocabulary;
+  - scales;
+  - common keys;
+  - lyric traits;
+  - reference tracks;
+  - a learning ladder.
+- **Style focus:** one style shapes the lessons for **two weeks at a time**. It rotates folk → blues → funk → soul by default, or you can pin a style in Settings. The focus sets:
+  - the Apply progression and groove;
+  - the fill vocabulary;
+  - the Create prompt;
+  - the song suggestions;
+  - the warm-up scale when the style has its own (e.g. the blues scale).
+- **Style-native skills** carry a `styles` tag (e.g. 12-bar shuffle, funk 16th scratch on 9th chords, Cropper/Mayfield soul double-stops, folk drone/open-tuning figures). Skills without a tag suit any style. The planner prefers skills tagged with the current style focus at the track's level.
+- **Style theory** feeds the theory cards: why I7 can be home in blues, one-chord funk vamps and extensions, gospel IV–I and 6ths, modal folk.
+- **Style transplant** is a Songwriting exercise type. Take a lyric and progression (usually folk) and re-set it in the current style's groove, chord colours, harmonic rhythm and form, keeping the lyric and melody shape. It's available as a daily Create block and as a weekly-session option.
+
 **Skill fields:**
 - `id`, `track`, `level`, `name`, `description`.
 - `pass_metric`: `bpm` | `clean_reps` | `self`.
 - `default_target`.
 - `allowed_keys` (null = any; e.g. open-friendly keys for L1 fingerstyle).
 - `theory_topic_id` (optional link to a theory skill).
+- `styles` (null = any style).
 
 ---
 
@@ -110,14 +135,14 @@ Session templates live in code as data (`engine/templates.ts`), so block order c
 | 3 | New skill | 9 | One concept: Hear → Learn → Play; tempo ladder from 60–70% of target; error loop |
 | — | Reset | 0.5 | Listen to the reference / visualise |
 | 4 | Mixed review | 5 | 2–3 due review items from other tracks (including theory quizzes), shuffled |
-| 5 | Apply | 6 | Today's skill in a song or progression, singing over it |
-| 6 | Create | 3 | A songwriting micro-constraint in today's key |
+| 5 | Apply | 6 | Today's skill in a song or progression **in the style focus**, singing over it |
+| 6 | Create | 3 | A songwriting micro-constraint in today's key; sometimes a style transplant |
 | 7 | Record & rate | 2 | Record, listen back, rate, one-line "fix tomorrow" |
 
 **Other templates:**
 - **25-minute:** shrink blocks 3–5.
 - **40-minute:** stretch blocks 3–5.
-- **Weekly songwriting session:** replaces the normal lesson on the weekday set in settings (default Sunday). It assembles the week's Create fragments into verse + chorus (+ bridge from week 3). Required fields are key, progression per section, the contrast levers used, and a central idea. It ends with one sing-and-strum take.
+- **Weekly songwriting session:** replaces the normal lesson on the weekday set in settings (default Sunday). It assembles the week's Create fragments into verse + chorus (+ bridge from week 3). Required fields are key, progression per section, the contrast levers used, and a central idea. It ends with one sing-and-strum take. Every other week it's a **style transplant** of an existing song instead.
 
 **Every lesson also carries a "Why it works" theory card.**
 
@@ -138,14 +163,14 @@ All tables have `user_id uuid references auth.users` plus RLS. Timestamps are `t
 
 | Table | Key columns |
 |---|---|
-| `skills` | `id text pk`, `track`, `level`, `name`, `description`, `pass_metric`, `default_target`, `allowed_keys text[]`, `theory_topic_id` — seeded; no `user_id` |
+| `skills` | `id text pk`, `track`, `level`, `name`, `description`, `pass_metric`, `default_target`, `allowed_keys text[]`, `theory_topic_id`, `styles text[]` — seeded; no `user_id` |
 | `skill_progress` | `user_id`, `skill_id`, `status` (`active`/`mastered`), `score int`, `current_target numeric`, `last_seen`, `last_key` — unique `(user_id, skill_id)` |
-| `lessons` | `id`, `user_id`, `lesson_date date`, `template`, `track`, `skill_id`, `key`, `plan jsonb`, `content jsonb`, `status` (`planned`/`completed`/`skipped`), `confidence 1–5`, `want_more_time bool`, `notes`, `llm_model`, `prompt_version`, `source` (`app`/`legacy`) — unique `(user_id, lesson_date)` |
+| `lessons` | `id`, `user_id`, `lesson_date date`, `template`, `track`, `skill_id`, `key`, `style`, `plan jsonb`, `content jsonb`, `status` (`planned`/`completed`/`skipped`), `confidence 1–5`, `want_more_time bool`, `notes`, `llm_model`, `prompt_version`, `source` (`app`/`legacy`) — unique `(user_id, lesson_date)` |
 | `exercise_logs` | `lesson_id`, `block_index`, `item_ref`, `passed bool`, `value_reached numeric`, `note` |
 | `review_items` | `user_id`, `item_type` (`skill`/`theory`), `ref`, `interval_days`, `next_due date`, `last_result` — unique `(user_id, item_type, ref)` |
 | `questions` | `user_id`, `lesson_id null`, `block_index null`, `question`, `answer`, `created_at` |
 | `songs` | `user_id`, `title`, `key`, `sections jsonb`, `central_idea`, `notes`, `updated_at` |
-| `settings` | `user_id pk`, `session_minutes` (25/30/40), `vocal_low`, `vocal_high`, `songwriting_weekday` |
+| `settings` | `user_id pk`, `session_minutes` (25/30/40), `vocal_low`, `vocal_high`, `songwriting_weekday`, `style_pinned` (null = rotate), `style_cycle_start date` |
 
 ---
 
@@ -178,6 +203,8 @@ All tables have `user_id uuid references auth.users` plus RLS. Timestamps are `t
 - When `score ≥ 3`, the skill becomes `mastered`, its score resets to 0, and a `review_items` row is created.
 - When `score ≤ −3`, the score resets to 0 and the target drops by 10%.
 
+**Style:** use `style_pinned` if set. Otherwise take the rotation `folk → blues → funk → soul`, advancing every 14 days from `style_cycle_start`. Skills from the style's profile are preferred in the skill pick, and its progression families drive the Apply block. On repeat days, style stays fixed along with skill and key.
+
 **Review scheduling:**
 - Intervals are `1 → 3 → 7 → 14 → 30 → 60` days.
 - A pass moves the item up one interval; a fail resets it to 1.
@@ -200,7 +227,7 @@ The output is `plan.music`, and it is the **only** chord and scale source the LL
 **`generate-lesson`** runs when the app opens and there is no lesson for today; it returns the existing row otherwise.
 1. `plan = planLesson(state)` — engine.
 2. `music = buildMusic(plan)` — engine.
-3. The LLM receives a fixed system prompt (cached), the plan, the music, the last 7 lesson summaries and the last 10 question topics. It returns JSON:
+3. The LLM receives a fixed system prompt (cached), the plan, the music, the style profile, the last 7 lesson summaries and the last 10 question topics. It returns JSON:
    - lesson level: `title`, `why_it_matters`, `theory_card`, `songs[3]` (`title`, `artist`, `why`, `capo`), `create_prompt`;
    - per block: `instructions[]`, `target_text`, `tips`, `explanation`.
 4. **Validate:**
@@ -233,7 +260,7 @@ The output is `plan.music`, and it is the **only** chord and scale source the LL
 | **Progress** | Level per track plus the theory ladder, target history per skill, streak, lesson history (including 129 imported legacy lessons). |
 | **Songbook** | `songs` CRUD; the weekly session writes into it. |
 | **Asked** | Searchable list of `questions`. |
-| **Settings** | Session length, vocal range, songwriting weekday. |
+| **Settings** | Session length, vocal range, songwriting weekday, style (rotate / pin). |
 
 **PWA:** installable, and today's lesson is cached for offline use.
 
@@ -260,14 +287,28 @@ The output is `plan.music`, and it is the **only** chord and scale source the LL
 
 **Location:** `Music_Lessons Vault/` in the repo folder, gitignored. Frontmatter contract: `_meta/Frontmatter Contract.md`.
 
-`npm run vault:sync` runs deterministic Node scripts; no LLM is involved.
+`npm run vault:sync` runs deterministic Node scripts; no LLM is involved. **Git hooks** (`post-commit`, `post-merge`, `post-checkout`) run the code sync in the background, so the code notes build up from the first commit, the same way Bill's do.
 
 | Script | Output | Source |
 |---|---|---|
 | `vault-sync-curriculum` | `Curriculum/<Track>/<Skill>.md` | `skills` + `skill_progress` |
 | `vault-sync-asked` | `Asked/<date> <topic>.md` | `questions` |
-| `vault-sync-code` | `Codebase/<file>.md` + function notes | TypeScript compiler API over `src/` and `supabase/functions/` |
+| `vault-sync-code` | `Codebase/` (see below) | TypeScript compiler API over `src/`, `supabase/functions/`, `scripts/` |
+| `vault-sync-styles` | `Styles/<Style>.md` | `engine/styles.ts` |
 | `vault-sync-dev` | `Development/Timeline.md` | `docs/SESSION_HANDOFF_*.md` + git log |
+
+**Code graph** (mirrors Bill's `vault_sync_code.py` frontmatter so the same Bases views work):
+- **One note per function or method:** `Codebase/<path>/<module>.<name>.md`. The frontmatter holds:
+  - `kind`, `file`, `line`, `loc`, `signature`, `summary`, `body_hash`;
+  - `parent` (the file hub);
+  - `calls` and `called_by` (wikilinks, resolved with the TypeScript type checker);
+  - `unresolved_calls`, `tables` (Supabase tables touched), `tested_by`;
+  - `duplicate_count`, `dead_candidate`, `test_only`;
+  - tags `code/ts`, `layer/<engine|edge|ui|script|db>`, `kind/…`, `visibility/…`.
+- **One hub per source file,** listing its functions.
+- **Action hubs** in `Codebase/_actions/`: one per entry point (edge function, DB function/RPC, React screen, npm script), linking down to everything it reaches.
+- **`summary`** comes from the function's JSDoc first line; functions without one get `summary: ""` and are counted in `_meta/sync.log`. LLM summaries (as Bill uses) can be added later.
+- **`_meta/Code Map.base`** lists functions filterable by layer, dead candidates, duplicates and untested code.
 
 **Rules:**
 - Generated notes carry `generated: true` and are pruned and rewritten on each run.
@@ -303,7 +344,9 @@ The output is `plan.music`, and it is the **only** chord and scale source the LL
    - Supabase schema + RLS + `complete_lesson()`.
    - The engine with tests, and the curriculum seed.
    - The legacy import.
-   - `vault-sync-curriculum` + `vault-sync-dev`.
+   - Style profiles (`engine/styles.ts`) from the style research.
+   - `vault-sync-curriculum`, `vault-sync-styles`, `vault-sync-dev`.
+   - `vault-sync-code` + git hooks, set up **first**, so every later commit is mapped.
 2. **Generation.**
    - `generate-lesson` with validation and fallback.
    - Kimi vs Qwen side-by-side: 3 fixed plans; the user picks the default.
@@ -313,7 +356,7 @@ The output is `plan.music`, and it is the **only** chord and scale source the LL
 4. **Understanding.**
    - `ask` + tools.
    - Theory Explorer, Progress, Asked.
-   - `vault-sync-asked` + `vault-sync-code`.
+   - `vault-sync-asked`.
 5. **Songwriting.** Songbook + the weekly session template.
 
 **Later (not specced):**
