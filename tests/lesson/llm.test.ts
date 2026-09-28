@@ -20,7 +20,7 @@ describe('openRouterComplete', () => {
     expect(JSON.parse(seen.init!.body as string)).toMatchObject({
       model: 'moonshotai/kimi-k2.6', messages: msgs,
       response_format: { type: 'json_schema', json_schema: { name: 'lesson', strict: true, schema: { type: 'object' } } },
-      provider: { data_collection: 'deny', require_parameters: true }, usage: { include: true },
+      provider: { data_collection: 'deny', require_parameters: true }, usage: { include: true }, reasoning: { enabled: false },
     });
   });
   it('throws on HTTP errors and empty content', async () => {

@@ -66,6 +66,10 @@ describe('validateLesson', () => {
     const c = { ...validContent(plan), why_it_matters: 'Hammer {Dsus4} to {Gmaj}.' };
     expect(validateLesson(c, plan, SKILL_MAP)).toMatchObject({ ok: true });
   });
+  it('never mistakes notes with octave numbers (a vocal range) for chords', () => {
+    const c = { ...validContent(), why_it_matters: 'Sing between A2 and E4, then hold the {G}.' };
+    expect(validateLesson(c, PLAN, SKILL_MAP)).toMatchObject({ ok: true });
+  });
   it('does not chord-check songs', () => {
     const c = validContent();
     const songs = [{ ...c.songs[0], why: 'Built on Am6 Dm6 E7.' }, ...c.songs.slice(1)];

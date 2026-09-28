@@ -4,7 +4,7 @@ export interface Completion { text: string; cost: number | null }
 export type Complete = (model: string, messages: ChatMessage[], schema: object) => Promise<Completion>;
 export interface LlmConfig { baseUrl: string; apiKey: string; timeoutMs?: number }
 
-/** OpenRouter (OpenAI-compatible) chat client over fetch: strict JSON-schema output, no-training providers only, cost reported. */
+/** OpenRouter (OpenAI-compatible) chat client over fetch: strict JSON-schema output, reasoning off, no-training providers only, cost reported. */
 export function openRouterComplete({ baseUrl, apiKey, timeoutMs = 55_000 }: LlmConfig, fetchFn: typeof fetch = fetch): Complete {
   return async (model, messages, schema) => {
     const res = await fetchFn(`${baseUrl.replace(/\/+$/, '')}/chat/completions`, {
@@ -15,6 +15,8 @@ export function openRouterComplete({ baseUrl, apiKey, timeoutMs = 55_000 }: LlmC
         response_format: { type: 'json_schema', json_schema: { name: 'lesson', strict: true, schema } },
         provider: { data_collection: 'deny', require_parameters: true },
         usage: { include: true },
+        // Lesson prose needs no chain of thought: with reasoning on, both candidates took ~100 s and up to 20k tokens.
+        reasoning: { enabled: false },
       }),
       signal: AbortSignal.timeout(timeoutMs),
     });

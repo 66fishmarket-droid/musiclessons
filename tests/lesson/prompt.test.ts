@@ -17,7 +17,8 @@ describe('buildMessages', () => {
   it('sends the fixed system prompt first', () => {
     expect(msgs[0]).toEqual({ role: 'system', content: SYSTEM_PROMPT });
     expect(msgs[1].content.startsWith("Write today's lesson for this plan:\n")).toBe(true);
-    expect(PROMPT_VERSION).toMatch(/^gc-\d{4}-\d{2}-\d{2}$/);
+    expect(PROMPT_VERSION).toMatch(/^gc-\d{4}-\d{2}-\d{2}[a-z]?$/);
+    expect(SYSTEM_PROMPT).toMatch(/reset: exactly one instruction/);
   });
   it('briefs the plan: skill, theory topic, key, chords and blocks in order', () => {
     expect(brief).toMatchObject({
