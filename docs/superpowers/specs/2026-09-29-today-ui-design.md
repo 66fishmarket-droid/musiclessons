@@ -78,7 +78,8 @@
 - They are shown as `<img>`, which is decorative (`alt=""`).
 - **Placement:**
   - **Today:** a large hero burst at the top right.
-  - **Done:** a full-width burst above the heading; this is the celebration.
+  - **About this skill** (Today and the Player's new-skill, apply and retest blocks): what the skill is, how to practise it, what to listen for. Fingerstyle skills also show their **animated picking pattern**: tab-style strings, finger dots p/i/m/a in gold/pink/teal/violet lighting in sequence, each note plucked at its real pitch at the metronome's tempo, with a chip for each pattern the skill uses. The Player's new-skill block shows the first pattern inline.
+- **Done:** a full-width burst above the heading; this is the celebration.
   - **Player:** a small corner burst in the block's colour, at 70% opacity.
 
 ## 5. Screens

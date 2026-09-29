@@ -52,7 +52,7 @@
 
 ## Global Constraints
 
-- **Branch:** work on `dev` and commit after every task. **Never push, merge to `main` or deploy without asking the user.** Task 13 has explicit ask-gates.
+- **Branch:** work on `dev` and commit after every task. **Never push, merge to `main` or deploy without asking the user.** Task 15 has explicit ask-gates.
 - **Imports and syntax:**
   - Relative imports use explicit extensions (`.ts`, `.tsx`). JSON imports use `with { type: 'json' }`.
   - No `enum`, `namespace` or parameter properties (`erasableSyntaxOnly`).
@@ -96,7 +96,7 @@
 | File | Responsibility |
 |---|---|
 | `index.html` | App shell, Google Fonts links, `#root` |
-| `vite.config.ts` | Vite + React (+ PWA from Task 11); dev server on 127.0.0.1:5173 |
+| `vite.config.ts` | Vite + React (+ PWA from Task 13); dev server on 127.0.0.1:5173 |
 | `src/main.tsx` | Mounts `<App/>` and imports `theme.css` |
 | `src/theme.css` | Tokens and every class the components use |
 | `src/App.tsx` | Auth gate, flushes pending completions, fetches today's lesson, chooses the screen |
@@ -118,6 +118,10 @@
 | `src/audio/useMetronome.ts` | `useMetronome`, `useDrone` hooks |
 | `src/components/*.tsx` | `Burst`, `Rail`, `ChordDiagram` (+`ModeToggle`), `ChordText`, `VoicingSheet`, `ChordPanel`, `Metronome`, `Recorder` |
 | `src/screens/*.tsx` | `SignIn`, `Today`, `Player`, `Done` |
+| `supabase/functions/_shared/engine/patterns.ts` | Role-based picking patterns (thumb = root/alt bass, fingers = top chord tones), resolved by semitones in any tuning |
+| `supabase/functions/_shared/engine/skillGuides.ts` | "About this skill" explainers (fingerstyle first) |
+| `src/lib/skillInfo.ts` | Skill + guide + patterns lookup |
+| `src/components/PickingPattern.tsx`, `SkillSheet.tsx` | Animated, audible picking pattern; About-this-skill sheet |
 | `scripts/gen-bursts.ts` | Deterministic powder-burst SVG generator → `public/bursts/*.svg` |
 | `public/icon.svg` | PWA icon |
 | `supabase/templates/magic_link.html` | Sign-in email with the link **and** a 6-digit code (needed for an installed iOS PWA) |
@@ -2610,7 +2614,560 @@ Claude-Session: https://claude.ai/code/session_01BsxF15yCGFvAGAgAc6SMZC"
 
 ---
 
-### Task 11: PWA (installable, works offline)
+### Task 11: Skill guides and the picking-pattern engine (roles, tuning-aware)
+
+**Why:** each lesson needs an "About this skill" explanation (e.g. *what is a Giuliani arpeggio?*). Fingerstyle skills also need their picking pattern as data the app can draw and play.
+
+**Design rule (user, 2026-09-29):** music logic is computed from semitones. So a pattern names **roles**, not strings:
+- the thumb plays `bass` (the lowest string sounding the root) and `alt` (the alternate bass: the 5th if it sits below the treble strings, else another chord tone there, else the lowest treble string);
+- the fingers play `t1` / `t2` / `t3`, the highest, second-highest and third-highest sounding strings.
+
+The roles are resolved against any voicing in any tuning. The voicings still come from `chords-db` in Phase 3; the instrument-agnostic chord generator is a later phase (spec §14). `noteAt` gains an optional `tuning` argument (default standard), so tunings become data only.
+
+**Files:**
+- Modify: `supabase/functions/_shared/engine/music.ts` (`noteAt` gains an optional tuning; add `TUNINGS`)
+- Create: `supabase/functions/_shared/engine/patterns.ts`, `supabase/functions/_shared/engine/skillGuides.ts`, `src/lib/skillInfo.ts`
+- Test: `tests/engine/patterns.test.ts`, `tests/app/skillInfo.test.ts`
+
+**Interfaces:**
+- Produces:
+  - `TUNINGS` (standard, dropD, dadgad, openD, openG; low → high, with octaves); `noteAt(string, fret, tuning = TUNING)`
+  - `type Finger = 'p' | 'i' | 'm' | 'a'`; `type Role = 'bass' | 'alt' | 't1' | 't2' | 't3'`
+  - `interface PickPattern { id: string; name: string; beatsPerBar: 3 | 4; stepsPerBeat: 1 | 2 | 3; steps: { finger: Finger; role: Role }[][] }`
+  - `PATTERNS: Record<string, PickPattern>`, `SKILL_PATTERNS: Record<string, string[]>`
+  - `interface PickNote { finger: Finger; role: Role; string: number; note: string; interval: string }` (`note` includes its octave, e.g. `G2`; `interval` is from the chord root: `R`, `3`, `5`…)
+  - `voiceRoles(v, chord, tuning?): Record<Role, number>` (string index per role, 0 = lowest string); `resolvePattern(p, v, chord, tuning?): PickNote[][]`
+  - `interface SkillGuide { what: string; how: string[]; listenFor: string }`, `SKILL_GUIDES: Record<string, SkillGuide>`
+  - `skillInfo(id): { skill: Skill; guide: SkillGuide | null; patterns: PickPattern[] } | null`
+
+- [ ] **Step 1: Write the failing tests**
+
+```ts
+// tests/engine/patterns.test.ts
+import { describe, expect, it } from 'vitest';
+import { TUNINGS, noteAt } from '../../supabase/functions/_shared/engine/music.ts';
+import { PATTERNS, SKILL_PATTERNS, resolvePattern, voiceRoles } from '../../supabase/functions/_shared/engine/patterns.ts';
+import { SKILLS } from '../../supabase/seed/curriculum.ts';
+
+const G = { frets: [3, 2, 0, 0, 0, 3], fingers: [2, 1, 0, 0, 0, 3], barres: [] };
+const C = { frets: [-1, 3, 2, 0, 1, 0], fingers: [0, 3, 2, 0, 1, 0], barres: [] };
+const D = { frets: [-1, -1, 0, 2, 3, 2], fingers: [0, 0, 0, 1, 3, 2], barres: [] };
+
+describe('noteAt with tunings', () => {
+  it('defaults to standard and counts semitones from any tuning', () => {
+    expect(noteAt(0, 3)).toBe('G');
+    expect(noteAt(0, 0, TUNINGS.dropD)).toBe('D');
+    expect(noteAt(4, 0, TUNINGS.dadgad)).toBe('A');
+    expect(noteAt(3, 4, TUNINGS.openD)).toBe('A#');
+  });
+});
+
+describe('voiceRoles', () => {
+  it('puts the thumb on the root and the fifth, fingers on the top three strings (G)', () => {
+    expect(voiceRoles(G, 'G')).toEqual({ bass: 0, alt: 2, t1: 5, t2: 4, t3: 3 });
+  });
+  it('uses another chord tone for the alternate bass when the fifth sits in the treble (C: 4th string E)', () => {
+    expect(voiceRoles(C, 'C')).toEqual({ bass: 1, alt: 2, t1: 5, t2: 4, t3: 3 });
+  });
+  it('shares the lowest treble string when there is no room below it (D: 4th and 3rd)', () => {
+    expect(voiceRoles(D, 'D')).toEqual({ bass: 2, alt: 3, t1: 5, t2: 4, t3: 3 });
+  });
+  it('resolves the same roles in DADGAD from semitones alone (open Dsus4)', () => {
+    expect(voiceRoles({ frets: [0, 0, 0, 0, 0, 0], fingers: [0, 0, 0, 0, 0, 0], barres: [] }, 'Dsus4', TUNINGS.dadgad))
+      .toEqual({ bass: 0, alt: 1, t1: 5, t2: 4, t3: 3 });
+  });
+});
+
+describe('resolvePattern', () => {
+  it('turns roles into strings, pitches and intervals', () => {
+    const steps = resolvePattern(PATTERNS.giuliani_pima, G, 'G');
+    expect(steps[0]).toEqual([{ finger: 'p', role: 'bass', string: 0, note: 'G2', interval: 'R' }]);
+    expect(steps[1]).toEqual([{ finger: 'i', role: 't3', string: 3, note: 'G3', interval: 'R' }]);
+    expect(steps[2]).toEqual([{ finger: 'm', role: 't2', string: 4, note: 'B3', interval: '3' }]);
+    expect(steps[3]).toEqual([{ finger: 'a', role: 't1', string: 5, note: 'G4', interval: 'R' }]);
+  });
+  it('plays the Travis alternate bass on the fifth', () => {
+    expect(resolvePattern(PATTERNS.travis, G, 'G')[2]).toEqual([{ finger: 'p', role: 'alt', string: 2, note: 'D3', interval: '5' }]);
+  });
+});
+
+describe('pattern library', () => {
+  it('fills exactly one bar per pattern', () => {
+    for (const p of Object.values(PATTERNS)) expect(p.steps.length, p.id).toBe(p.beatsPerBar * p.stepsPerBeat);
+  });
+  it('maps every fingerstyle skill to known patterns', () => {
+    for (const s of SKILLS.filter(x => x.track === 'fingerstyle')) {
+      expect(SKILL_PATTERNS[s.id]?.length, s.id).toBeGreaterThan(0);
+      for (const id of SKILL_PATTERNS[s.id]) expect(PATTERNS[id], id).toBeDefined();
+    }
+  });
+});
+```
+
+```ts
+// tests/app/skillInfo.test.ts
+import { describe, expect, it } from 'vitest';
+import { skillInfo } from '../../src/lib/skillInfo.ts';
+import { SKILLS } from '../../supabase/seed/curriculum.ts';
+
+describe('skillInfo', () => {
+  it('joins the skill, its guide and its patterns', () => {
+    const info = skillInfo('fingerstyle.l1.giuliani_arpeggios')!;
+    expect(info.skill.name).toBe('Arpeggio patterns');
+    expect(info.guide?.what).toMatch(/Giuliani/);
+    expect(info.patterns.map(p => p.id)).toEqual(['giuliani_pim', 'giuliani_pmi', 'giuliani_pimi', 'giuliani_pima']);
+  });
+  it('has a guide for every fingerstyle skill', () => {
+    for (const s of SKILLS.filter(x => x.track === 'fingerstyle')) expect(skillInfo(s.id)?.guide, s.id).not.toBeNull();
+  });
+  it('returns the bare skill when no guide is written yet, and null for unknown ids', () => {
+    const r = skillInfo('theory.l1.intervals')!;
+    expect(r.skill.id).toBe('theory.l1.intervals');
+    expect(r.guide).toBeNull();
+    expect(r.patterns).toEqual([]);
+    expect(skillInfo('nope')).toBeNull();
+  });
+});
+```
+
+- [ ] **Step 2: Run the tests and check they fail**
+
+Run: `npx vitest run tests/engine/patterns.test.ts tests/app/skillInfo.test.ts`
+Expected: FAIL, because `TUNINGS`, `patterns.ts` and `skillInfo.ts` are missing.
+
+- [ ] **Step 3: Make `noteAt` tuning-aware (`music.ts`)**
+
+Replace the `noteAt` function and add `TUNINGS` right after `TUNING`. Existing callers keep working because the argument is optional.
+
+```ts
+/** Named tunings, low → high string, with octaves. Everything downstream is semitone maths from these. */
+export const TUNINGS = {
+  standard: TUNING,
+  dropD: ['D2', 'A2', 'D3', 'G3', 'B3', 'E4'],
+  dadgad: ['D2', 'A2', 'D3', 'G3', 'A3', 'D4'],
+  openD: ['D2', 'A2', 'D3', 'F#3', 'A3', 'D4'],
+  openG: ['D2', 'G2', 'D3', 'G3', 'B3', 'D4'],
+} satisfies Record<string, readonly string[]>;
+
+/** Pitch class sounding at a string (0 = lowest) and fret, in the given tuning (default standard). */
+export function noteAt(string: number, fret: number, tuning: readonly string[] = TUNING): string {
+  return Note.pitchClass(Note.transpose(tuning[string], Interval.fromSemitones(fret)));
+}
+```
+
+- [ ] **Step 4: Create `supabase/functions/_shared/engine/patterns.ts`**
+
+```ts
+import { Chord, Interval, Note } from 'tonal';
+import { TUNING, noteAt, type Voicing } from './music.ts';
+
+export type Finger = 'p' | 'i' | 'm' | 'a';
+/** bass = lowest root string; alt = alternate bass; t1/t2/t3 = highest, second- and third-highest sounding strings. */
+export type Role = 'bass' | 'alt' | 't1' | 't2' | 't3';
+export interface PickPattern {
+  id: string; name: string; beatsPerBar: 3 | 4; stepsPerBeat: 1 | 2 | 3;
+  /** One entry per step; several notes in a step sound together (a pinch); [] is a rest. */
+  steps: { finger: Finger; role: Role }[][];
+}
+export interface PickNote { finger: Finger; role: Role; string: number; note: string; interval: string }
+
+const DEGREE = ['R', 'b9', '9', 'b3', '3', '4', 'b5', '5', '#5', '6', 'b7', '7'];
+const n = (finger: Finger, role: Role) => ({ finger, role });
+const P = n('p', 'bass'), PA = n('p', 'alt'), I = n('i', 't3'), M = n('m', 't2'), A = n('a', 't1');
+const I2 = n('i', 't2'), M1 = n('m', 't1');
+const bar = (cell: PickPattern['steps'], times: number): PickPattern['steps'] => Array.from({ length: times }, () => cell).flat();
+
+/** Picking-hand patterns in teaching order (Giuliani Op.1, thumb independence, Travis, accompaniment families). */
+export const PATTERNS: Record<string, PickPattern> = {
+  giuliani_pim: { id: 'giuliani_pim', name: 'p-i-m', beatsPerBar: 4, stepsPerBeat: 3, steps: bar([[P], [I], [M]], 4) },
+  giuliani_pmi: { id: 'giuliani_pmi', name: 'p-m-i', beatsPerBar: 4, stepsPerBeat: 3, steps: bar([[P], [M], [I]], 4) },
+  giuliani_pimi: { id: 'giuliani_pimi', name: 'p-i-m-i', beatsPerBar: 4, stepsPerBeat: 2, steps: bar([[P], [I], [M], [I]], 2) },
+  giuliani_pima: { id: 'giuliani_pima', name: 'p-i-m-a', beatsPerBar: 4, stepsPerBeat: 2, steps: bar([[P], [I], [M], [A]], 2) },
+  pinch: { id: 'pinch', name: 'Pinch and pluck', beatsPerBar: 4, stepsPerBeat: 1, steps: [[P, A], [I], [PA, M], [I]] },
+  thumb_steady: { id: 'thumb_steady', name: 'Steady thumb', beatsPerBar: 4, stepsPerBeat: 1, steps: bar([[P]], 4) },
+  thumb_alt: { id: 'thumb_alt', name: 'Alternating thumb', beatsPerBar: 4, stepsPerBeat: 1, steps: bar([[P], [PA]], 2) },
+  travis: { id: 'travis', name: 'Travis', beatsPerBar: 4, stepsPerBeat: 2, steps: [[P, M1], [], [PA], [I2], [P], [M1], [PA], [I2]] },
+  ballad: { id: 'ballad', name: 'Ballad p-i-m-a-m-i', beatsPerBar: 3, stepsPerBeat: 2, steps: [[P], [I], [M], [A], [M], [I]] },
+  waltz: { id: 'waltz', name: 'Waltz boom-chuck-chuck', beatsPerBar: 3, stepsPerBeat: 1, steps: [[P], [I, M, A], [I, M, A]] },
+};
+
+/** Which patterns each fingerstyle skill practises, easiest first. */
+export const SKILL_PATTERNS: Record<string, string[]> = {
+  'fingerstyle.l1.pima_pinches': ['giuliani_pima', 'pinch'],
+  'fingerstyle.l1.giuliani_arpeggios': ['giuliani_pim', 'giuliani_pmi', 'giuliani_pimi', 'giuliani_pima'],
+  'fingerstyle.l2.thumb_single_bass': ['thumb_steady'],
+  'fingerstyle.l2.alternating_thumb': ['thumb_alt'],
+  'fingerstyle.l3.travis_basic': ['thumb_alt', 'travis'],
+  'fingerstyle.l3.travis_changes': ['travis'],
+  'fingerstyle.l4.accompaniment_patterns': ['ballad', 'waltz', 'travis'],
+  'fingerstyle.l4.sing_over_pattern': ['thumb_alt', 'ballad', 'travis'],
+  'fingerstyle.l5.melody_over_thumb': ['thumb_steady', 'thumb_alt'],
+  'fingerstyle.l5.arrange_own_song': ['travis', 'ballad'],
+};
+
+/** String index (0 = lowest) for each role on this voicing, worked out from semitones in the given tuning. */
+export function voiceRoles(v: Voicing, chord: string, tuning: readonly string[] = TUNING): Record<Role, number> {
+  const tonic = Chord.get(chord).tonic;
+  const root = tonic ? Note.chroma(tonic) : undefined;
+  const sounding = v.frets.flatMap((f, s) => (f >= 0 ? [s] : []));
+  const iv = (s: number) => (root === undefined ? -1 : (Note.chroma(noteAt(s, v.frets[s], tuning))! - root + 12) % 12);
+  const [t1, t2, t3] = [...sounding].reverse();
+  const bass = sounding.find(s => iv(s) === 0) ?? sounding[0];
+  const below = sounding.filter(s => s > bass && s < t3);
+  const alt = below.find(s => iv(s) === 7) ?? below[0] ?? t3;
+  return { bass, alt, t1, t2, t3 };
+}
+
+/** Each step of a pattern on this chord shape: finger, role, string, pitch with octave, and interval from the root. */
+export function resolvePattern(p: PickPattern, v: Voicing, chord: string, tuning: readonly string[] = TUNING): PickNote[][] {
+  const roles = voiceRoles(v, chord, tuning);
+  const tonic = Chord.get(chord).tonic;
+  return p.steps.map(step => step.map(({ finger, role }) => {
+    const string = roles[role];
+    const note = Note.transpose(tuning[string], Interval.fromSemitones(Math.max(0, v.frets[string])));
+    const interval = tonic ? DEGREE[(Note.chroma(note)! - Note.chroma(tonic)! + 12) % 12] : '';
+    return { finger, role, string, note, interval };
+  }));
+}
+```
+
+- [ ] **Step 5: Create `supabase/functions/_shared/engine/skillGuides.ts`**
+
+The content is promoted by hand from `Music_Lessons Vault/Research/guitar_methods/`: `giuliani_120_pima`, `travis_emmanuel_thumbstyle`, `claim_thumb_autopilot_first`. Guides for the other tracks come in a later content pass (spec §14).
+
+```ts
+export interface SkillGuide { what: string; how: string[]; listenFor: string }
+
+/** Hand-written explainers per skill ("About this skill"), promoted from Music_Lessons Vault/Research. */
+export const SKILL_GUIDES: Record<string, SkillGuide> = {
+  'fingerstyle.l1.pima_pinches': {
+    what: 'PIMA names the picking-hand fingers from the Spanish: p (pulgar, thumb), i (índice), m (medio), a (anular). Each finger owns a string: the thumb covers the bass strings, i-m-a sit on the top three. A pinch plays the thumb and a finger at the same instant, which is how a bass note and a melody note line up.',
+    how: ['Rest i, m and a on the top three strings, thumb on the bass note of the chord.', 'Pluck from the knuckle, not the wrist; the hand stays still.', 'Pinch: thumb and a together, then i, then m. Keep the pinch notes exactly together.'],
+    listenFor: 'Both notes of each pinch landing as one sound, and every string at the same volume.',
+  },
+  'fingerstyle.l1.giuliani_arpeggios': {
+    what: "Mauro Giuliani's 120 Right-Hand Studies (Op. 1, 1812) hold one simple chord still and cycle the picking hand through arpeggio patterns: three-finger ones first (p-i-m, p-m-i), then a repeated finger (p-i-m-i), then all four (p-i-m-a). Freezing the fretting hand puts all your attention on the picking hand, so each finger learns its own string and its own volume. It is the classical foundation under almost every fingerpicked accompaniment.",
+    how: ['Thumb (p) plays the bass note of the chord; i, m and a play the top three strings.', 'Hold a two-chord loop you already own (G–D or C–G7) so the fretting hand needs no thought.', 'Start the first pattern at the start tempo; move to the next only when every note is even.', 'Climb the tempo ladder one rung at a time; drop a rung after two misses in a row.'],
+    listenFor: 'Even volume across all four fingers, and the bass note ringing under the treble.',
+  },
+  'fingerstyle.l2.thumb_single_bass': {
+    what: "The thumb plays one bass string on every beat, dead steady, while the fingers stay out of it. Tommy Emmanuel teaches this before anything else, and has even taped students' fingers down, because a thumb that runs by itself is what later frees the fingers and the voice.",
+    how: ['Thumb on the root string of the chord, one note per beat.', 'Rest the side of the picking hand lightly on the bridge to palm-mute the bass a little.', 'Talk or count out loud while it runs; the thumb must not drift.'],
+    listenFor: 'Identical spacing and volume on every beat for two full minutes.',
+  },
+  'fingerstyle.l2.alternating_thumb': {
+    what: 'The thumb alternates between the root and a second bass note, usually the fifth, on every beat. It is the engine of Travis picking and most folk accompaniment: a walking bass line from one hand.',
+    how: ['Root on beats 1 and 3, the alternate bass note on beats 2 and 4.', 'The app picks the alternate string from the chord: the fifth if it sits below the treble strings, otherwise the nearest chord tone.', 'Fingers stay off until two minutes run without a stumble.'],
+    listenFor: 'A steady boom-boom bass with no gaps when the thumb changes string.',
+  },
+  'fingerstyle.l3.travis_basic': {
+    what: 'Travis picking (after Merle Travis, refined by Chet Atkins and Tommy Emmanuel) keeps the alternating thumb on every beat and adds treble notes between the thumb beats, often starting with a pinch on beat 1. The result sounds like bass and a second guitar at once.',
+    how: ['Get the alternating thumb automatic first.', 'Pinch the root with the middle finger on the top string on beat 1.', 'Fill the "and" of beats 2, 3 and 4 with index and middle on the top two strings.', 'Keep the bass lightly palm-muted so the treble sits on top.'],
+    listenFor: 'The thumb never waits for the fingers; the treble notes fall exactly between the bass notes.',
+  },
+  'fingerstyle.l3.travis_changes': {
+    what: 'The same Travis pattern carried through chord changes without the bass stopping. The thumb re-targets to the new root and alternate note on the change; the pattern itself does not change.',
+    how: ['Know where the root and alternate bass move for each chord before playing.', 'Change the fretting hand a beat early if needed; the thumb keeps time.', 'Loop two chords, then the whole progression.'],
+    listenFor: 'An unbroken bass line across every chord change.',
+  },
+  'fingerstyle.l4.accompaniment_patterns': {
+    what: 'The pattern families that carry most fingerpicked songs: the ballad arpeggio (p-i-m-a-m-i), the 3/4 waltz (bass then two chord plucks), Travis, and finger-strumming with a thumb bass. Knowing several lets the song choose the pattern, not the other way round.',
+    how: ['Play each family over the same progression.', 'Match the pattern to the feel: waltz for 3/4, ballad for slow 4/4, Travis for driving folk.', 'Keep the thumb on the chord roots whatever the fingers do.'],
+    listenFor: 'Each pattern keeping its own feel at the same tempo.',
+  },
+  'fingerstyle.l4.sing_over_pattern': {
+    what: 'Singing over a fingerstyle pattern only works once the pattern is automatic. The ladder is hum, then speak the lyric in rhythm, then sing, and you only climb a rung when the hands do not falter.',
+    how: ['Run the pattern for two minutes while humming one note.', 'Speak the lyric in rhythm over it.', 'Sing it. If the hands stumble, drop back a rung.'],
+    listenFor: 'The picking staying identical when the voice comes in.',
+  },
+  'fingerstyle.l5.melody_over_thumb': {
+    what: 'A melody or fill played on the top strings while the thumb keeps the bass going underneath: a whole arrangement from one guitar.',
+    how: ['Thumb on steady or alternating bass first.', 'Add the melody notes on the top strings, on the beat at first, then between beats.', 'Keep fills to one per four bars inside a song.'],
+    listenFor: 'The bass carrying on untouched under every melody note.',
+  },
+  'fingerstyle.l5.arrange_own_song': {
+    what: 'A fingerstyle arrangement of one of your own songs: choose a pattern family, place the bass on the roots, and put melody or fills on top. A capo or drop D tuning is allowed if it makes the shapes sit better.',
+    how: ["Pick the pattern family that fits the song's feel.", 'Map the bass roots for every chord.', 'Record a full take and listen back for balance between voice and guitar.'],
+    listenFor: 'The guitar supporting the voice, never competing with it.',
+  },
+};
+```
+
+- [ ] **Step 6: Create `src/lib/skillInfo.ts`**
+
+```ts
+import { PATTERNS, SKILL_PATTERNS, type PickPattern } from '../../supabase/functions/_shared/engine/patterns.ts';
+import { SKILL_GUIDES, type SkillGuide } from '../../supabase/functions/_shared/engine/skillGuides.ts';
+import type { Skill } from '../../supabase/functions/_shared/engine/types.ts';
+import { SKILLS } from '../../supabase/seed/curriculum.ts';
+
+/** Everything the "About this skill" sheet shows: the curriculum row, its guide (if written) and its picking patterns. */
+export function skillInfo(id: string): { skill: Skill; guide: SkillGuide | null; patterns: PickPattern[] } | null {
+  const skill = SKILLS.find(s => s.id === id);
+  if (!skill) return null;
+  return { skill, guide: SKILL_GUIDES[id] ?? null, patterns: (SKILL_PATTERNS[id] ?? []).map(p => PATTERNS[p]) };
+}
+```
+
+- [ ] **Step 7: Run the tests and check they pass**
+
+Run: `npx vitest run tests/engine tests/app && npm run typecheck`
+Expected: PASS. The existing `tests/engine/music.test.ts` is unchanged and still green.
+
+If a `voiceRoles` case differs, check it by hand from semitones before touching the test. Example: DADGAD open = D A D G A D, and Dsus4 = D G A. So bass = 0 (D), treble = strings 5, 4, 3, the strings between are 1 (A = 5th) and 2, so alt = 1.
+
+- [ ] **Step 8: Commit**
+
+```bash
+git add supabase/functions/_shared/engine src/lib/skillInfo.ts tests/engine/patterns.test.ts tests/app/skillInfo.test.ts
+git commit -m "feat(engine): role-based, tuning-aware picking patterns and fingerstyle skill guides
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01BsxF15yCGFvAGAgAc6SMZC"
+```
+
+---
+
+### Task 12: "About this skill" sheet and the animated picking pattern
+
+**Files:**
+- Modify: `src/audio/clock.ts` (add `pluck`), `src/screens/Today.tsx`, `src/screens/Player.tsx`, `src/theme.css`
+- Create: `src/components/PickingPattern.tsx`, `src/components/SkillSheet.tsx`
+
+**Interfaces:**
+- Consumes: `skillInfo`, `resolvePattern`, `PickPattern` (Task 11); `audio` (Task 5); `Voicing`.
+- Produces:
+  - `pluck(when: number, freq: number): void`
+  - `<PickingPattern pattern chord voicing bpm />`: a tab-style view with the high string on top and one column per step. Finger dots are coloured p = gold, i = pink, m = teal, a = violet. Play moves a playhead through the bar at `bpm` and plucks each note at its real pitch.
+  - `<SkillSheet skillId chord voicing bpm onClose />`
+
+- [ ] **Step 1: Add `pluck` to `src/audio/clock.ts`**
+
+```ts
+/** A short plucked-string tone at `when`: triangle wave, fast attack, 0.6 s decay. */
+export function pluck(when: number, freq: number): void {
+  const ac = audio();
+  const osc = ac.createOscillator();
+  const env = ac.createGain();
+  osc.type = 'triangle';
+  osc.frequency.value = freq;
+  env.gain.setValueAtTime(0.0001, when);
+  env.gain.exponentialRampToValueAtTime(0.3, when + 0.005);
+  env.gain.exponentialRampToValueAtTime(0.0001, when + 0.6);
+  osc.connect(env).connect(ac.destination);
+  osc.start(when);
+  osc.stop(when + 0.65);
+}
+```
+
+- [ ] **Step 2: Create `src/components/PickingPattern.tsx`**
+
+```tsx
+import { Note } from 'tonal';
+import { useEffect, useMemo, useState } from 'react';
+import type { Voicing } from '../../supabase/functions/_shared/engine/music.ts';
+import { resolvePattern, type PickPattern } from '../../supabase/functions/_shared/engine/patterns.ts';
+import { audio, pluck } from '../audio/clock.ts';
+
+const STRING_NAMES = ['E', 'A', 'D', 'G', 'B', 'e'];
+const FINGER_CLASS = { p: 'pk-p', i: 'pk-i', m: 'pk-m', a: 'pk-a' } as const;
+const SUB: Record<number, string[]> = { 1: [''], 2: ['', '&'], 3: ['', 'tri', 'let'] };
+
+/** Animated picking pattern: finger dots light up in order on a tab-style string view, each note plucked at its pitch. */
+export function PickingPattern({ pattern, chord, voicing, bpm }: { pattern: PickPattern; chord: string; voicing: Voicing; bpm: number }) {
+  const steps = useMemo(() => resolvePattern(pattern, voicing, chord), [pattern, voicing, chord]);
+  const [playing, setPlaying] = useState(false);
+  const [pos, setPos] = useState(-1);
+  const stepMs = 60_000 / bpm / pattern.stepsPerBeat;
+
+  useEffect(() => {
+    if (!playing) { setPos(-1); return; }
+    let k = 0;
+    const play = () => {
+      const i = k % steps.length;
+      setPos(i);
+      const t = audio().currentTime;
+      for (const n of steps[i]) pluck(t, Note.freq(n.note) ?? 220);
+      k++;
+    };
+    play();
+    const timer = window.setInterval(play, stepMs);
+    return () => window.clearInterval(timer);
+  }, [playing, steps, stepMs]);
+
+  const W = 44 + steps.length * 30;
+  const X = (col: number) => 44 + col * 30 + 15;
+  const Y = (string: number) => 16 + (5 - string) * 24; // tab view: high e on top
+  const label = steps.map(s => s.map(n => `${n.finger} on ${STRING_NAMES[n.string]} (${n.interval})`).join(' + ') || 'rest').join(', ');
+  return (
+    <section className="card" aria-label={`${pattern.name} picking pattern on ${chord}`}>
+      <div className="row"><b>{pattern.name}</b><small className="muted">{chord} · {bpm} bpm</small></div>
+      <div style={{ overflowX: 'auto' }}>
+        <svg width={W} height={170} viewBox={`0 0 ${W} 170`} role="img" aria-label={label}>
+          {pos >= 0 && <rect x={X(pos) - 13} y={4} width={26} height={140} rx={8} className="pk-head" />}
+          {[0, 1, 2, 3, 4, 5].map(s => (
+            <g key={s}>
+              <text x={8} y={Y(s)} className="pk-name">{STRING_NAMES[s]}</text>
+              <text x={26} y={Y(s)} className="pk-fret">{voicing.frets[s] < 0 ? '×' : voicing.frets[s]}</text>
+              <line x1={40} x2={W - 4} y1={Y(s)} y2={Y(s)} className="pk-string" />
+            </g>
+          ))}
+          {steps.map((step, col) => step.map(n => (
+            <g key={`${col}-${n.string}`} className={pos === col ? 'pk-on' : ''}>
+              <circle cx={X(col)} cy={Y(n.string)} r={11} className={`pk-dot ${FINGER_CLASS[n.finger]}`} />
+              <text x={X(col)} y={Y(n.string) + 1} className="pk-finger">{n.finger}</text>
+            </g>
+          )))}
+          {steps.map((_, col) => (
+            <text key={col} x={X(col)} y={162} className="pk-count">
+              {col % pattern.stepsPerBeat === 0 ? col / pattern.stepsPerBeat + 1 : SUB[pattern.stepsPerBeat][col % pattern.stepsPerBeat]}
+            </text>
+          ))}
+        </svg>
+      </div>
+      <p className="muted" style={{ fontSize: 13 }}>p thumb · i index · m middle · a ring. The thumb takes the root and the alternate bass; the fingers take the top chord tones.</p>
+      <button type="button" className="btn-play" aria-pressed={playing} onClick={() => setPlaying(!playing)}>
+        {playing ? 'Stop' : 'Play the pattern'}
+      </button>
+    </section>
+  );
+}
+```
+
+Add to `src/theme.css`:
+
+```css
+.pk-string { stroke: var(--muted); stroke-width: 1.5; opacity: 0.6; }
+.pk-name { fill: var(--muted); font: 600 12px 'IBM Plex Sans', sans-serif; dominant-baseline: central; }
+.pk-fret { fill: var(--text-2); font: 500 11px 'IBM Plex Mono', monospace; dominant-baseline: central; }
+.pk-head { fill: var(--surface-2); }
+.pk-dot { opacity: 0.5; transition: opacity 80ms; }
+.pk-on .pk-dot { opacity: 1; }
+.pk-p { fill: var(--gold); } .pk-i { fill: var(--pink); } .pk-m { fill: var(--teal); } .pk-a { fill: var(--violet); }
+.pk-finger { fill: var(--bg); font: 800 12px 'IBM Plex Sans', sans-serif; text-anchor: middle; dominant-baseline: central; }
+.pk-count { fill: var(--muted); font: 500 11px 'IBM Plex Mono', monospace; text-anchor: middle; }
+.sheet-tall { max-height: 90dvh; overflow-y: auto; }
+.sheet-tall[open] { align-items: stretch; }
+@media (prefers-reduced-motion: reduce) { .pk-dot { transition: none; } }
+```
+
+- [ ] **Step 3: Create `src/components/SkillSheet.tsx`**
+
+```tsx
+import { useEffect, useRef, useState } from 'react';
+import type { Voicing } from '../../supabase/functions/_shared/engine/music.ts';
+import { skillInfo } from '../lib/skillInfo.ts';
+import { PickingPattern } from './PickingPattern.tsx';
+
+/** "About this skill": what it is, how to practise it, what to listen for, and its animated picking patterns. */
+export function SkillSheet({ skillId, chord, voicing, bpm, onClose }: {
+  skillId: string; chord: string; voicing: Voicing | undefined; bpm: number; onClose: () => void;
+}) {
+  const ref = useRef<HTMLDialogElement>(null);
+  const [pi, setPi] = useState(0);
+  useEffect(() => { const d = ref.current; if (d && !d.open) d.showModal(); }, []);
+  const info = skillInfo(skillId);
+  if (!info) return null;
+  const { skill, guide, patterns } = info;
+  return (
+    <dialog ref={ref} className="sheet sheet-tall" onClose={onClose} aria-label={`About ${skill.name}`}>
+      <div className="sheet-head">
+        <small className="muted">{skill.track.replaceAll('_', ' ')} · level {skill.level}</small>
+        <button type="button" className="btn-ghost" onClick={() => ref.current?.close()}>Close</button>
+      </div>
+      <h2 className="title title-sm">{skill.name}</h2>
+      <p className="text-2">{guide?.what ?? skill.description}</p>
+      {guide ? (
+        <>
+          <h3 className="label">How to practise</h3>
+          <ol className="stack-sm" style={{ margin: 0, paddingLeft: 20 }}>{guide.how.map(h => <li key={h}>{h}</li>)}</ol>
+          <p><b>Listen for:</b> <span className="text-2">{guide.listenFor}</span></p>
+        </>
+      ) : (
+        <p className="muted">A fuller guide for this skill is on the way. The block's "Tips &amp; why" has today's notes.</p>
+      )}
+      {patterns.length > 0 && voicing && (
+        <>
+          {patterns.length > 1 && (
+            <div className="toggle" role="group" aria-label="Pattern">
+              {patterns.map((p, k) => <button key={p.id} type="button" aria-pressed={k === pi} onClick={() => setPi(k)}>{p.name}</button>)}
+            </div>
+          )}
+          <PickingPattern key={patterns[pi].id} pattern={patterns[pi]} chord={chord} voicing={voicing} bpm={bpm} />
+        </>
+      )}
+    </dialog>
+  );
+}
+```
+
+- [ ] **Step 4: Wire it into Today and the Player**
+
+In `src/screens/Today.tsx`:
+1. Import `SkillSheet` and add `const [about, setAbout] = useState(false);` next to the other state.
+2. Under the `why_it_matters` paragraph, add:
+
+```tsx
+        <button type="button" className="btn-ghost" style={{ alignSelf: 'flex-start' }} onClick={() => setAbout(true)}>About this skill ›</button>
+```
+3. Before `</main>`, add:
+```tsx
+      {about && (
+        <SkillSheet skillId={plan.skill_id} chord={plan.music.progression.chords[0]}
+          voicing={plan.music.voicings[plan.music.progression.chords[0]]?.[0]}
+          bpm={plan.blocks.find(b => b.kind === 'new_skill')?.items[0]?.target?.start ?? 60}
+          onClose={() => setAbout(false)} />
+      )}
+```
+
+In `src/screens/Player.tsx` (`BlockView`):
+1. Import `skillInfo`, `PickingPattern` and `SkillSheet`.
+2. Next to the other `useState` calls, so the hook order stays fixed, add:
+
+```tsx
+  const [about, setAbout] = useState(false);
+```
+3. With the other derived values, add:
+```tsx
+  const skillId = block.kind === 'retest' ? plan.retest?.skill_id : ['new_skill', 'apply'].includes(block.kind) ? plan.skill_id : undefined;
+  const firstChord = plan.music.progression.chords[0];
+  const firstVoicing = plan.music.voicings[firstChord]?.[0];
+  const pattern = skillId ? skillInfo(skillId)?.patterns[0] : undefined;
+```
+4. Under the `<h1>`, add:
+```tsx
+      {skillId && <button type="button" className="btn-ghost" style={{ alignSelf: 'flex-start' }} onClick={() => setAbout(true)}>About this skill ›</button>}
+```
+5. Just above the `Metronome`, add the inline pattern (it follows the metronome tempo):
+```tsx
+      {pattern && firstVoicing && <PickingPattern pattern={pattern} chord={firstChord} voicing={firstVoicing} bpm={metro.bpm} />}
+```
+6. Next to the voicing sheet, add:
+```tsx
+      {about && skillId && <SkillSheet skillId={skillId} chord={firstChord} voicing={firstVoicing} bpm={metro.bpm} onClose={() => setAbout(false)} />}
+```
+
+- [ ] **Step 5: Verify in the browser**
+
+On today's Giuliani lesson:
+1. Today → "About this skill ›" opens: Arpeggio patterns, the Giuliani explanation, How to practise, Listen for, and chips p-i-m / p-m-i / p-i-m-i / p-i-m-a.
+2. "Play the pattern" moves the playhead across the bar. On G with p-i-m-a, the dots light up in order: the gold p on the low E (G2, R), pink i on G (G3), teal m on B (B3), violet a on high e (G4). You hear each of those pitches. Switching chips changes the pattern.
+3. In the Player's new-skill block, the inline pattern card follows the tempo as you press − or +.
+4. With reduced motion turned on in the OS, the dots stop fading but the playhead still steps.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add src/audio/clock.ts src/components/PickingPattern.tsx src/components/SkillSheet.tsx src/screens src/theme.css
+git commit -m "feat(app): About this skill sheet and animated, audible picking patterns
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01BsxF15yCGFvAGAgAc6SMZC"
+```
+
+---
+
+### Task 13: PWA (installable, works offline)
 
 **Files:**
 - Modify: `package.json`, `vite.config.ts`
@@ -2699,7 +3256,7 @@ Claude-Session: https://claude.ai/code/session_01BsxF15yCGFvAGAgAc6SMZC"
 
 ---
 
-### Task 12: Local end-to-end pass, vault sync and handoff notes
+### Task 14: Local end-to-end pass, vault sync and handoff notes
 
 **Files:**
 - Modify: `README.md` (if anything drifted)
@@ -2725,7 +3282,7 @@ Expected: `Codebase/_actions/` gains `screen` action hubs for `src/screens/*`.
 
 - [ ] **Step 4: Write the handoff**
 
-Write `docs/SESSION_HANDOFF_2026-09-29.md` in the same shape as `SESSION_HANDOFF_2026-09-28b.md`: what was built, the design decisions, known gaps, and what's next (Task 13 deploy, Phase 4).
+Write `docs/SESSION_HANDOFF_2026-09-29.md` in the same shape as `SESSION_HANDOFF_2026-09-28b.md`: what was built, the design decisions, known gaps, and what's next (Task 15 deploy, Phase 4).
 
 - [ ] **Step 5: Commit**
 
@@ -2739,7 +3296,7 @@ Claude-Session: https://claude.ai/code/session_01BsxF15yCGFvAGAgAc6SMZC"
 
 ---
 
-### Task 13: Deploy (hosted Supabase + Netlify). **Ask the user at every gate**
+### Task 15: Deploy (hosted Supabase + Netlify). **Ask the user at every gate**
 
 **Files:**
 - Create: `netlify.toml`

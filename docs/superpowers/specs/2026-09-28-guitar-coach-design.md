@@ -384,6 +384,8 @@ The output is `plan.music`, and it is the **only** chord and scale source the LL
 - Stored recordings.
 - Coach chat.
 - Vault → DB promotion.
+- Chord engine, progression-aware voicings, capo suggestions and alternate tunings (§14).
+- Skill guides for the non-fingerstyle tracks (§14.4).
 
 ---
 
@@ -391,3 +393,46 @@ The output is `plan.music`, and it is the **only** chord and scale source the LL
 
 1. Default LLM: **decided 2026-09-28** by the Phase 2 side-by-side (`docs/superpowers/model-comparison-2026-09-28.html`): default `qwen/qwen3.7-plus`, fallback `moonshotai/kimi-k2.6`, both with reasoning off (with it on, each took ~100 s per lesson).
 2. Direct provider vs OpenRouter: OpenRouter assumed. A direct provider only changes `LLM_BASE_URL` and the key.
+
+---
+
+## 14. Chord engine, tunings and skill guides (added 2026-09-29; later phase)
+
+The user's direction: music logic is computed, not memorised. Every chord is intervals stacked on a root, every fret is one semitone, and an instrument is just a tuning plus a string count and a fret count. Phase 3 lays the groundwork:
+- `noteAt(string, fret, tuning)` and `TUNINGS`;
+- picking patterns defined by role and resolved from semitones (`engine/patterns.ts`).
+
+Phase 3 still takes its chord shapes from `chords-db` (standard tuning). The rest arrives as its own phase, after Songwriting:
+
+**14.1 Instrument-agnostic voicing generator**
+- **Input:** `Instrument { name, tuning: string[] (low → high), frets }`, so guitar, drop D, DADGAD, open G, ukulele (G C E A, re-entrant), mandolin and banjo are all data. Plus a chord symbol.
+- **Chord tones from `tonal`:** the triad (R, 3, 5) plus the rules for sus2/sus4 (the 2 or 4 replaces the 3), add9/add11/add13 (the extension is added and the 3 is kept), sevenths, and slash bass.
+- **Search:**
+  - every string may be muted, open, or fretted within a span of 4 frets (configurable);
+  - a shape must contain the root and the 3rd (or the sus note), may omit the 5th, and has the required bass note lowest;
+  - no more than 4 fretting fingers, where a barre counts as 1.
+- **Scoring:**
+  - playability (span, finger count, barre, muted strings only at the edges);
+  - completeness (every chord tone present);
+  - bass correctness;
+  - open strings (a bonus when the style is open or folk).
+- **Output:** ranked `Voicing[]` with fingers and barres, the same type as today, so diagrams and patterns work unchanged. `chords-db` stays as a cross-check test oracle for standard tuning.
+
+**14.2 Progression-aware voicing choice** (user, 2026-09-29): pick shapes per **song**, not per chord.
+- **Neck region:**
+  - Beginners and folk start with open position.
+  - Some styles sit higher: country and bluegrass often use a capo at 5 or 7, which gives brighter tone and open-string drones in a new key. The style profile carries a preferred register and capo range.
+- **Grouping:** choose one voicing per chord to minimise the total hand movement across the progression (the fret distance between shape centroids, plus shared or common-tone fingers). Keeping a complex progression in one part of the neck makes changes and runs faster.
+- **Capo suggestion:** for a target key, try capo 0–9 with open shapes and score playability, grouping and style register. For example, "key of A, bluegrass: capo 2, play G shapes".
+- **Output:** a `ProgressionVoicing` (capo + one voicing per chord + a movement score) that feeds the chord panel, the picking-pattern roles and the Apply block.
+
+**14.3 Tunings in the curriculum**
+- A `skill.tuning` field (default standard) and `plan.music.tuning`. A tuning block at the start of the lesson plays a per-string reference drone.
+- **Order of introduction:**
+  1. drop D (only the 6th string changes; a one-finger power chord in D);
+  2. DADGAD (modal, sus sounds, Celtic style);
+  3. open D and open G (slide, drones).
+- Chord diagrams and the picking view label strings from the tuning; the header of the diagram shows the tuning name.
+- A tuner (single-note pitch detection) belongs with the "mic pitch checking" spike (§12 Later).
+
+**14.4 Skill guides content pass.** Phase 3 ships guides for the fingerstyle track. The other tracks (rhythm, fretboard, fills, ear and voice, songwriting, theory) get the same `what / how / listen for` guides, drafted from `Music_Lessons Vault/Research/` by a research agent and reviewed by the user before they go into `engine/skillGuides.ts`. Until then the sheet falls back to the curriculum description.
