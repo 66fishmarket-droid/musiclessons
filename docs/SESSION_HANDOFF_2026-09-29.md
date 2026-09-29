@@ -53,12 +53,31 @@
   - the offline shell and lesson;
   - the About sheet and pattern animation.
 
+## Final review (fresh reviewer) and fixes
+The verdict was "with fixes": no Critical issues and 3 Important. Two Minors were re-graded Important because they affect daily use. All five are fixed test-first (224 unit tests pass):
+1. **Offline relaunch after the sign-in token expired showed SignIn.** It now serves today's cached lesson, or shows "You're offline". Checked in the browser with an expired token and the API gateway stopped.
+2. **Day rollover.** A PWA left open overnight loads the new day's lesson when it comes back to the foreground. It never does this mid-session.
+3. **Recorder.** Leaving the record block stops the take and still keeps it, releases the mic, and can't open two mic streams.
+4. **iOS audio.** Audio now resumes when iOS reports the `interrupted` state after a call or screen lock.
+5. **Resume.** Coming back to a block whose time had already run out restarts its clock instead of showing overtime.
+
+Line endings: every Phase 3 file is normalised to LF. Windows rewrites had made whole files show as changed.
+
 ## Not yet checked (needs your phone)
 - Readability from a music stand, the screen staying awake, and the microphone permission and recording.
 - Hearing the plucked pattern pitches.
 - Installing to the home screen.
 
 ## Known minors (deferred)
+- The metronome can burst missed beats after background throttling, and the beat dot can re-light after Stop.
+- The startup sync and the Done save have no network timeout, so they can hang on a stalled connection. Nothing is lost.
+- Some server errors (anything other than "lesson not found") are retried silently forever, with no "waiting to sync" message.
+- Reopening offline after Done shows Start again. Doing the lesson again is harmless.
+- Keys ignore auto-repeat and modifier keys (Alt+← also moves back a block), and the arrow keys still work while a sheet is open.
+- Saving the session can throw if browser storage is blocked or full.
+- `voiceRoles` breaks if a chord shape sounds fewer than 3 strings.
+- "Minutes practised" counts time the app was closed.
+- The auto-updating service worker could reload the page mid-session after a deploy. Revisit at Task 15.
 - Apply and review blocks start the metronome at the new-skill **start** tempo instead of the tempo you reached earlier in the session.
 - The main JS chunk is over 500 KB (the engine + the chords-db JSON; about 70 KB gzipped).
 
