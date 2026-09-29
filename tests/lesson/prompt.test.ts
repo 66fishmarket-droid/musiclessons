@@ -19,6 +19,8 @@ describe('buildMessages', () => {
     expect(msgs[1].content.startsWith("Write today's lesson for this plan:\n")).toBe(true);
     expect(PROMPT_VERSION).toMatch(/^gc-\d{4}-\d{2}-\d{2}[a-z]?$/);
     expect(SYSTEM_PROMPT).toMatch(/reset: exactly one instruction/);
+    expect(SYSTEM_PROMPT).toMatch(/Plain words: the learner is a beginner/);
+    expect(SYSTEM_PROMPT).toMatch(/The create block's instructions are a recipe/);
   });
   it('briefs the plan: skill, theory topic, key, chords and blocks in order', () => {
     expect(brief).toMatchObject({

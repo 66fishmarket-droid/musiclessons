@@ -7,6 +7,7 @@ import { ChordText } from '../components/ChordText.tsx';
 import { Metronome } from '../components/Metronome.tsx';
 import { PickingPattern } from '../components/PickingPattern.tsx';
 import { Rail } from '../components/Rail.tsx';
+import { ScaleBoard } from '../components/ScaleBoard.tsx';
 import { Recorder } from '../components/Recorder.tsx';
 import { SkillSheet } from '../components/SkillSheet.tsx';
 import { VoicingSheet } from '../components/VoicingSheet.tsx';
@@ -66,8 +67,9 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
   const steps = text?.instructions.length ? text.instructions : [''];
   const tonic = tonicOf(plan.key);
   const skillId = block.kind === 'retest' ? plan.retest?.skill_id : ['new_skill', 'apply'].includes(block.kind) ? plan.skill_id : undefined;
-  const firstChord = plan.music.progression.chords[0];
-  const firstVoicing = plan.music.voicings[firstChord]?.[0];
+  const chords = plan.music.progression.chords;
+  const [chordIdx, setChordIdx] = useState(0);
+  const chord = chords[chordIdx];
   const pattern = skillId ? skillInfo(skillId)?.patterns[0] : undefined;
 
   const metro = useMetronome(first);
@@ -127,10 +129,11 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
         <button type="button" className="round" aria-label="Next step" disabled={step === steps.length - 1} onClick={() => setStep(step + 1)}>›</button>
       </section>
 
-      {block.kind === 'apply' && <ChordPanel chords={plan.music.progression.chords} voicings={plan.music.voicings} onShapes={setSheet} />}
+      {block.kind === 'warmup' && <ScaleBoard scale={plan.music.scale} />}
+      {block.kind === 'apply' && <ChordPanel chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} onShapes={setSheet} />}
       {block.kind === 'create' && <section className="card"><p><ChordText text={content.create_prompt} onChord={setSheet} /></p></section>}
       {block.kind === 'record' && <Recorder onTake={onTake} />}
-      {pattern && firstVoicing && <PickingPattern pattern={pattern} chord={firstChord} voicing={firstVoicing} bpm={metro.bpm} />}
+      {pattern && chords.length > 0 && <PickingPattern pattern={pattern} chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} bpm={metro.bpm} />}
       {hasMetro && (
         <Metronome metro={metro} target={target} ladder={target !== null ? tempoLadder(first, target) : null}
           drone={drone} onDrone={() => setDrone(!drone)} tonic={tonic} />
@@ -169,7 +172,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
         <button type="button" className="btn-ghost" disabled={i === 0} onClick={() => onMove(i - 1)}>‹ Back</button>
         <button type="button" className="btn-ghost" onClick={() => onMove(i + 1)}>Skip ›</button>
       </nav>
-      {about && skillId && <SkillSheet skillId={skillId} chord={firstChord} voicing={firstVoicing} bpm={metro.bpm} onClose={() => setAbout(false)} />}
+      {about && skillId && <SkillSheet skillId={skillId} chord={chord} voicing={plan.music.voicings[chord]?.[0]} bpm={metro.bpm} onClose={() => setAbout(false)} />}
       {sheet && <VoicingSheet chord={sheet} known={plan.music.voicings[sheet]} onClose={() => setSheet(null)} />}
     </main>
   );

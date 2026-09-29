@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Voicing } from '../../supabase/functions/_shared/engine/music.ts';
 import { skillInfo } from '../lib/skillInfo.ts';
 import { PickingPattern } from './PickingPattern.tsx';
@@ -9,6 +9,7 @@ export function SkillSheet({ skillId, chord, voicing, bpm, onClose }: {
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const [pi, setPi] = useState(0);
+  const one = useMemo(() => ({ chords: [chord], voicings: { [chord]: voicing ? [voicing] : [] } }), [chord, voicing]);
   useEffect(() => { const d = ref.current; if (d && !d.open) d.showModal(); }, []);
   const info = skillInfo(skillId);
   if (!info) return null;
@@ -37,7 +38,7 @@ export function SkillSheet({ skillId, chord, voicing, bpm, onClose }: {
               {patterns.map((p, k) => <button key={p.id} type="button" aria-pressed={k === pi} onClick={() => setPi(k)}>{p.name}</button>)}
             </div>
           )}
-          <PickingPattern key={patterns[pi].id} pattern={patterns[pi]} chord={chord} voicing={voicing} bpm={bpm} />
+          <PickingPattern key={patterns[pi].id} pattern={patterns[pi]} chords={one.chords} voicings={one.voicings} idx={0} onIdx={() => {}} bpm={bpm} />
         </>
       )}
     </dialog>
