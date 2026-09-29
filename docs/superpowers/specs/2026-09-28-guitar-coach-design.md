@@ -424,6 +424,10 @@ Phase 3 still takes its chord shapes from `chords-db` (standard tuning). The res
   - Some styles sit higher: country and bluegrass often use a capo at 5 or 7, which gives brighter tone and open-string drones in a new key. The style profile carries a preferred register and capo range.
 - **Grouping:** choose one voicing per chord to minimise the total hand movement across the progression (the fret distance between shape centroids, plus shared or common-tone fingers). Keeping a complex progression in one part of the neck makes changes and runs faster.
 - **Capo suggestion:** for a target key, try capo 0–9 with open shapes and score playability, grouping and style register. For example, "key of A, bluegrass: capo 2, play G shapes".
+- **Lick room** (user, 2026-09-29): score each voicing for how easy it makes a fill. That means how many fretting fingers are free, whether the pinky is the only free finger (as on a full barre), and which scale tones sit within reach of the shape. Open chords and 3–4-string triads usually leave a finger or two free to hammer, pull off and run up and down the frets; full barres rarely do. When the lesson or the song calls for fills (the Fills track, the Apply block with a fill element), the choice leans towards shapes with lick room.
+  - A fill is then generated from the shape plus the theory: the chord tones held, and the major or minor pentatonic notes within reach of the free fingers.
+  - The fills ladder in `Research/guitar_methods/claim_fills_static_top_note.md` sets the order: sus/add hammer-ons on open chords, then bass walks, then double-stops with a static top note, then sliding 6ths, then short pentatonic fills around the current CAGED shape.
+  - Rule: a fill lasts 1–2 beats and returns to the groove within the bar.
 - **Output:** a `ProgressionVoicing` (capo + one voicing per chord + a movement score) that feeds the chord panel, the picking-pattern roles and the Apply block.
 
 **14.3 Tunings in the curriculum**
