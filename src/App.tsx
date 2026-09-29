@@ -9,7 +9,7 @@ import { ANON_KEY, SUPABASE_URL, db } from './lib/supabase.ts';
 import { SignIn } from './screens/SignIn.tsx';
 // Task 8–10 imports (add as each screen lands):
 import { Today } from './screens/Today.tsx';
-// import { Player } from './screens/Player.tsx';
+import { Player } from './screens/Player.tsx';
 // import { Done } from './screens/Done.tsx';
 
 /** Auth gate → flush queued completions → today's lesson → Today / Player / Done. */
@@ -69,5 +69,6 @@ export function App() {
       </main>
     );
   }
+  if (screen === 'player') return <Player lesson={lesson} onFinish={finish} onTake={setTake} />;
   return <Today lesson={lesson} onStart={() => setScreen('player')} />;
 }
