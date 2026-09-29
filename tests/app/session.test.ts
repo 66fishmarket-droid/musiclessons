@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { flushPending, queueCompletion, type Completion } from '../../src/lib/pending.ts';
 import {
-  blockResult, clearSession, goTo, loadSession, logVerdict, newSession, saveSession, slotsFor, summary, verdictFor, type Log,
+  blockResult, clearSession, goTo, loadSession, logVerdict, newSession, saveSession, resumeSession, slotsFor, summary, verdictFor, type Log,
 } from '../../src/lib/session.ts';
 import { PLAN, memoryKV } from './fixtures.ts';
 
@@ -123,5 +123,13 @@ describe('verdictFor (clean below target is progress, not a pass)', () => {
     s = logVerdict(s, log(1, 'skill:fingerstyle.l1.giuliani_arpeggios', null, 53));
     expect(blockResult(s, 1)).toBe('clean at 53');
     expect(summary(s, 60_000)).toMatchObject({ bestBpm: 53, clean: 1, rated: 1 });
+  });
+});
+
+describe('resumeSession (coming back after the app was closed)', () => {
+  it('restarts the block clock only when the block time already ran out', () => {
+    const s = { ...newSession('L1', 0), index: 1, blockStartedAt: 1_000 };
+    expect(resumeSession(s, 600, 1_000 + 300_000)).toBe(s); // 5 min into a 10-min block: keep counting
+    expect(resumeSession(s, 600, 1_000 + 3_600_000)).toEqual({ ...s, blockStartedAt: 1_000 + 3_600_000 });
   });
 });

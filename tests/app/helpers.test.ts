@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { clock, localDate, weekDays } from '../../src/lib/dates.ts';
+import { clock, localDate, needsNewDay, weekDays } from '../../src/lib/dates.ts';
 import { keyAction } from '../../src/lib/keys.ts';
 import { tempoLadder } from '../../src/lib/ladder.ts';
 import { BLOCK_META, bpmTarget, refLabel, startBpm, tonicOf } from '../../src/lib/lesson.ts';
@@ -95,5 +95,15 @@ describe('lesson meta', () => {
     expect(tonicOf('G')).toBe('G');
     expect(refLabel('skill:fingerstyle.l1.giuliani_arpeggios')).toBe('giuliani arpeggios');
     expect(refLabel('theory:intervals_basic')).toBe('intervals basic');
+  });
+});
+
+describe('needsNewDay (app left open past midnight)', () => {
+  it("reloads when the loaded lesson is not today's, except mid-session", () => {
+    expect(needsNewDay('2026-09-28', '2026-09-29', 'today')).toBe(true);
+    expect(needsNewDay('2026-09-28', '2026-09-29', 'done')).toBe(true);
+    expect(needsNewDay('2026-09-28', '2026-09-29', 'player')).toBe(false); // never yank a running session
+    expect(needsNewDay('2026-09-29', '2026-09-29', 'today')).toBe(false);
+    expect(needsNewDay(undefined, '2026-09-29', 'today')).toBe(false); // nothing loaded yet
   });
 });

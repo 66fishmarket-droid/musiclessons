@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError, GENERATE_TIMEOUT_MS, completeLesson, fetchToday } from '../../src/lib/api.ts';
+import { ApiError, GENERATE_TIMEOUT_MS, cachedLesson, completeLesson, fetchToday, offlineStart } from '../../src/lib/api.ts';
 import { memoryKV } from './fixtures.ts';
 
 const ROW = { id: 'L1', lesson_date: '2026-09-29', status: 'planned', plan: {}, content: {} };
@@ -57,5 +57,26 @@ describe('completeLesson', () => {
   it('throws on failure so the caller can queue it, but drops a lesson that no longer exists', async () => {
     await expect(completeLesson({ rpc: async () => ({ error: { code: '08006', message: 'offline' } }) } as never, c)).rejects.toBeTruthy();
     await expect(completeLesson({ rpc: async () => ({ error: { code: 'P0002', message: 'lesson not found' } }) } as never, c)).resolves.toBeUndefined();
+  });
+});
+
+describe('offline start (token expired while offline must not land on SignIn)', () => {
+  it("serves only today's cached copy", () => {
+    const kv = memoryKV();
+    expect(cachedLesson(kv, '2026-09-29')).toBeNull();
+    kv.setItem('gc.lesson', JSON.stringify({ date: '2026-09-28', lesson: ROW }));
+    expect(cachedLesson(kv, '2026-09-29')).toBeNull();
+    kv.setItem('gc.lesson', JSON.stringify({ date: '2026-09-29', lesson: ROW }));
+    expect(cachedLesson(kv, '2026-09-29')).toEqual(ROW);
+    kv.setItem('gc.lesson', '{broken');
+    expect(cachedLesson(kv, '2026-09-29')).toBeNull();
+  });
+  it('goes offline when a stored sign-in could not refresh for network reasons', () => {
+    const base = { hasSession: false, hasStoredToken: true, online: true, retryableError: false };
+    expect(offlineStart({ ...base, online: false })).toBe(true);
+    expect(offlineStart({ ...base, retryableError: true })).toBe(true);
+    expect(offlineStart(base)).toBe(false); // online, real sign-out: show SignIn
+    expect(offlineStart({ ...base, hasStoredToken: false, online: false })).toBe(false); // never signed in
+    expect(offlineStart({ ...base, hasSession: true, online: false })).toBe(false); // has a session: normal path
   });
 });

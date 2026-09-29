@@ -15,13 +15,17 @@ import { keyAction } from '../lib/keys.ts';
 import { tempoLadder } from '../lib/ladder.ts';
 import { BLOCK_META, bpmTarget, refLabel, startBpm, tonicOf, type TodayLesson } from '../lib/lesson.ts';
 import { skillInfo } from '../lib/skillInfo.ts';
-import { goTo, loadSession, logVerdict, saveSession, slotsFor, verdictFor, type Log, type Session } from '../lib/session.ts';
+import { goTo, loadSession, logVerdict, resumeSession, saveSession, slotsFor, verdictFor, type Log, type Session } from '../lib/session.ts';
 import { useWakeLock } from '../lib/wakeLock.ts';
 
 /** The block-by-block player. Saves on every change, so a reload resumes the same block with its verdicts. */
 export function Player({ lesson, onFinish, onTake }: { lesson: TodayLesson; onFinish: () => void; onTake: (url: string) => void }) {
   const count = lesson.plan.blocks.length;
-  const [s, setS] = useState(() => loadSession(localStorage, lesson.id, Date.now()));
+  const [s, setS] = useState(() => {
+    const now = Date.now();
+    const saved = loadSession(localStorage, lesson.id, now);
+    return resumeSession(saved, (lesson.plan.blocks[saved.index]?.minutes ?? 0) * 60, now);
+  });
   useEffect(() => saveSession(localStorage, s), [s]);
   useEffect(() => { if (s.index >= count) onFinish(); }, [s.index, count, onFinish]);
   useWakeLock(true);

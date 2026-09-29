@@ -12,6 +12,11 @@ export function weekDays(date: string): string[] {
   return Array.from({ length: 7 }, (_, i) => new Date(monday + i * 86_400_000).toISOString().slice(0, 10));
 }
 
+/** True when the app is showing another day's lesson and isn't mid-session, so it should load today's. */
+export function needsNewDay(lessonDate: string | undefined, today: string, screen: 'today' | 'player' | 'done'): boolean {
+  return lessonDate !== undefined && lessonDate !== today && screen !== 'player';
+}
+
 /** m:ss countdown; overtime shows as +m:ss. */
 export function clock(secs: number): string {
   const a = Math.abs(Math.round(secs));

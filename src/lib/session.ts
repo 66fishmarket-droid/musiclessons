@@ -24,6 +24,11 @@ export function loadSession(kv: KV, lessonId: string, now: number): Session {
   return newSession(lessonId, now);
 }
 
+/** On reopening: a block whose time already ran out (the app was closed) gets a fresh clock instead of stale overtime. */
+export function resumeSession(s: Session, blockSeconds: number, now: number): Session {
+  return now - s.blockStartedAt > blockSeconds * 1000 ? { ...s, blockStartedAt: now } : s;
+}
+
 /** Persists the session. */
 export function saveSession(kv: KV, s: Session): void {
   kv.setItem(key(s.lessonId), JSON.stringify(s));

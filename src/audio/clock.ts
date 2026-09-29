@@ -3,7 +3,7 @@ let ctx: AudioContext | null = null;
 /** The app's single AudioContext, created and resumed on first use (call from a tap: iOS needs a user gesture). */
 export function audio(): AudioContext {
   ctx ??= new AudioContext();
-  if (ctx.state === 'suspended') void ctx.resume();
+  if (ctx.state !== 'running') void ctx.resume(); // 'suspended', or iOS 'interrupted' after a call or screen lock
   return ctx;
 }
 

@@ -31,12 +31,28 @@ export async function fetchToday(o: {
     return body;
   } catch (e) {
     if (e instanceof ApiError && e.status === 401) throw e;
-    try {
-      const cached = JSON.parse(o.storage.getItem(CACHE) ?? 'null') as { date: string; lesson: TodayLesson } | null;
-      if (cached?.date === o.date) return cached.lesson;
-    } catch { /* corrupt cache: report the original error */ }
+    const cached = cachedLesson(o.storage, o.date);
+    if (cached) return cached;
     throw e;
   }
+}
+
+/** Today's offline copy of the lesson, or null when there is none for `date` (yesterday's copy is never served). */
+export function cachedLesson(storage: KV, date: string): TodayLesson | null {
+  try {
+    const cached = JSON.parse(storage.getItem(CACHE) ?? 'null') as { date: string; lesson: TodayLesson } | null;
+    return cached?.date === date ? cached.lesson : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Start in offline mode: a stored sign-in exists but its token couldn't be refreshed because the network is down.
+ * auth-js reports that as "no session", which would otherwise land on SignIn with the cached lesson unreachable.
+ */
+export function offlineStart(o: { hasSession: boolean; hasStoredToken: boolean; online: boolean; retryableError: boolean }): boolean {
+  return !o.hasSession && o.hasStoredToken && (!o.online || o.retryableError);
 }
 
 /** Calls complete_lesson(); throws so the caller can queue it, except for a lesson that no longer exists (dropped). */
