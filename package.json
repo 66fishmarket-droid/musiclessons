@@ -15,19 +15,30 @@
     "seed:sql": "node scripts/gen-seed-sql.ts",
     "import:legacy": "node --env-file=.env.local scripts/import-legacy.ts",
     "dev:session": "node --env-file=.env.local scripts/dev-session.ts",
-    "compare:models": "node --env-file=supabase/functions/.env scripts/compare-models.ts"
+    "compare:models": "node --env-file=supabase/functions/.env scripts/compare-models.ts",
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 5173",
+    "bursts": "node scripts/gen-bursts.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
     "@tombatossals/chords-db": "^0.5.1",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "tonal": "^6.4.3"
   },
   "devDependencies": {
     "@types/node": "^24.19.0",
     "@types/pg": "^8.23.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^5.2.0",
     "csv-parse": "^6.2.1",
     "pg": "^8.23.0",
     "typescript": "^5.9.3",
+    "vite": "^7.3.6",
+    "vite-plugin-pwa": "^1.3.0",
     "vitest": "^3.2.7"
   }
 }

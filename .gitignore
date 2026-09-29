@@ -8,3 +8,6 @@ supabase/.temp/
 supabase/.branches/
 # Personal Ultimate Guitar tab exports (copyrighted; local only, same policy as the vault)
 tabs/
+# Vite build output
+dist/
+dev-dist/
