@@ -19,9 +19,18 @@ export interface MusicContent {
 }
 export interface MusicInput { key: string; track: string; style: StyleProfile | null; element: StyleElement | null }
 
-/** Pitch class sounding at a string (0 = low E) and fret. */
-export function noteAt(string: number, fret: number): string {
-  return Note.pitchClass(Note.transpose(TUNING[string], Interval.fromSemitones(fret)));
+/** Named tunings, low → high string, with octaves. Everything downstream is semitone maths from these. */
+export const TUNINGS = {
+  standard: TUNING,
+  dropD: ['D2', 'A2', 'D3', 'G3', 'B3', 'E4'],
+  dadgad: ['D2', 'A2', 'D3', 'G3', 'A3', 'D4'],
+  openD: ['D2', 'A2', 'D3', 'F#3', 'A3', 'D4'],
+  openG: ['D2', 'G2', 'D3', 'G3', 'B3', 'D4'],
+} satisfies Record<string, readonly string[]>;
+
+/** Pitch class sounding at a string (0 = lowest) and fret, in the given tuning (default standard). */
+export function noteAt(string: number, fret: number, tuning: readonly string[] = TUNING): string {
+  return Note.pitchClass(Note.transpose(tuning[string], Interval.fromSemitones(fret)));
 }
 
 /** Every fret 0..maxFret on every string whose note is in the scale, with its scale degree. */
