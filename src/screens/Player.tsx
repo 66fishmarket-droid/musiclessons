@@ -5,13 +5,16 @@ import { Burst } from '../components/Burst.tsx';
 import { ChordPanel } from '../components/ChordPanel.tsx';
 import { ChordText } from '../components/ChordText.tsx';
 import { Metronome } from '../components/Metronome.tsx';
+import { PickingPattern } from '../components/PickingPattern.tsx';
 import { Rail } from '../components/Rail.tsx';
 import { Recorder } from '../components/Recorder.tsx';
+import { SkillSheet } from '../components/SkillSheet.tsx';
 import { VoicingSheet } from '../components/VoicingSheet.tsx';
 import { clock } from '../lib/dates.ts';
 import { keyAction } from '../lib/keys.ts';
 import { tempoLadder } from '../lib/ladder.ts';
 import { BLOCK_META, bpmTarget, refLabel, startBpm, tonicOf, type TodayLesson } from '../lib/lesson.ts';
+import { skillInfo } from '../lib/skillInfo.ts';
 import { goTo, loadSession, logVerdict, saveSession, slotsFor, verdictFor, type Log, type Session } from '../lib/session.ts';
 import { useWakeLock } from '../lib/wakeLock.ts';
 
@@ -58,12 +61,17 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
   const slots = slotsFor(plan, i);
   const steps = text?.instructions.length ? text.instructions : [''];
   const tonic = tonicOf(plan.key);
+  const skillId = block.kind === 'retest' ? plan.retest?.skill_id : ['new_skill', 'apply'].includes(block.kind) ? plan.skill_id : undefined;
+  const firstChord = plan.music.progression.chords[0];
+  const firstVoicing = plan.music.voicings[firstChord]?.[0];
+  const pattern = skillId ? skillInfo(skillId)?.patterns[0] : undefined;
 
   const metro = useMetronome(first);
   const [drone, setDrone] = useState(false);
   useDrone(drone ? tonic : null);
   const [step, setStep] = useState(0);
   const [sheet, setSheet] = useState<string | null>(null);
+  const [about, setAbout] = useState(false);
   const total = block.minutes * 60;
   const left = useSecondsLeft(total, session.blockStartedAt);
   const chimed = useRef(left <= 0);
@@ -104,6 +112,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
         <span className={left < 0 ? 'timer over' : 'timer'} role="timer" aria-label="Block time left">{clock(left)}</span>
       </div>
       <h1 className="title title-sm">{text?.target_text || meta.label}</h1>
+      {skillId && <button type="button" className="btn-ghost" style={{ alignSelf: 'flex-start' }} onClick={() => setAbout(true)}>About this skill ›</button>}
 
       <section className="card step" aria-live="polite">
         <div className="step-text">
@@ -117,6 +126,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
       {block.kind === 'apply' && <ChordPanel chords={plan.music.progression.chords} voicings={plan.music.voicings} onShapes={setSheet} />}
       {block.kind === 'create' && <section className="card"><p><ChordText text={content.create_prompt} onChord={setSheet} /></p></section>}
       {block.kind === 'record' && <Recorder onTake={onTake} />}
+      {pattern && firstVoicing && <PickingPattern pattern={pattern} chord={firstChord} voicing={firstVoicing} bpm={metro.bpm} />}
       {hasMetro && (
         <Metronome metro={metro} target={target} ladder={target !== null ? tempoLadder(first, target) : null}
           drone={drone} onDrone={() => setDrone(!drone)} tonic={tonic} />
@@ -155,6 +165,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
         <button type="button" className="btn-ghost" disabled={i === 0} onClick={() => onMove(i - 1)}>‹ Back</button>
         <button type="button" className="btn-ghost" onClick={() => onMove(i + 1)}>Skip ›</button>
       </nav>
+      {about && skillId && <SkillSheet skillId={skillId} chord={firstChord} voicing={firstVoicing} bpm={metro.bpm} onClose={() => setAbout(false)} />}
       {sheet && <VoicingSheet chord={sheet} known={plan.music.voicings[sheet]} onClose={() => setSheet(null)} />}
     </main>
   );

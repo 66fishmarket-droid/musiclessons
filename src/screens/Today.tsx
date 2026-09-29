@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Burst } from '../components/Burst.tsx';
+import { SkillSheet } from '../components/SkillSheet.tsx';
 import { completedDays } from '../lib/api.ts';
 import { weekDays } from '../lib/dates.ts';
 import { BLOCK_META, type TodayLesson } from '../lib/lesson.ts';
@@ -12,6 +13,7 @@ export function Today({ lesson, onStart }: { lesson: TodayLesson; onStart: () =>
   const { plan, content } = lesson;
   const days = weekDays(lesson.lesson_date);
   const [done, setDone] = useState<string[]>([]);
+  const [about, setAbout] = useState(false);
   useEffect(() => {
     completedDays(db, days).then(setDone).catch(() => setDone([])); // offline: dots stay empty
   }, [lesson.lesson_date, lesson.status]); // `days` derives from lesson_date
@@ -38,6 +40,7 @@ export function Today({ lesson, onStart }: { lesson: TodayLesson; onStart: () =>
         <span className="pill">{plan.track.replaceAll('_', ' ')} · new skill</span>
         <h1 className="title">{content.title}</h1>
         <p className="text-2">{content.why_it_matters}</p>
+        <button type="button" className="btn-ghost" style={{ alignSelf: 'flex-start' }} onClick={() => setAbout(true)}>About this skill ›</button>
       </section>
       <section className="list" aria-label="Today's blocks">
         {plan.blocks.map((b, k) => b.kind === 'reset' ? null : (
@@ -70,6 +73,12 @@ export function Today({ lesson, onStart }: { lesson: TodayLesson; onStart: () =>
       <button type="button" className="btn-primary" disabled={finished} onClick={onStart}>
         {finished ? 'Done for today ✓' : resumeAt > 0 ? `Resume · block ${resumeAt + 1}` : `Start · ${minutes} min`}
       </button>
+      {about && (
+        <SkillSheet skillId={plan.skill_id} chord={plan.music.progression.chords[0]}
+          voicing={plan.music.voicings[plan.music.progression.chords[0]]?.[0]}
+          bpm={plan.blocks.find(b => b.kind === 'new_skill')?.items[0]?.target?.start ?? 60}
+          onClose={() => setAbout(false)} />
+      )}
     </main>
   );
 }
