@@ -25,3 +25,10 @@ LLM_FALLBACK_MODEL=<fallback model id>
 Run locally: `supabase functions serve`, then `TOKEN=$(npm run -s dev:session -- --email you@example.com)` and
 `curl -X POST http://127.0.0.1:55321/functions/v1/generate-lesson -H "Authorization: Bearer $TOKEN" -d '{"date":"YYYY-MM-DD"}'`.
 Compare models: `npm run compare:models -- --models a,b` (paid, a few cents).
+
+## App (Phase 3)
+```bash
+supabase start && supabase functions serve   # functions serve reads supabase/functions/.env
+npm run dev                                  # http://127.0.0.1:5173 (needs VITE_* in .env.local, see .env.example)
+```
+Sign-in emails locally land in Inbucket: http://127.0.0.1:55324
