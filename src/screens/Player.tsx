@@ -12,7 +12,7 @@ import { clock } from '../lib/dates.ts';
 import { keyAction } from '../lib/keys.ts';
 import { tempoLadder } from '../lib/ladder.ts';
 import { BLOCK_META, bpmTarget, refLabel, startBpm, tonicOf, type TodayLesson } from '../lib/lesson.ts';
-import { goTo, loadSession, logVerdict, saveSession, slotsFor, type Log, type Session } from '../lib/session.ts';
+import { goTo, loadSession, logVerdict, saveSession, slotsFor, verdictFor, type Log, type Session } from '../lib/session.ts';
 import { useWakeLock } from '../lib/wakeLock.ts';
 
 /** The block-by-block player. Saves on every change, so a reload resumes the same block with its verdicts. */
@@ -84,11 +84,15 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
     return () => window.removeEventListener('keydown', onKey);
   }); // re-bound every render so it sees the current metronome state
 
-  const logged = (ref: string | null) => session.logs.find(l => l.block_index === i && l.item_ref === ref)?.passed;
-  const verdict = (ref: string | null, passed: boolean) => onLog({
-    block_index: i, block_kind: block.kind, item_ref: ref, passed, value_reached: target !== null ? metro.bpm : null, note: null,
+  const logged = (ref: string | null) => {
+    const l = session.logs.find(x => x.block_index === i && x.item_ref === ref);
+    return l ? l.passed !== false : undefined; // clean below target (null) still shows as clean
+  };
+  const verdict = (ref: string | null, clean: boolean) => onLog({
+    block_index: i, block_kind: block.kind, item_ref: ref, passed: verdictFor(clean, metro.bpm, target),
+    value_reached: target !== null ? metro.bpm : null, note: null,
   });
-  const decide = (passed: boolean) => { verdict(slots[0], passed); onMove(i + 1); };
+  const decide = (clean: boolean) => { verdict(slots[0], clean); onMove(i + 1); };
   const passLabel = target !== null ? `Clean at ${metro.bpm}` : block.kind === 'record' ? 'Take done' : 'Clean';
 
   return (

@@ -52,23 +52,36 @@ export function goTo(s: Session, to: number, count: number, now: number): Sessio
   return index === s.index ? s : { ...s, index, blockStartedAt: now };
 }
 
+/**
+ * A verdict against the block's target: true = clean at or above a bpm target (scored as a pass), false = not yet,
+ * null = clean but below target (kept with its tempo as progress; complete_lesson leaves it unscored).
+ */
+export function verdictFor(clean: boolean, bpm: number, target: number | null): boolean | null {
+  if (!clean) return false;
+  return target === null || bpm >= target ? true : null;
+}
+
+/** A log that records a result: a verdict, or a clean tempo below target. */
+const rated = (l: Log) => l.passed !== null || l.value_reached !== null;
+
 /** Headline numbers for the Done screen: best clean bpm, clean vs rated verdicts, minutes practised. */
 export function summary(s: Session, now: number): { bestBpm: number | null; clean: number; rated: number; minutes: number } {
-  const rated = s.logs.filter(l => l.passed !== null);
-  const bpms = rated.filter(l => l.passed && l.value_reached !== null).map(l => l.value_reached!);
+  const done = s.logs.filter(rated);
+  const clean = done.filter(l => l.passed !== false);
+  const bpms = clean.flatMap(l => (l.value_reached !== null ? [l.value_reached] : []));
   return {
     bestBpm: bpms.length ? Math.max(...bpms) : null,
-    clean: rated.filter(l => l.passed).length,
-    rated: rated.length,
+    clean: clean.length,
+    rated: done.length,
     minutes: Math.max(1, Math.round((now - s.startedAt) / 60_000)),
   };
 }
 
 /** One line per block for the Done list: "clean at 52", "clean", "1 of 2 clean", "not yet" or "skipped". */
 export function blockResult(s: Session, i: number): string {
-  const logs = s.logs.filter(l => l.block_index === i && l.passed !== null);
+  const logs = s.logs.filter(l => l.block_index === i && rated(l));
   if (!logs.length) return 'skipped';
-  const clean = logs.filter(l => l.passed).length;
+  const clean = logs.filter(l => l.passed !== false).length;
   if (clean === logs.length) {
     const bpm = Math.max(0, ...logs.map(l => l.value_reached ?? 0));
     return bpm > 0 ? `clean at ${bpm}` : 'clean';

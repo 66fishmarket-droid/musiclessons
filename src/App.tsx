@@ -6,11 +6,10 @@ import { localDate } from './lib/dates.ts';
 import type { TodayLesson } from './lib/lesson.ts';
 import { flushPending } from './lib/pending.ts';
 import { ANON_KEY, SUPABASE_URL, db } from './lib/supabase.ts';
-import { SignIn } from './screens/SignIn.tsx';
-// Task 8–10 imports (add as each screen lands):
-import { Today } from './screens/Today.tsx';
+import { Done } from './screens/Done.tsx';
 import { Player } from './screens/Player.tsx';
-// import { Done } from './screens/Done.tsx';
+import { SignIn } from './screens/SignIn.tsx';
+import { Today } from './screens/Today.tsx';
 
 /** Auth gate → flush queued completions → today's lesson → Today / Player / Done. */
 export function App() {
@@ -45,7 +44,7 @@ export function App() {
     return () => { live = false; };
   }, [userId]);
 
-  const finish = useCallback(() => setScreen('done'), []); // used by the Player (Task 9); `take` by Done (Task 10)
+  const finish = useCallback(() => setScreen('done'), []);
 
   if (auth === undefined) return <main className="screen" />;
   if (auth === null) return <SignIn />;
@@ -68,6 +67,9 @@ export function App() {
         <p className="text-2">The first open of the day can take up to a minute.</p>
       </main>
     );
+  }
+  if (screen === 'done') {
+    return <Done lesson={lesson} take={take} onSaved={() => { setLesson({ ...lesson, status: 'completed' }); setScreen('today'); }} />;
   }
   if (screen === 'player') return <Player lesson={lesson} onFinish={finish} onTake={setTake} />;
   return <Today lesson={lesson} onStart={() => setScreen('player')} />;

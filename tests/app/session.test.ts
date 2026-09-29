@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { flushPending, queueCompletion, type Completion } from '../../src/lib/pending.ts';
 import {
-  blockResult, clearSession, goTo, loadSession, logVerdict, newSession, saveSession, slotsFor, summary, type Log,
+  blockResult, clearSession, goTo, loadSession, logVerdict, newSession, saveSession, slotsFor, summary, verdictFor, type Log,
 } from '../../src/lib/session.ts';
 import { PLAN, memoryKV } from './fixtures.ts';
 
@@ -104,5 +104,24 @@ describe('pending completions', () => {
     const kv = memoryKV();
     kv.setItem('gc.pending', 'garbage');
     expect(await flushPending(kv, async () => { throw new Error('should not be called'); })).toBe(0);
+  });
+});
+
+describe('verdictFor (clean below target is progress, not a pass)', () => {
+  it('passes only at or above a bpm target', () => {
+    expect(verdictFor(true, 60, 60)).toBe(true);
+    expect(verdictFor(true, 64, 60)).toBe(true);
+    expect(verdictFor(true, 53, 60)).toBeNull(); // logged with its tempo, not scored up or down
+    expect(verdictFor(false, 53, 60)).toBe(false);
+  });
+  it('treats blocks without a bpm target as plain clean / not yet', () => {
+    expect(verdictFor(true, 70, null)).toBe(true);
+    expect(verdictFor(false, 70, null)).toBe(false);
+  });
+  it('shows clean-below-target as clean in the Done list and stats', () => {
+    let s = newSession('L1', 0);
+    s = logVerdict(s, log(1, 'skill:fingerstyle.l1.giuliani_arpeggios', null, 53));
+    expect(blockResult(s, 1)).toBe('clean at 53');
+    expect(summary(s, 60_000)).toMatchObject({ bestBpm: 53, clean: 1, rated: 1 });
   });
 });
