@@ -8,7 +8,7 @@ import { flushPending } from './lib/pending.ts';
 import { ANON_KEY, SUPABASE_URL, db } from './lib/supabase.ts';
 import { SignIn } from './screens/SignIn.tsx';
 // Task 8–10 imports (add as each screen lands):
-// import { Today } from './screens/Today.tsx';
+import { Today } from './screens/Today.tsx';
 // import { Player } from './screens/Player.tsx';
 // import { Done } from './screens/Done.tsx';
 
@@ -69,5 +69,5 @@ export function App() {
       </main>
     );
   }
-  return <main className="screen"><h1 className="title">{lesson.content.title}</h1></main>; // replaced in Task 8
+  return <Today lesson={lesson} onStart={() => setScreen('player')} />;
 }
