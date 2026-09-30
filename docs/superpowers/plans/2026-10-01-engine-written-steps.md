@@ -173,7 +173,7 @@ describe('renderSteps', () => {
       'Thumb on string 6.',
       '46 to 70 bpm.',
       'Pinch and pluck: 1 thumb + ring together · 2 index · 3 thumb (alternate bass) + middle together · 4 index',
-      'Boom-chick: 1 thumb plays the bass note · 2 strum down · 3 thumb plays the bass note · 4 strum down',
+      "Today's rhythm: 1 thumb plays the bass note · 2 strum down · 3 thumb plays the bass note · 4 strum down",  // a recipe grid without a name (Task 3 adds gridName)
     ]);
   });
   it('throws on unknown slots and on slots with no data', () => {
@@ -261,7 +261,7 @@ export function renderSteps(templates: string[], ctx: SlotCtx): string[] {
 
 Note that chord names in rendered steps stay in braces (`{G}`). The Player's `ChordText` already turns braced chords into tappable chips.
 
-- [ ] **Step 4: Run** the test. Expect PASS. In the first test, the `{rhythm_name}` line needs the grid's name: when `opts.grid` is given, the name is `"Today's rhythm"`. Change that expected line to `"Today's rhythm: 1 thumb plays the bass note · …"`; that's the implemented behaviour. The plan renders the recipe grid's name through `SkillRecipe.gridName` (Task 3).
+- [ ] **Step 4: Run** the test. Expect PASS.
 
 - [ ] **Step 5: Commit.**
 
@@ -701,6 +701,7 @@ git commit -m "feat(engine): planner picks today's picking pattern and Create ta
 
 **Files:**
 - Create: `supabase/functions/_shared/lesson/steps.ts`
+- Modify: `supabase/functions/_shared/lesson/fallback.ts` (re-export `targetText`)
 - Test: `tests/lesson/steps.test.ts`
 
 **Interfaces:**
@@ -782,7 +783,15 @@ import { recipeFor } from '../engine/recipes.ts';
 import { renderSteps, slotContext } from '../engine/render.ts';
 import { STYLE_CATALOG } from '../engine/styles.ts';
 import type { BlockKind, LessonPlan, PlanBlock, Skill } from '../engine/types.ts';
-import { targetText } from './fallback.ts';
+import type { Target } from '../engine/types.ts';
+
+/** A plan target as plain words (moved here from fallback.ts, which re-exports it). */
+export function targetText(t: Target | null): string {
+  if (!t) return '';
+  if (t.metric === 'bpm' && t.target !== null) return `Start at ${t.start} bpm, reach ${t.target} bpm cleanly.`;
+  if (t.metric === 'clean_reps' && t.target !== null) return `${t.target} clean reps in a row.`;
+  return 'Rate yourself honestly, 1–5.';
+}
 
 export interface EngineBlock { kind: BlockKind; instructions: string[]; target_text: string; listen_for: string }
 export const APPLY_DEFAULT_GRID = 'D---D---D---D---';
@@ -825,11 +834,11 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
       case 'retest': {
         const id = plan.retest?.skill_id ?? plan.skill_id;
         const r = recipeSteps(id, b, false);
-        return make([`Cold retest: ${skillOf(id)?.name ?? id}. One attempt at the target, no practice run first.`, r.steps[0]], r.listen);
+        return make([`Cold retest: ${skillOf(id)?.name ?? id}. One attempt at the target, no practice run first.`, ...r.steps.slice(0, 2)], r.listen); // first two steps: set-up plus the pattern/rhythm line
       }
       case 'review': return make(b.items.map(i => {
         const [type, ref] = [i.ref.slice(0, i.ref.indexOf(':')), i.ref.slice(i.ref.indexOf(':') + 1)];
-        if (type === 'style') return `${STYLE_CATALOG.elements.find(e => e.id === ref)?.name ?? ref}: play it once through {chords}.`.replace('{chords}', renderSteps(['{chords}'], base)[0]);
+        if (type === 'style') return renderSteps([`${STYLE_CATALOG.elements.find(e => e.id === ref)?.name ?? ref}: play it once through {chords}.`], base)[0];
         if (type === 'skill' && skillOf(ref)) return `${skillOf(ref)!.name}: ${recipeSteps(ref, { ...b, items: [i] }, false).steps[0]}`;
         return `Review: ${skillOf(ref)?.name ?? ref}.`;
       }));
@@ -854,7 +863,7 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
 }
 ```
 
-`fallback.ts` imports nothing from `steps.ts`, so there's no cycle. `steps.ts` imports `targetText` from `fallback.ts`.
+In `fallback.ts`, replace the `targetText` function with `export { targetText } from './steps.ts';`. `steps.ts` must not import from `fallback.ts`, so Task 7 can import `buildSteps` into `fallback.ts` without a cycle.
 
 - [ ] **Step 4: Run** `npm test` and `npm run typecheck`. Expect PASS. If the no-rhythm case gives `'Steady down-strums: 1 strum down · 2 strum down · 3 strum down · 4 strum down'`, the fallback path is right.
 
@@ -1010,7 +1019,7 @@ export function assembleLesson(plan: LessonPlan, skills: Map<string, Skill>, col
 }
 ```
 
-(`fallback.ts` now imports `buildSteps` from `./steps.ts`, and `steps.ts` imports `targetText` from `./fallback.ts`. To avoid the cycle, **move `targetText` into `steps.ts`**, re-export it from `fallback.ts` with `export { targetText } from './steps.ts';`, and update the import in `steps.ts`.)
+(`targetText` already lives in `steps.ts` since Task 6, so importing `buildSteps` into `fallback.ts` makes no cycle.)
 
 **`prompt.ts`:** `PROMPT_VERSION = 'gc-2026-10-01'`. `SYSTEM_PROMPT` becomes:
 
