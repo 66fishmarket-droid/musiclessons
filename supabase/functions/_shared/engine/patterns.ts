@@ -37,20 +37,6 @@ export const PATTERNS: Record<string, PickPattern> = {
   waltz: { id: 'waltz', name: 'Waltz boom-chuck-chuck', beatsPerBar: 3, stepsPerBeat: 1, steps: [[P], [I, M, A], [I, M, A]] },
 };
 
-/** Which patterns each fingerstyle skill practises, easiest first. */
-export const SKILL_PATTERNS: Record<string, string[]> = {
-  'fingerstyle.l1.pima_pinches': ['giuliani_pima', 'pinch'],
-  'fingerstyle.l1.giuliani_arpeggios': ['giuliani_pim', 'giuliani_pmi', 'giuliani_pimi', 'giuliani_pima'],
-  'fingerstyle.l2.thumb_single_bass': ['thumb_steady'],
-  'fingerstyle.l2.alternating_thumb': ['thumb_alt'],
-  'fingerstyle.l3.travis_basic': ['thumb_alt', 'travis'],
-  'fingerstyle.l3.travis_changes': ['travis'],
-  'fingerstyle.l4.accompaniment_patterns': ['ballad', 'waltz', 'travis'],
-  'fingerstyle.l4.sing_over_pattern': ['thumb_alt', 'ballad', 'travis'],
-  'fingerstyle.l5.melody_over_thumb': ['thumb_steady', 'thumb_alt'],
-  'fingerstyle.l5.arrange_own_song': ['travis', 'ballad'],
-};
-
 /** String index (0 = lowest) for each role on this voicing, worked out from semitones in the given tuning. */
 export function voiceRoles(v: Voicing, chord: string, tuning: readonly string[] = TUNING): Record<Role, number> {
   const tonic = Chord.get(chord).tonic;

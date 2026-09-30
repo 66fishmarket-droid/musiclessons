@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { TUNINGS, noteAt } from '../../supabase/functions/_shared/engine/music.ts';
-import { PATTERNS, SKILL_PATTERNS, nextBarChord, patternCounts, resolvePattern, rhythmCounts, rhythmPattern, voiceRoles } from '../../supabase/functions/_shared/engine/patterns.ts';
-import { SKILLS } from '../../supabase/seed/curriculum.ts';
+import { PATTERNS, nextBarChord, patternCounts, resolvePattern, rhythmCounts, rhythmPattern, voiceRoles } from '../../supabase/functions/_shared/engine/patterns.ts';
 import { STYLE_CATALOG } from '../../supabase/functions/_shared/engine/styles.ts';
 
 const G = { frets: [3, 2, 0, 0, 0, 3], fingers: [2, 1, 0, 0, 0, 3], barres: [] };
@@ -49,12 +48,6 @@ describe('resolvePattern', () => {
 describe('pattern library', () => {
   it('fills exactly one bar per pattern', () => {
     for (const p of Object.values(PATTERNS)) expect(p.steps.length, p.id).toBe(p.beatsPerBar * p.stepsPerBeat);
-  });
-  it('maps every fingerstyle skill to known patterns', () => {
-    for (const s of SKILLS.filter(x => x.track === 'fingerstyle')) {
-      expect(SKILL_PATTERNS[s.id]?.length, s.id).toBeGreaterThan(0);
-      for (const id of SKILL_PATTERNS[s.id]) expect(PATTERNS[id], id).toBeDefined();
-    }
   });
 });
 

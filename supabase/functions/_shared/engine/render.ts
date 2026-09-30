@@ -12,12 +12,12 @@ export function listNotes(notes: string[]): string {
 }
 
 /** Everything a step template may mention, from the same plan data the cards draw. */
-export function slotContext(plan: LessonPlan, opts: { target?: Target | null; patternId?: string | null; grid?: string | null }): SlotCtx {
+export function slotContext(plan: LessonPlan, opts: { target?: Target | null; patternId?: string | null; grid?: string | null; gridName?: string | null }): SlotCtx {
   const { music } = plan;
   const chord1 = music.progression.chords[0];
   const v = chord1 ? music.voicings[chord1]?.[0] : undefined;
   const rhythm = opts.grid
-    ? rhythmPattern('Today\'s rhythm', opts.grid.split(''))
+    ? rhythmPattern(opts.gridName ?? 'Today\'s rhythm', opts.grid.split(''))
     : music.rhythm ? rhythmPattern(music.rhythm.name, music.rhythm.grid) : null;
   return {
     key: plan.key, scale: music.scale.name, chords: music.progression.chords, scaleNotes: music.scale.notes,

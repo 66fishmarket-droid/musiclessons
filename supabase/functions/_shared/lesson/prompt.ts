@@ -1,4 +1,5 @@
-import { PATTERNS, SKILL_PATTERNS, rhythmCounts, rhythmPattern } from '../engine/patterns.ts';
+import { PATTERNS, rhythmCounts, rhythmPattern } from '../engine/patterns.ts';
+import { RECIPES } from '../engine/recipes.ts';
 import type { StyleProfile } from '../engine/styles.ts';
 import type { LessonPlan, Settings, Skill } from '../engine/types.ts';
 import { allowedChords } from './contract.ts';
@@ -51,7 +52,7 @@ export function buildMessages({ plan, skills, style, settings, recent, questions
   const brief = {
     date: plan.date, session: plan.template, track: plan.track, key: plan.key, is_repeat: plan.is_repeat,
     skill: named(plan.skill_id), theory_topic: named(plan.theory_topic_id),
-    picking_pattern: plan.skill_id ? PATTERNS[SKILL_PATTERNS[plan.skill_id]?.[0]]?.name ?? null : null,
+    picking_pattern: plan.skill_id ? PATTERNS[RECIPES[plan.skill_id]?.patterns?.[0] ?? '']?.name ?? null : null,
     retest: plan.retest ? { skill: named(plan.retest.skill_id), target: plan.retest.target } : null,
     review: plan.review.map(r => ({ type: r.item_type, ref: r.ref, name: skills.get(r.ref)?.name ?? r.ref })),
     style: style ? {
