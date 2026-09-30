@@ -136,7 +136,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
       {block.kind === 'create' && <section className="card"><p><ChordText text={content.create_prompt} onChord={setSheet} /></p></section>}
       {block.kind === 'record' && <Recorder onTake={onTake} />}
       {pattern && chords.length > 0 && <PickingPattern pattern={pattern} chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} bpm={metro.bpm} />}
-      {skillId && NOTE_CALLER_SKILLS.includes(skillId) && <NoteCaller bpm={metro.bpm} />}
+      {skillId && block.kind !== 'apply' && NOTE_CALLER_SKILLS.includes(skillId) && <NoteCaller metro={metro} />}
       {hasMetro && (
         <Metronome metro={metro} target={target} ladder={target !== null ? tempoLadder(first, target) : null}
           drone={drone} onDrone={() => setDrone(!drone)} tonic={tonic} />
