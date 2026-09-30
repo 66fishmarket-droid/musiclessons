@@ -31,6 +31,12 @@ describe('recipes', () => {
       expect(r.listenFor.length, id).toBeGreaterThan(0);
     }
   });
+  it('has a recipe for every rhythm skill with the right card', () => {
+    for (const s of SKILLS.filter(x => x.track === 'rhythm')) {
+      expect(RECIPES[s.id], s.id).toBeDefined();
+      expect(['rhythm'], s.id).toContain(RECIPES[s.id].card);
+    }
+  });
   it('falls back to a generic recipe built from the description', () => {
     const s = SKILLS.find(x => !RECIPES[x.id] && x.track !== 'theory');
     if (!s) return; // every recipe written (Task 14 turns this into a hard requirement)
