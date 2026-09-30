@@ -93,11 +93,7 @@ describe('recipes', () => {
       }
     }
   });
-  it('falls back to a generic recipe built from the description', () => {
-    const s = SKILLS.find(x => !RECIPES[x.id] && x.track !== 'theory');
-    if (!s) return; // every recipe written (Task 14 turns this into a hard requirement)
-    const r = recipeFor(s);
-    expect(r.card).toBe('none');
-    expect(r.steps[0]).toBe(s.description);
+  it('has a recipe for every practice skill', () => {
+    expect(SKILLS.filter(s => s.track !== 'theory' && !RECIPES[s.id]).map(s => s.id)).toEqual([]);
   });
 });

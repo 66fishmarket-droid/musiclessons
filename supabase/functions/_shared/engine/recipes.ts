@@ -614,7 +614,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
   },
 };
 
-/** The skill's recipe, or a generic one from its description until the recipe is written. */
+/** The skill's recipe, or a generic one from its description. The generic branch protects skills added to the curriculum later. */
 export function recipeFor(skill: Skill): SkillRecipe {
   return RECIPES[skill.id] ?? {
     card: 'none',
