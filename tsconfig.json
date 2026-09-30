@@ -12,7 +12,7 @@
     "erasableSyntaxOnly": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "types": ["node", "vite/client"]
+    "types": ["node", "vite/client", "vite-plugin-pwa/react"]
   },
   "include": ["scripts", "supabase/functions/_shared", "supabase/seed", "tests", "src", "vite.config.ts"]
 }
