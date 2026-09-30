@@ -1,5 +1,5 @@
 import type { BlockKind, LessonPlan } from '../../supabase/functions/_shared/engine/types.ts';
-import type { LessonContent } from '../../supabase/functions/_shared/lesson/contract.ts';
+import type { BlockContent, LessonContent } from '../../supabase/functions/_shared/lesson/contract.ts';
 
 /** The lessons row generate-lesson returns (the columns the app reads). */
 export interface TodayLesson {
@@ -43,4 +43,12 @@ export function tonicOf(key: string): string {
 export function refLabel(ref: string): string {
   const id = ref.slice(ref.indexOf(':') + 1);
   return (id.split('.').pop() ?? id).replaceAll('_', ' ');
+}
+
+/** One block's text, reading both engine-written lessons and ones stored before them (tips/explanation). */
+export function blockText(content: LessonContent, i: number): { instructions: string[]; target_text: string; listen_for: string; more: string[] } {
+  const b = content.blocks[i] as (Partial<BlockContent> & { tips?: string; explanation?: string }) | undefined;
+  if (!b) return { instructions: [''], target_text: '', listen_for: '', more: [] };
+  const more = b.more !== undefined ? [b.more] : [b.tips ?? '', b.explanation ?? ''];
+  return { instructions: b.instructions?.length ? b.instructions : [''], target_text: b.target_text ?? '', listen_for: b.listen_for ?? '', more: more.filter(Boolean) };
 }

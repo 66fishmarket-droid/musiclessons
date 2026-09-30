@@ -11,16 +11,20 @@ import { Rail } from '../components/Rail.tsx';
 import { ScaleBoard } from '../components/ScaleBoard.tsx';
 import { Recorder } from '../components/Recorder.tsx';
 import { SkillSheet } from '../components/SkillSheet.tsx';
+import { TriadBoard } from '../components/TriadBoard.tsx';
 import { VoicingSheet } from '../components/VoicingSheet.tsx';
 import { clock } from '../lib/dates.ts';
 import { keyAction } from '../lib/keys.ts';
 import { tempoLadder } from '../lib/ladder.ts';
-import { BLOCK_META, bpmTarget, refLabel, startBpm, tonicOf, type TodayLesson } from '../lib/lesson.ts';
-import { NOTE_CALLER_SKILLS } from '../lib/noteCaller.ts';
-import { skillInfo } from '../lib/skillInfo.ts';
-import { rhythmPattern } from '../../supabase/functions/_shared/engine/patterns.ts';
+import { BLOCK_META, blockText, bpmTarget, refLabel, startBpm, tonicOf, type TodayLesson } from '../lib/lesson.ts';
+import { recipeFor } from '../../supabase/functions/_shared/engine/recipes.ts';
+import { PATTERNS, rhythmPattern } from '../../supabase/functions/_shared/engine/patterns.ts';
+import { APPLY_DEFAULT_GRID } from '../../supabase/functions/_shared/lesson/steps.ts';
+import { SKILLS } from '../../supabase/seed/curriculum.ts';
 import { goTo, loadSession, logVerdict, resumeSession, saveSession, slotsFor, verdictFor, type Log, type Session } from '../lib/session.ts';
 import { useWakeLock } from '../lib/wakeLock.ts';
+
+const SKILLS_BY_ID = new Map(SKILLS.map(s => [s.id, s]));
 
 /** The block-by-block player. Saves on every change, so a reload resumes the same block with its verdicts. */
 export function Player({ lesson, onFinish, onTake }: { lesson: TodayLesson; onFinish: () => void; onTake: (url: string) => void }) {
@@ -61,26 +65,36 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
   const { plan, content } = lesson;
   const i = session.index;
   const block = plan.blocks[i];
-  const text = content.blocks[i];
+  const text = blockText(content, i);
   const meta = BLOCK_META[block.kind];
   const target = bpmTarget(plan, i);
   const first = startBpm(plan, i);
   const hasMetro = !['reset', 'create', 'record'].includes(block.kind);
   const slots = slotsFor(plan, i);
-  const steps = text?.instructions.length ? text.instructions : [''];
+  const steps = text.instructions;
   const tonic = tonicOf(plan.key);
   const skillId = block.kind === 'retest' ? plan.retest?.skill_id : ['new_skill', 'apply'].includes(block.kind) ? plan.skill_id : undefined;
+  const cardSkill = block.kind === 'retest' ? plan.retest?.skill_id : block.kind === 'new_skill' ? plan.skill_id : undefined;
+  const recipe = cardSkill ? recipeFor(SKILLS_BY_ID.get(cardSkill)!) : undefined;
+  const card = block.kind === 'apply' ? 'rhythm' : recipe?.card ?? 'none';
   const chords = plan.music.progression.chords;
   const [chordIdx, setChordIdx] = useState(0);
   const chord = chords[chordIdx];
   const rhythm = plan.music.rhythm;
   // Apply plays the day's style rhythm (e.g. boom-chick); skill blocks play the skill's picking pattern.
-  const skillPatterns = useMemo(() => (skillId ? skillInfo(skillId)?.patterns ?? [] : []), [skillId]);
-  const [pi, setPi] = useState(0);
-  const pattern = useMemo(() => (block.kind === 'apply' && rhythm
-    ? rhythmPattern(rhythm.name, rhythm.grid)
-    : skillPatterns[pi]), [block.kind, rhythm, skillPatterns, pi]);
-  const showChords = block.kind === 'apply' || block.kind === 'create' || (block.kind === 'new_skill' && !!pattern);
+  const skillPatterns = useMemo(() => (card === 'pattern' ? (recipe?.patterns ?? []).map(id => PATTERNS[id]) : []), [card, recipe]);
+  const [pi, setPi] = useState(() => {
+    if (block.kind !== 'new_skill' || !plan.pattern_id) return 0;
+    const idx = (recipe?.patterns ?? []).indexOf(plan.pattern_id);
+    return idx >= 0 ? idx : 0;
+  });
+  const pattern = useMemo(() => {
+    if (card === 'pattern') return skillPatterns[pi];
+    if (card !== 'rhythm') return undefined;
+    if (block.kind !== 'apply' && recipe?.grid) return rhythmPattern(recipe.gridName ?? "Today's rhythm", recipe.grid.split(''));
+    return rhythm ? rhythmPattern(rhythm.name, rhythm.grid) : rhythmPattern('Steady down-strums', APPLY_DEFAULT_GRID.split(''));
+  }, [card, skillPatterns, pi, block.kind, recipe, rhythm]);
+  const showChords = block.kind === 'apply' || block.kind === 'create' || card === 'pattern' || card === 'rhythm' || card === 'chords';
 
   const metro = useMetronome(first);
   const [drone, setDrone] = useState(false);
@@ -127,7 +141,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
         <span className="c-text">{i + 1} of {plan.blocks.length} · {meta.label}</span>
         <span className={left < 0 ? 'timer over' : 'timer'} role="timer" aria-label="Block time left">{clock(left)}</span>
       </div>
-      <h1 className="title title-sm">{text?.target_text || meta.label}</h1>
+      <h1 className="title title-sm">{text.target_text || meta.label}</h1>
       {skillId && <button type="button" className="btn-ghost" style={{ alignSelf: 'flex-start' }} onClick={() => setAbout(true)}>About this skill ›</button>}
 
       <section className="card step" aria-live="polite">
@@ -138,6 +152,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
         <button type="button" className="round" aria-label="Previous step" disabled={step === 0} onClick={() => setStep(step - 1)}>‹</button>
         <button type="button" className="round" aria-label="Next step" disabled={step === steps.length - 1} onClick={() => setStep(step + 1)}>›</button>
       </section>
+      {text.listen_for && <p className="muted"><b>Listen for:</b> {text.listen_for}</p>}
 
       {block.kind === 'warmup' && <ScaleBoard scale={plan.music.scale} />}
       {block.kind === 'create' && <section className="card"><p><ChordText text={content.create_prompt} onChord={setSheet} /></p></section>}
@@ -145,22 +160,23 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
       {block.kind === 'create' && <ScaleBoard scale={plan.music.scale} />}
       {block.kind === 'create' && <Recorder onTake={() => {}} />}
       {block.kind === 'record' && <Recorder onTake={onTake} />}
+      {card === 'scale' && <ScaleBoard scale={plan.music.scale} highlight={recipe?.degrees} />}
+      {card === 'triads' && <TriadBoard triads={plan.music.triads} />}
       {pattern && !pattern.strokes && skillPatterns.length > 1 && (
         <div className="toggle" role="group" aria-label="Pattern">
           {skillPatterns.map((p, k) => <button key={p.id} type="button" aria-pressed={k === pi} onClick={() => setPi(k)}>{p.name}</button>)}
         </div>
       )}
       {pattern && chords.length > 0 && <PickingPattern key={pattern.id} pattern={pattern} chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} bpm={metro.bpm} />}
-      {skillId && block.kind !== 'apply' && NOTE_CALLER_SKILLS.includes(skillId) && <NoteCaller metro={metro} />}
+      {card === 'note_caller' && <NoteCaller metro={metro} />}
       {hasMetro && (
         <Metronome metro={metro} target={target} ladder={target !== null ? tempoLadder(first, target) : null}
           drone={drone} onDrone={() => setDrone(!drone)} tonic={tonic} />
       )}
-      {(text?.tips || text?.explanation) && (
+      {text.more.length > 0 && (
         <details className="card">
-          <summary>Tips &amp; why</summary>
-          {text.tips && <p>{text.tips}</p>}
-          {text.explanation && <p className="text-2">{text.explanation}</p>}
+          <summary>More about this</summary>
+          {text.more.map(m => <p key={m}>{m}</p>)}
         </details>
       )}
 
