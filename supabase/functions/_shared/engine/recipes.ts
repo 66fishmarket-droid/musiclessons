@@ -292,6 +292,117 @@ export const RECIPES: Record<string, SkillRecipe> = {
     ],
     listenFor: 'Each root landing cleanly on one scale degree, not hovering between two.',
   },
+  // Fretboard: note_caller for the two note-finding skills; triads for the shapes the triads card actually draws
+  // (chords[0]'s inversions on strings 3-2-1 and 4-3-2); scale (degrees highlighted, shapes described in words)
+  // for everything the card can't show on its own — a different quality, a different string set, or no triad at all.
+  'fretboard.l1.notes_e_a': {
+    card: 'note_caller',
+    steps: [
+      'Strings 6 and 5 are E and A when played open; each fret up is the next note (E, F, F#, G…).',
+      'Press "Start calling notes". Find each called note on string 6 or 5 before the next bar.',
+      'Say the note out loud as you play it.', 'Aim for {target_reps} clean passes in a row.',
+    ],
+    listenFor: 'Finding each note before the next click of beat 1.',
+  },
+  'fretboard.l1.octave_shapes': {
+    card: 'note_caller',
+    steps: [
+      'An octave is the same note, higher or lower. From a note on string 6 or 5, its octave sits two strings up and two frets over.',
+      'Press "Start calling notes". Find the called note on string 6 or 5, then find its octave with that shape.',
+      'Say the note name out loud at both spots.', 'Aim for {target_reps} clean passes in a row.',
+    ],
+    listenFor: 'Landing on the note and its octave before the next click of beat 1.',
+  },
+  'fretboard.l2.caged_linked': {
+    card: 'scale', degrees: [1],
+    steps: [
+      'CAGED links five chord shapes — C, A, G, E and D — that each play {chord1} at a different spot up the neck.',
+      'Play {chord1} in a shape you know, then find the next CAGED shape up the neck sharing the same root note, {degrees:1}.',
+      'Move shape to shape up the neck in CAGED order, landing on {degrees:1} in each new shape before you strum.',
+      'Aim for {target_reps} clean passes in a row.',
+    ],
+    listenFor: 'Every string ringing clean in each new shape, with the root always findable first.',
+  },
+  'fretboard.l2.pentatonic_per_shape': {
+    card: 'scale', degrees: [1, 3, 5],
+    steps: [
+      'A pentatonic box is today\'s {scale} box with two notes dropped: skip the 2nd and 6th for a minor scale, the 4th and 7th for major.',
+      'Find {chord1}\'s CAGED shape, then play the pentatonic box wrapped around it, using {degrees:1,3,5} as your anchor notes.',
+      'Climb the box root to root, saying "root" each time you land on {degrees:1}.',
+      LADDER,
+    ],
+    listenFor: 'Landing on the root note cleanly in tune every time you climb through the box.',
+  },
+  'fretboard.l3.triads_321': {
+    card: 'triads',
+    steps: [
+      'The card shows three inversions of {chord1} on strings 3-2-1 (the top three): root position, then first and second inversion, three notes each.',
+      'Play each shape in order, root to second inversion, saying which inversion you\'re on as you strum it.',
+      'Move to the next inversion only once the last one rings clean and in tune.',
+      LADDER,
+    ],
+    listenFor: 'All three notes of each shape ringing together, with no muted or buzzing string.',
+  },
+  'fretboard.l3.triads_432': {
+    card: 'triads',
+    steps: [
+      'The card also shows {chord1}\'s three inversions on strings 4-3-2: drop the top string, add string 4, same shapes moved one string set down.',
+      'Play root, first and second inversion in order on strings 4-3-2 only, letting each one ring before you move on.',
+      'Compare the sound to the 3-2-1 set: the same three notes, sitting one string lower overall.',
+      LADDER,
+    ],
+    listenFor: 'Every note in each shape ringing evenly, including the middle string most players mute by accident.',
+  },
+  'fretboard.l3.minor_triads': {
+    card: 'scale', degrees: [1, 5],
+    steps: [
+      'A minor triad is root, minor 3rd and 5th. {degrees:1} and {degrees:5} anchor the shape; the 3rd sits one fret below the major 3rd you know.',
+      'Build minor triads on strings 3-2-1 first, then the same shapes on strings 4-3-2, moving fret by fret up the neck.',
+      'Say "minor" out loud each time you land on a new shape, to keep the darker sound in your ear.',
+      LADDER,
+    ],
+    listenFor: 'The minor 3rd sounding noticeably darker than a major triad, with the shape still ringing clean.',
+  },
+  'fretboard.l4.voice_leading_inversions': {
+    card: 'triads',
+    steps: [
+      'The card shows {chord1}\'s three inversions on strings 3-2-1. Start on the one closest to the middle of the neck, not always the lowest.',
+      'Move through {chords}, one chord per bar: for each new chord, choose the triad shape on strings 3-2-1 nearest the fret you just played.',
+      'Never jump back to an open or low shape mid-progression — the smallest hand move wins.',
+      LADDER,
+    ],
+    listenFor: 'Each chord change covering the smallest possible distance up or down the neck.',
+  },
+  'fretboard.l4.triads_lower_sets': {
+    card: 'scale', degrees: [1, 5],
+    steps: [
+      'The same triad idea moves to strings 5-4-3, then 6-5-4: root, 3rd and 5th, one note per string, {degrees:1} and {degrees:5} as anchors.',
+      'A sus chord swaps the 3rd for {degrees:4} (sus4) or {degrees:2} (sus2); a diminished triad flattens both the 3rd and the 5th a fret each.',
+      'Build {chord1}\'s triad on strings 5-4-3 first, then move the same shape down to strings 6-5-4.',
+      LADDER,
+    ],
+    listenFor: 'All three notes on the lower strings ringing as clearly as the higher sets you already know.',
+  },
+  'fretboard.l5.thirds_sixths_shapes': {
+    card: 'scale', degrees: [1, 3, 6],
+    steps: [
+      'A 3rd shape pairs two notes a 3rd apart, like {degrees:1,3}, on two neighbouring strings; a 6th shape pairs notes a 6th apart, like {degrees:1,6}.',
+      'Play {degrees:1,3} together on two strings, then slide the same shape up to the next pair of notes in {scale}.',
+      'Do the same with a 6th shape, {degrees:1,6}, moving it degree by degree through {scale}.',
+      LADDER,
+    ],
+    listenFor: 'Both notes of each pair landing together, evenly balanced in volume.',
+  },
+  'fretboard.l5.seventh_shells': {
+    card: 'scale', degrees: [1, 3, 7],
+    steps: [
+      'A shell voicing drops the 5th and plays just root, 3rd and 7th — {degrees:1,3,7} — three notes instead of a full chord.',
+      'Build the shell with the root on string 6, then again with the root on string 5, one string higher.',
+      'Say "root, third, seventh" as you play each note of the shell.',
+      'Aim for {target_reps} clean passes in a row.',
+    ],
+    listenFor: 'Three clear, separate notes with no muffled or buzzing string between them.',
+  },
 };
 
 /** The skill's recipe, or a generic one from its description until the recipe is written. */
