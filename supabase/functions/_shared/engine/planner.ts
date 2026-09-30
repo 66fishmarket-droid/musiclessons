@@ -154,7 +154,7 @@ export function planLesson(state: PlannerState, catalog: StyleCatalog = STYLE_CA
   const profile = style ? catalog.profiles.find(p => p.id === style.style) ?? null : null;
   const element = style ? catalog.elements.find(e => e.id === style.element_id) ?? null : null;
   const patterns = RECIPES[skill.id]?.card === 'pattern' ? RECIPES[skill.id].patterns ?? [] : [];
-  const timesSeen = state.recentLessons.filter(l => l.skill_id === skill.id).length;
+  const timesSeen = Math.max(0, state.recentLessons.filter(l => l.skill_id === skill.id).length - (ctx.isRepeat ? 1 : 0));
   const pattern_id = patterns.length ? patterns[timesSeen % patterns.length] : null;
   const create_task_id = pickCreateTask(state.today, skill.id, state.recentLessons.map(l => l.create_task_id));
   return {

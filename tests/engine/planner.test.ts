@@ -163,6 +163,16 @@ describe('pattern and create task', () => {
     expect(planFor(1).pattern_id).toBe('giuliani_pima');
     expect(planFor(2).pattern_id).toBe('pinch');
   });
+  it('keeps yesterday\'s pattern on a repeat day instead of advancing', () => {
+    const skills = SKILLS.filter(s => s.id === pinch);
+    const yesterday = [{
+      date: '2026-10-08', track: 'fingerstyle' as const, skill_id: pinch, key: 'G', style_element: null,
+      want_more_time: true, status: 'completed' as const, create_task_id: null,
+    }];
+    const plan = planLesson(newUserState({ today: '2026-10-09', skills, recentLessons: yesterday }), NO_STYLES);
+    expect(plan.is_repeat).toBe(true);
+    expect(plan.pattern_id).toBe('pinch');
+  });
   it('has no pattern for a skill without a pattern card', () => {
     expect(planLesson(newUserState(), NO_STYLES).pattern_id).toBeNull();
   });
