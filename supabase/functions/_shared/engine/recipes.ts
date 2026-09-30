@@ -254,7 +254,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
     listenFor: 'The harmony note sitting clearly above the melody note, never unison or below it.',
   },
   'ear_voice.l4.colour_notes': {
-    card: 'scale', degrees: [3, 4, 5, 6, 7],
+    card: 'scale', degrees: [3, 4, 5, 6, 7], majorKeyOnly: true,
     steps: [
       'Turn on the drone. b7 sits one fret below {degrees:7}; b3 sits one fret below {degrees:3}. Play and sing each against the drone.',
       'b6 sits one fret below {degrees:6}; #4 sits one fret above {degrees:4}. Play and sing those two the same way.',
@@ -264,7 +264,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
     listenFor: 'Each colour note sitting clearly darker or brighter than its nearby scale degree, not identical to it.',
   },
   'ear_voice.l4.borrowed_chords_by_ear': {
-    card: 'scale', degrees: [4, 6, 7],
+    card: 'scale', degrees: [4, 6, 7], majorKeyOnly: true,
     steps: [
       'Play {chords} straight through once so the plain, diatonic version is fresh in your ear.',
       'iv and bVI borrow a note from outside the key: one fret below {degrees:6} (b6); bVII borrows one fret below {degrees:7} (b7). Sing each borrowed note over the drone.',
@@ -487,7 +487,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
     listenFor: 'Both notes of the 6th ringing evenly through the slide, even with a string skipped between them.',
   },
   'fills.l5.pentatonic_fills_caged': {
-    card: 'chords',
+    card: 'chords', majorKeyOnly: true,
     steps: [
       'A pentatonic fill: five notes built around the chord — {degrees:1,2,3,5,6} — played from wherever your fretting hand is already sitting on {chord1}.',
       'In the last two beats of a bar, play three or four of those notes, ending on a chord tone.',

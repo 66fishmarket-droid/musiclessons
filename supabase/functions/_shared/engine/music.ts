@@ -137,6 +137,7 @@ export function buildMusic({ key, track, style, element }: MusicInput): MusicCon
     progression: { roman: roman.map(normalizeRoman), chords },
     voicings,
     rhythm: pattern ? { name: pattern.name, grid: pattern.grid } : null,
-    triads: track === 'fretboard' ? [...triadInversions(chords[0], [3, 4, 5]), ...triadInversions(chords[0], [2, 3, 4])] : [],
+    // Always built (a triad skill's retest can land on a non-fretboard day), not gated by track.
+    triads: [...triadInversions(chords[0], [3, 4, 5]), ...triadInversions(chords[0], [2, 3, 4])],
   };
 }

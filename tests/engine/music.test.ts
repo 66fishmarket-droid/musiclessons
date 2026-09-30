@@ -80,7 +80,11 @@ describe('buildMusic', () => {
     expect(m.scale).toMatchObject({ tonic: 'A', name: 'minor pentatonic', notes: ['A', 'C', 'D', 'E', 'G'] });
     expect(Object.keys(m.voicings)).toEqual(['A7', 'D7', 'E7']);
     expect(m.rhythm?.name).toBe('Shuffle');
-    expect(m.triads).toEqual([]);
+    expect(m.triads.length).toBeGreaterThan(0); // triads are always built from chords[0], not gated by track
+  });
+  it('builds triads for a non-fretboard (rhythm) track too, so a triad-skill retest on that day has a card', () => {
+    const m = buildMusic({ key: 'G', track: 'rhythm', style: null, element: null });
+    expect(m.triads.length).toBeGreaterThan(3);
   });
   it('defaults to I–IV–V–I in major without a style, with triads for fretboard lessons', () => {
     const m = buildMusic({ key: 'G', track: 'fretboard', style: null, element: null });

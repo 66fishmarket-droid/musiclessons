@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CREATE_TASKS } from '../../supabase/functions/_shared/engine/create.ts';
 import { planLesson } from '../../supabase/functions/_shared/engine/planner.ts';
+import { RECIPES } from '../../supabase/functions/_shared/engine/recipes.ts';
 import { elementsOf, STYLE_CATALOG, type StyleCatalog, type StyleProfile } from '../../supabase/functions/_shared/engine/styles.ts';
 import type { LessonSummary, PlannerState, Skill, StyleChoice } from '../../supabase/functions/_shared/engine/types.ts';
 import { SKILLS } from '../../supabase/seed/curriculum.ts';
@@ -161,6 +162,20 @@ describe('planLesson', () => {
     expect(plan.skill_id).toBe('songwriting.l3.borrowed_colour');
     expect(plan.style_element).not.toBeNull();
     expect(plan.music.scale.name).toBe('major');
+  });
+
+  it('drops a minor-family style for every majorKeyOnly recipe, always landing on a major scale', () => {
+    const minorProfile = STYLE_CATALOG.profiles.find(p => p.id === 'blues')!; // scales[0] 'minor pentatonic'
+    const minorCatalog: StyleCatalog = { profiles: [minorProfile], elements: elementsOf(minorProfile) };
+    const majorOnlyIds = Object.entries(RECIPES).filter(([, r]) => r.majorKeyOnly).map(([id]) => id);
+    expect(majorOnlyIds.length).toBeGreaterThanOrEqual(5);
+    for (const id of majorOnlyIds) {
+      const plan = planLesson(state({ skills: [sk(id, 'self', null)],
+        settings: { session_minutes: 30, style_core: ['blues'], vocal_low: null, vocal_high: null } }), minorCatalog);
+      expect(plan.skill_id, id).toBe(id);
+      expect(plan.style_element, id).toBeNull();
+      expect(plan.music.scale.name, id).toBe('major');
+    }
   });
 
   it('is deterministic', () => {
