@@ -403,13 +403,14 @@ export const RECIPES: Record<string, SkillRecipe> = {
     ],
     listenFor: 'Three clear, separate notes with no muffled or buzzing string between them.',
   },
-  // Fills: chord panel only, no tab card yet (spec §8) — strings and frets stay in words, relative to the
-  // shape the card is already showing for {chord1}, not hard-coded to one key.
+  // Fills: chord panel only, no tab card yet (spec §8) — strings, frets and shapes stay in words, relative
+  // to {chord1} itself and its root ({degrees:1}), never claimed as something the card's diagram shows
+  // (the card draws chords-db's first voicing, usually open, not a barre or a CAGED-labelled shape).
   'fills.l1.sus_add_hammers': {
     card: 'chords',
     steps: [
       'A hammer-on: tap a fretting-hand finger onto a higher fret on the same string without picking again, so the new note rings straight out of the old one.',
-      'On {chord1}, hammer one finger down one fret from where it already sits, then lift straight back off to the plain chord.',
+      'On {chord1}, hammer a free finger onto the next fret up on the same string, then lift straight back off to the plain chord.',
       'Go through {chords}, one hammer-on and lift-off per bar.',
       LADDER,
     ],
@@ -428,7 +429,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
     card: 'chords',
     steps: [
       'A bass walk: instead of jumping straight to the next chord, step your lowest note up or down one note per beat until it lands on the next chord\'s root.',
-      'On {chord1}, start from the bass note the card shows (string {root_string}) and walk toward the next chord in {chords} over the last beat of the bar.',
+      'On {chord1}, start from the bass note the card shows (string {root_string}) and walk the bass into the next chord during the last beat of each bar.',
       'Land exactly on the new root the instant the chord changes, then let it ring.',
       LADDER,
     ],
@@ -457,15 +458,15 @@ export const RECIPES: Record<string, SkillRecipe> = {
   'fills.l3.double_stops_barre': {
     card: 'chords',
     steps: [
-      'Double-stops here are the top two strings of the full barre shape the card shows for {chord1} — play just those two strings together.',
-      'A slide: keep pressing while you move that two-string shape up two frets, then slide it back down to where it started.',
+      'A barre: press one finger flat across every string, then shape {chord1} behind it with its root on string 6 where {degrees:1} sits (E-shape) or string 5 (A-shape).',
+      'Play just the top two strings of that barre together — that\'s the double-stop — then slide it (keep pressing while you move) up two frets and back down.',
       'Go through {chords}, sliding the double-stop up and back once on each chord.',
       LADDER,
     ],
     listenFor: 'Both notes staying locked together through the slide, with no buzz or muted string.',
   },
   'fills.l4.sliding_thirds': {
-    card: 'chords', degrees: [1, 3],
+    card: 'chords',
     steps: [
       'A 3rd: two notes two scale steps apart, like {degrees:1,3}, played together on two neighbouring strings.',
       'Find a 3rd shape inside {chord1} on two neighbouring strings, then slide it (keep pressing while you move) up to the next 3rd shape in {scale}.',
@@ -475,7 +476,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
     listenFor: 'Both notes of each 3rd arriving together after the slide, neither one lagging behind.',
   },
   'fills.l4.sliding_sixths': {
-    card: 'chords', degrees: [1, 6],
+    card: 'chords',
     steps: [
       'A 6th: two notes further apart than a 3rd, like {degrees:1,6}, played together with one string skipped between them.',
       'Play a 6th shape on strings 3 and 1 inside {chord1}, then slide it up one shape and back.',
@@ -487,8 +488,8 @@ export const RECIPES: Record<string, SkillRecipe> = {
   'fills.l5.pentatonic_fills_caged': {
     card: 'chords',
     steps: [
-      'A pentatonic box: a five-note scale shape that sits right around one CAGED chord shape — the one the card is showing for {chord1}.',
-      'In the last two beats of a bar on {chord1}, play three or four notes from that box, ending on a chord tone.',
+      'A pentatonic fill: five notes built around the chord — {degrees:1,2,3,5,6} — played from wherever your fretting hand is already sitting on {chord1}.',
+      'In the last two beats of a bar, play three or four of those notes, ending on a chord tone.',
       'Drop straight back into the rhythm on beat 1. Try it once per phrase through {chords}.',
       LADDER,
     ],
