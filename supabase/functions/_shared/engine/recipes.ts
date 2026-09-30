@@ -403,6 +403,107 @@ export const RECIPES: Record<string, SkillRecipe> = {
     ],
     listenFor: 'Three clear, separate notes with no muffled or buzzing string between them.',
   },
+  // Fills: chord panel only, no tab card yet (spec §8) — strings and frets stay in words, relative to the
+  // shape the card is already showing for {chord1}, not hard-coded to one key.
+  'fills.l1.sus_add_hammers': {
+    card: 'chords',
+    steps: [
+      'A hammer-on: tap a fretting-hand finger onto a higher fret on the same string without picking again, so the new note rings straight out of the old one.',
+      'On {chord1}, hammer one finger down one fret from where it already sits, then lift straight back off to the plain chord.',
+      'Go through {chords}, one hammer-on and lift-off per bar.',
+      LADDER,
+    ],
+    listenFor: 'The hammered note ringing as loud as a picked one, then the plain chord landing clean when the finger lifts.',
+  },
+  'fills.l1.open_chord_pulloffs': {
+    card: 'chords',
+    steps: [
+      'A pull-off: fret a note, then flick that finger off the string sideways so the open string below it sounds, without picking again.',
+      'On {chord1}, pull off one fretted note to its open string on beat 4, then land back on the chord on beat 1.',
+      'Go through {chords}, one pull-off at the end of each bar.', LADDER,
+    ],
+    listenFor: 'The pulled-off note as loud as a picked one, and beat 1 landing on time.',
+  },
+  'fills.l2.bass_walks': {
+    card: 'chords',
+    steps: [
+      'A bass walk: instead of jumping straight to the next chord, step your lowest note up or down one note per beat until it lands on the next chord\'s root.',
+      'On {chord1}, start from the bass note the card shows (string {root_string}) and walk toward the next chord in {chords} over the last beat of the bar.',
+      'Land exactly on the new root the instant the chord changes, then let it ring.',
+      LADDER,
+    ],
+    listenFor: 'The walk arriving right on the new root with no gap when the chord changes.',
+  },
+  'fills.l2.g_run': {
+    card: 'chords',
+    steps: [
+      'A phrase-ending run: walk up the bass strings note by note under the current chord, timed to land on the root exactly as the next phrase starts.',
+      'Play the run under {chord1}, finishing with a hammer-on or pull-off — tap or flick a finger without picking again — right onto the root.',
+      'Use it to close a phrase through {chords}, about once every four bars.',
+      LADDER,
+    ],
+    listenFor: 'The run landing squarely on the root as the new phrase begins, the closing hammer or pull-off as loud as the rest.',
+  },
+  'fills.l3.double_stops_static_top': {
+    card: 'chords',
+    steps: [
+      'A double-stop: two notes plucked or strummed together on two neighbouring strings, both part of the current chord.',
+      'On {chord1}, hold the higher of the two notes still and hammer the lower one up a fret into the next chord tone, then let both ring together.',
+      'Repeat through {chords}: the top note stays put, only the lower note moves.',
+      LADDER,
+    ],
+    listenFor: 'The top note staying rock steady while the lower note snaps cleanly into its new pitch.',
+  },
+  'fills.l3.double_stops_barre': {
+    card: 'chords',
+    steps: [
+      'Double-stops here are the top two strings of the full barre shape the card shows for {chord1} — play just those two strings together.',
+      'A slide: keep pressing while you move that two-string shape up two frets, then slide it back down to where it started.',
+      'Go through {chords}, sliding the double-stop up and back once on each chord.',
+      LADDER,
+    ],
+    listenFor: 'Both notes staying locked together through the slide, with no buzz or muted string.',
+  },
+  'fills.l4.sliding_thirds': {
+    card: 'chords', degrees: [1, 3],
+    steps: [
+      'A 3rd: two notes two scale steps apart, like {degrees:1,3}, played together on two neighbouring strings.',
+      'Find a 3rd shape inside {chord1} on two neighbouring strings, then slide it (keep pressing while you move) up to the next 3rd shape in {scale}.',
+      'Walk that sliding 3rd through {chords}, following each chord\'s own notes.',
+      LADDER,
+    ],
+    listenFor: 'Both notes of each 3rd arriving together after the slide, neither one lagging behind.',
+  },
+  'fills.l4.sliding_sixths': {
+    card: 'chords', degrees: [1, 6],
+    steps: [
+      'A 6th: two notes further apart than a 3rd, like {degrees:1,6}, played together with one string skipped between them.',
+      'Play a 6th shape on strings 3 and 1 inside {chord1}, then slide it up one shape and back.',
+      'Move the same sliding 6th to strings 4 and 2, then walk it through {chords}.',
+      LADDER,
+    ],
+    listenFor: 'Both notes of the 6th ringing evenly through the slide, even with a string skipped between them.',
+  },
+  'fills.l5.pentatonic_fills_caged': {
+    card: 'chords',
+    steps: [
+      'A pentatonic box: a five-note scale shape that sits right around one CAGED chord shape — the one the card is showing for {chord1}.',
+      'In the last two beats of a bar on {chord1}, play three or four notes from that box, ending on a chord tone.',
+      'Drop straight back into the rhythm on beat 1. Try it once per phrase through {chords}.',
+      LADDER,
+    ],
+    listenFor: 'The fill staying inside two beats and landing back on the groove exactly on beat 1.',
+  },
+  'fills.l5.fill_in_context': {
+    card: 'chords',
+    steps: [
+      'Play the groove on {chords} for four full bars, no fills, keeping the rhythm locked.',
+      'On the last two beats of bar four, play one fill you know (a hammer, a pull-off, a slide or a short run), then land back on the beat.',
+      'Repeat for another four bars, choosing a different fill each time.',
+      'Aim for {target_reps} clean passes in a row.',
+    ],
+    listenFor: 'Exactly one fill every four bars, with the groove never missing a beat around it.',
+  },
 };
 
 /** The skill's recipe, or a generic one from its description until the recipe is written. */
