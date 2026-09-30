@@ -7,8 +7,8 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
-      injectRegister: 'auto',
+      registerType: 'prompt', // an update never reloads mid-practice on its own; UpdateBanner asks
+      injectRegister: false,
       includeAssets: ['icon.svg', 'favicon.ico', 'apple-touch-icon-180x180.png', 'bursts/*.svg'],
       manifest: {
         name: 'Guitar Coach',
