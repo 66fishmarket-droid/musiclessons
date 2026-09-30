@@ -1,5 +1,7 @@
+import { pickCreateTask } from './create.ts';
 import { nextKey } from './keys.ts';
 import { buildMusic } from './music.ts';
+import { RECIPES } from './recipes.ts';
 import { STYLE_CATALOG, type StyleCatalog, type StyleElement } from './styles.ts';
 import { buildBlocks } from './templates.ts';
 import {
@@ -151,9 +153,14 @@ export function planLesson(state: PlannerState, catalog: StyleCatalog = STYLE_CA
     .map(b => ({ ...b, items: items(b.kind) }));
   const profile = style ? catalog.profiles.find(p => p.id === style.style) ?? null : null;
   const element = style ? catalog.elements.find(e => e.id === style.element_id) ?? null : null;
+  const patterns = RECIPES[skill.id]?.card === 'pattern' ? RECIPES[skill.id].patterns ?? [] : [];
+  const timesSeen = state.recentLessons.filter(l => l.skill_id === skill.id).length;
+  const pattern_id = patterns.length ? patterns[timesSeen % patterns.length] : null;
+  const create_task_id = pickCreateTask(state.today, skill.id, state.recentLessons.map(l => l.create_task_id));
   return {
     date: state.today, template: `standard_${state.settings.session_minutes}`, track, skill_id: skill.id, key,
     is_repeat: ctx.isRepeat, style_element: style, theory_topic_id: theory, retest, review, blocks,
     music: buildMusic({ key, track, style: profile, element }),
+    pattern_id, create_task_id,
   };
 }

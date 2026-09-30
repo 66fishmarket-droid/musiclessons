@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
+import { CREATE_TASKS } from '../../supabase/functions/_shared/engine/create.ts';
 import { planLesson } from '../../supabase/functions/_shared/engine/planner.ts';
 import { elementsOf, type StyleCatalog, type StyleProfile } from '../../supabase/functions/_shared/engine/styles.ts';
 import type { LessonSummary, PlannerState, Skill, StyleChoice } from '../../supabase/functions/_shared/engine/types.ts';
+import { SKILLS } from '../../supabase/seed/curriculum.ts';
+import { newUserState, NO_STYLES } from '../lesson/fixtures.ts';
 
 const sk = (id: string, metric: Skill['pass_metric'], target: number | null, extra: Partial<Skill> = {}): Skill => {
   const [track, lvl] = id.split('.');
@@ -32,7 +35,7 @@ const state = (over: Partial<PlannerState> = {}): PlannerState => ({
   skills, progress: [], reviewItems: [], recentLessons: [], recentLogs: [], ...over,
 });
 const lesson = (date: string, track: LessonSummary['track'], skill_id: string, key: string, over: Partial<LessonSummary> = {}): LessonSummary =>
-  ({ date, track, skill_id, key, style_element: null, want_more_time: false, status: 'completed', ...over });
+  ({ date, track, skill_id, key, style_element: null, want_more_time: false, status: 'completed', create_task_id: null, ...over });
 const style = (s: string, el: string, is_new = false): StyleChoice => ({ style: s, element_id: el, kind: 'rhythm', is_new });
 
 describe('planLesson', () => {
@@ -142,5 +145,28 @@ describe('planLesson', () => {
 
   it('is deterministic', () => {
     expect(planLesson(state(), catalog)).toEqual(planLesson(state(), catalog));
+  });
+});
+
+describe('pattern and create task', () => {
+  const pinch = 'fingerstyle.l1.pima_pinches';
+  const seen = (n: number) => Array.from({ length: n }, (_, i) => ({
+    date: `2026-10-0${i + 1}`, track: 'fingerstyle' as const, skill_id: pinch, key: 'G', style_element: null,
+    want_more_time: null, status: 'completed' as const, create_task_id: null,
+  }));
+  const planFor = (n: number) => {
+    const skills = SKILLS.filter(s => s.id === pinch);
+    return planLesson(newUserState({ today: '2026-10-09', skills, recentLessons: seen(n) }), NO_STYLES);
+  };
+  it('starts on the first pattern and rotates each time the skill comes back', () => {
+    expect(planFor(0).pattern_id).toBe('pinch');
+    expect(planFor(1).pattern_id).toBe('giuliani_pima');
+    expect(planFor(2).pattern_id).toBe('pinch');
+  });
+  it('has no pattern for a skill without a pattern card', () => {
+    expect(planLesson(newUserState(), NO_STYLES).pattern_id).toBeNull();
+  });
+  it('always picks a known Create task', () => {
+    expect(CREATE_TASKS.map(t => t.id)).toContain(planLesson(newUserState(), NO_STYLES).create_task_id);
   });
 });

@@ -37,8 +37,8 @@ export const FIXTURES: { name: string; state: PlannerState }[] = [
       { item_type: 'theory', ref: 'theory.l1.intervals', interval_days: 1, next_due: '2026-10-09', last_result: true },
     ],
     recentLessons: [
-      { date: '2026-10-09', track: 'fills', skill_id: 'fills.l1.sus_add_hammers', key: 'G', style_element: null, want_more_time: false, status: 'completed' },
-      { date: '2026-10-07', track: 'rhythm', skill_id: 'rhythm.l1.accents_palm_mute', key: 'A', style_element: null, want_more_time: false, status: 'completed' },
+      { date: '2026-10-09', track: 'fills', skill_id: 'fills.l1.sus_add_hammers', key: 'G', style_element: null, want_more_time: false, status: 'completed', create_task_id: null },
+      { date: '2026-10-07', track: 'rhythm', skill_id: 'rhythm.l1.accents_palm_mute', key: 'A', style_element: null, want_more_time: false, status: 'completed', create_task_id: null },
     ],
   }) },
   { name: 'Repeat day, 25 minutes', state: base({
@@ -46,6 +46,7 @@ export const FIXTURES: { name: string; state: PlannerState }[] = [
     recentLessons: [{
       date: '2026-10-09', track: 'fingerstyle', skill_id: 'fingerstyle.l1.pima_pinches', key: 'D',
       style_element: { style: 'folk', element_id: 'folk.boom_chick', kind: 'rhythm', is_new: true }, want_more_time: true, status: 'completed',
+      create_task_id: null,
     }],
   }) },
 ];

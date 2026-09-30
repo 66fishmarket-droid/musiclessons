@@ -23,6 +23,7 @@ export interface StyleChoice { style: string; element_id: string; kind: 'rhythm'
 export interface LessonSummary {
   date: string; track: Track | null; skill_id: string | null; key: string | null;
   style_element: StyleChoice | null; want_more_time: boolean | null; status: 'planned' | 'completed' | 'skipped';
+  create_task_id: string | null;
 }
 /** One logged new-skill block, newest first. */
 export interface LogSummary { date: string; track: Track; passed: boolean | null }
@@ -42,4 +43,5 @@ export interface LessonPlan {
   retest: { skill_id: string; target: Target } | null;
   review: { item_type: ReviewItem['item_type']; ref: string }[];
   blocks: PlanBlock[]; music: MusicContent;
+  pattern_id: string | null; create_task_id: string;
 }
