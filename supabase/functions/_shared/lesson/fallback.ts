@@ -1,14 +1,9 @@
 import { STYLE_CATALOG } from '../engine/styles.ts';
-import type { BlockKind, LessonPlan, PlanBlock, Skill, Target } from '../engine/types.ts';
+import type { BlockKind, LessonPlan, PlanBlock, Skill } from '../engine/types.ts';
 import type { BlockContent, LessonContent } from './contract.ts';
+import { targetText } from './steps.ts';
 
-/** A plan target as plain words ("Start at 46 bpm, reach 70 bpm cleanly."); "" when the block has none. */
-export function targetText(t: Target | null): string {
-  if (!t) return '';
-  if (t.metric === 'bpm' && t.target !== null) return `Start at ${t.start} bpm, reach ${t.target} bpm cleanly.`;
-  if (t.metric === 'clean_reps' && t.target !== null) return `${t.target} clean reps in a row.`;
-  return 'Rate yourself honestly, 1–5.';
-}
+export { targetText } from './steps.ts';
 
 const braced = (chords: string[]) => chords.map(c => `{${c}}`).join(' ');
 
