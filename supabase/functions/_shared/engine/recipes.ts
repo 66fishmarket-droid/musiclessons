@@ -192,6 +192,106 @@ export const RECIPES: Record<string, SkillRecipe> = {
     ],
     listenFor: 'A crisp, short "chk" landing only between the beats, with true silence on the beats themselves.',
   },
+  // Ear & voice: scale card, degrees highlighted on the fretboard; drone from the metronome card; no mic, so every step ends in self-rating.
+  'ear_voice.l1.pitch_match': {
+    card: 'scale', degrees: [1],
+    steps: [
+      'Turn on the drone for {degrees:1}, the home note. Hum along until your note locks on with no wobble.',
+      'Now play {degrees:1} on the guitar, stop the drone, and sing that exact pitch from memory.',
+      'Play {degrees:1} again to check: did you land on it, above it, or below it?',
+      'Rate yourself 1–5 on how close your pitch matching was today.',
+    ],
+    listenFor: 'Your sung note settling into the drone until you cannot hear two separate pitches.',
+  },
+  'ear_voice.l1.sing_135': {
+    card: 'scale', degrees: [1, 3, 5],
+    steps: [
+      'Turn on the drone. Play {degrees:1} on the guitar and sing it: that is 1, the home note.',
+      'Sing up 1-3-5, that is {degrees:1,3,5}, then back down. Play each note first if you lose it.',
+      'Now sing 5-4-3-2-1: {degrees:5,4,3,2,1}.', 'Rate yourself 1–5 on how close each note felt.',
+    ],
+    listenFor: 'Each sung note blending with the drone instead of wobbling against it.',
+  },
+  'ear_voice.l2.sing_all_degrees': {
+    card: 'scale', degrees: [1, 2, 3, 4, 5, 6, 7],
+    steps: [
+      'Turn on the drone. Sing {degrees:1,2,3,4,5,6,7} one at a time, low to high, checking each against the drone.',
+      'Now sing each degree again, but resolve it back to {degrees:1} before you move to the next one.',
+      'Go in a random order instead of straight up the scale, resolving home every time.',
+      'Rate yourself 1–5 on how quickly each degree found its way home.',
+    ],
+    listenFor: 'Every degree settling cleanly onto the drone\'s note when it resolves.',
+  },
+  'ear_voice.l2.sing_roots': {
+    card: 'scale', degrees: [1, 4, 5, 6],
+    steps: [
+      'These roots live at {degrees:1,4,5,6}. Play each one on the guitar first so your ear knows where home, four, five and six sit.',
+      'Now strum {chords}, one chord per bar, and sing the root of each one as it changes.',
+      'Go again. This time call out each chord\'s number in the loop ("one", "four", "five"…) right after you sing its root.',
+      'Rate yourself 1–5 on how fast you found each new root.',
+    ],
+    listenFor: 'Your sung root landing exactly as each new chord arrives, not a beat late.',
+  },
+  'ear_voice.l3.sing_chord_tones': {
+    card: 'scale', degrees: [1, 3, 5],
+    steps: [
+      'Warm up the shape first: sing {degrees:1,3,5} in order, low to high, over the drone.',
+      'Strum {chord1} and let it ring a full bar. Sing that chord\'s own root, then its 3rd, then its 5th.',
+      'Go through {chords}, one whole-note strum per chord, singing root-3rd-5th before you strum the next one.',
+      'Rate yourself 1–5 on how many chords you got by ear before strumming.',
+    ],
+    listenFor: 'Three clearly separate pitches inside each chord, landing low to high without sliding.',
+  },
+  'ear_voice.l3.harmony_thirds_sixths': {
+    card: 'scale', degrees: [1, 3, 6],
+    steps: [
+      'Play {degrees:1} on the guitar: that is your melody note. A 3rd above it is {degrees:3}; play and sing that.',
+      'A 6th above {degrees:1} is {degrees:6}. Play it, then sing it, keeping {degrees:1} ringing under it if you can.',
+      'Pick any other scale degree as your melody note, play it, then sing a 3rd or a 6th above it from memory.',
+      'Rate yourself 1–5 on how in-tune each harmony note felt against the melody note.',
+    ],
+    listenFor: 'The harmony note sitting clearly above the melody note, never unison or below it.',
+  },
+  'ear_voice.l4.colour_notes': {
+    card: 'scale', degrees: [3, 4, 5, 6, 7],
+    steps: [
+      'Turn on the drone. b7 sits one fret below {degrees:7}; b3 sits one fret below {degrees:3}. Play and sing each against the drone.',
+      'b6 sits one fret below {degrees:6}; #4 sits one fret above {degrees:4}. Play and sing those two the same way.',
+      'Pick any two colour notes and sing them back to back, without replaying them on the guitar first.',
+      'Rate yourself 1–5 on how confidently you found each colour note by ear.',
+    ],
+    listenFor: 'Each colour note sitting clearly darker or brighter than its nearby scale degree, not identical to it.',
+  },
+  'ear_voice.l4.borrowed_chords_by_ear': {
+    card: 'scale', degrees: [4, 6, 7],
+    steps: [
+      'Play {chords} straight through once so the plain, diatonic version is fresh in your ear.',
+      'iv and bVI borrow a note from outside the key: one fret below {degrees:6} (b6); bVII borrows one fret below {degrees:7} (b7). Sing each borrowed note over the drone.',
+      'Play {chords} again. On one bar, swap the chord for iv, bVI or bVII in your head and sing the changed note before you hear it played.',
+      'Rate yourself 1–5 on how clearly the borrowed chord stood out.',
+    ],
+    listenFor: 'The borrowed chord sounding darker or further from home than the diatonic chords around it.',
+  },
+  'ear_voice.l5.harmony_while_strumming': {
+    card: 'scale', degrees: [1, 3, 6],
+    steps: [
+      'Strum {chords} at a steady pace until the chord changes need no attention at all.',
+      'Pick a harmony line a 3rd or 6th above the melody, using {degrees:1,3,6} as your reference points in today\'s key.',
+      'Strum {chords} again, singing that harmony line the whole way through. If the hands falter, hum it instead of singing words.',
+      'Rate yourself 1–5 on how steady the strumming stayed while you sang.',
+    ],
+    listenFor: 'The strum pattern completely unaffected by the voice coming in.',
+  },
+  'ear_voice.l5.transcribe_progression': {
+    card: 'scale', degrees: [1, 2, 3, 4, 5, 6, 7],
+    steps: [
+      'Play {degrees:1,2,3,4,5,6,7} on the guitar or hum them, so every degree is fresh before you start.',
+      'Play the first chord of your chosen song. Sing its root, then match that pitch to a degree on the card.',
+      'Write down the numeral for that degree, then repeat for every new chord until the progression loops.',
+      'Rate yourself 1–5 on how many chords you placed correctly.',
+    ],
+    listenFor: 'Each root landing cleanly on one scale degree, not hovering between two.',
+  },
 };
 
 /** The skill's recipe, or a generic one from its description until the recipe is written. */
