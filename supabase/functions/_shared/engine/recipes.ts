@@ -137,9 +137,9 @@ export const RECIPES: Record<string, SkillRecipe> = {
     listenFor: 'The hand never stopping, with only the named hits ringing out above the quiet ghosts.',
   },
   'rhythm.l3.anticipations': {
-    card: 'rhythm', grid: 'D---D-U-D-U-D-UD', gridName: 'Anticipated change before beat 1',
+    card: 'rhythm', grid: 'D---D-U-D-U-D-D-', gridName: 'Anticipated change before beat 1',
     steps: [
-      'An anticipated chord arrives one 16th early, on the last "a" of the bar, instead of landing right on beat 1.',
+      'An anticipated chord arrives an eighth early, on the "&" of beat 4, instead of landing right on beat 1.',
       'Strum {chord1}: {rhythm_counts}. That last hit is the anticipation — move the fretting hand there, just before the downbeat.',
       'Then through {chords}, changing early on the anticipation every time, one chord per bar.', LADDER,
     ],
