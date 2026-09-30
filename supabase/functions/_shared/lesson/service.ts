@@ -44,9 +44,10 @@ export async function getOrCreateLesson(
   const plan = planLesson(state);
   const skills = new Map<string, Skill>(rows.skills.map(s => [s.id, s]));
   const style = plan.style_element ? STYLE_CATALOG.profiles.find(p => p.id === plan.style_element!.style) ?? null : null;
-  const messages = buildMessages({ plan, skills, style, settings: state.settings, recent: lessonSummaries(rows.lessons), questions: rows.questions });
+  const metSkills = rows.progress.map(p => p.skill_id);
+  const messages = buildMessages({ plan, skills, style, settings: state.settings, recent: lessonSummaries(rows.lessons), questions: rows.questions, metSkills });
   // ponytail: two simultaneous first-opens both pay for a model call; the unique key keeps one row. Add a claim row if cost matters.
-  const written = await writeLesson(messages, plan, skills, complete, models);
+  const written = await writeLesson(messages, plan, skills, complete, models, metSkills);
 
   const { data, error } = await db.from('lessons').insert({
     lesson_date: date, template: plan.template, track: plan.track, skill_id: plan.skill_id, key: plan.key,

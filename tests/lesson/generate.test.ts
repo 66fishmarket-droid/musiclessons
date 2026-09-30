@@ -2,9 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { parseJson, writeLesson } from '../../supabase/functions/_shared/lesson/generate.ts';
 import type { Complete } from '../../supabase/functions/_shared/lesson/llm.ts';
 import type { ChatMessage } from '../../supabase/functions/_shared/lesson/prompt.ts';
-import { PLAN, SKILL_MAP, validContent } from './fixtures.ts';
+import { buildSteps } from '../../supabase/functions/_shared/lesson/steps.ts';
+import { PLAN, SKILL_MAP, validColour } from './fixtures.ts';
 
-const good = JSON.stringify(validContent());
+const good = JSON.stringify(validColour());
 const msgs: ChatMessage[] = [{ role: 'system', content: 's' }, { role: 'user', content: 'u' }];
 /** A stub model that gives the scripted answers in order (an Error is thrown). */
 function scripted(answers: (string | Error)[], calls: string[] = []): Complete {
@@ -29,28 +30,31 @@ describe('parseJson', () => {
 describe('writeLesson', () => {
   it('returns the first valid answer without calling the fallback model', async () => {
     const calls: string[] = [];
-    const w = await writeLesson(msgs, PLAN, SKILL_MAP, scripted([good], calls), ['m1', 'm2']);
+    const w = await writeLesson(msgs, PLAN, SKILL_MAP, scripted([good], calls), ['m1', 'm2'], []);
     expect(w).toMatchObject({ llm_model: 'm1', attempts: [{ model: 'm1', errors: [], cost: 0.001 }] });
     expect(calls).toEqual(['m1']);
+    expect(w.content.blocks[0].instructions).toEqual(buildSteps(PLAN, SKILL_MAP).blocks[0].instructions);
+    expect(w.content.blocks[0].more).toBe(validColour().blocks[0].more);
   });
   it('retries on the fallback model when the first answer is invalid', async () => {
-    const w = await writeLesson(msgs, PLAN, SKILL_MAP, scripted(['{"title":"x"}', `\`\`\`json\n${good}\n\`\`\``]), ['m1', 'm2']);
+    const w = await writeLesson(msgs, PLAN, SKILL_MAP, scripted(['{"title":"x"}', `\`\`\`json\n${good}\n\`\`\``]), ['m1', 'm2'], []);
     expect(w.llm_model).toBe('m2');
     expect(w.attempts[0].errors.length).toBeGreaterThan(0);
     expect(w.content.fallback).toBeUndefined();
   });
   it('serves the plan-only lesson when every model fails, without throwing', async () => {
-    const w = await writeLesson(msgs, PLAN, SKILL_MAP, scripted([new Error('timeout'), 'not json']), ['m1', 'm2']);
+    const w = await writeLesson(msgs, PLAN, SKILL_MAP, scripted([new Error('timeout'), 'not json']), ['m1', 'm2'], []);
     expect(w.llm_model).toBe('fallback');
     expect(w.content.fallback).toBe(true);
+    expect(w.content.blocks[0].instructions.length).toBeGreaterThan(0);
     expect(w.attempts.map(a => a.errors)).toEqual([['timeout'], ['not a JSON object']]);
   });
   it('skips blank and duplicate model names, and calls nothing when none is set', async () => {
     const calls: string[] = [];
-    await writeLesson(msgs, PLAN, SKILL_MAP, scripted([good], calls), ['', undefined, 'm1', 'm1']);
+    await writeLesson(msgs, PLAN, SKILL_MAP, scripted([good], calls), ['', undefined, 'm1', 'm1'], []);
     expect(calls).toEqual(['m1']);
     const none: string[] = [];
-    expect((await writeLesson(msgs, PLAN, SKILL_MAP, scripted([], none), [undefined, ''])).llm_model).toBe('fallback');
+    expect((await writeLesson(msgs, PLAN, SKILL_MAP, scripted([], none), [undefined, ''], [])).llm_model).toBe('fallback');
     expect(none).toEqual([]);
   });
 });

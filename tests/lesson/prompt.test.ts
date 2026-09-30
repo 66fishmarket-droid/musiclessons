@@ -3,7 +3,6 @@ import { planLesson } from '../../supabase/functions/_shared/engine/planner.ts';
 import { STYLE_CATALOG } from '../../supabase/functions/_shared/engine/styles.ts';
 import { PROMPT_VERSION, SYSTEM_PROMPT, buildMessages } from '../../supabase/functions/_shared/lesson/prompt.ts';
 import { PLAN, SKILL_MAP, newUserState } from './fixtures.ts';
-import { NOTE_CALLER_SKILLS } from '../../src/lib/noteCaller.ts';
 import { rhythmCounts, rhythmPattern } from '../../supabase/functions/_shared/engine/patterns.ts';
 
 const briefOf = (content: string) => JSON.parse(content.slice(content.indexOf('\n') + 1));
@@ -12,7 +11,7 @@ const settings = { ...newUserState().settings, vocal_low: 'A2', vocal_high: 'E4'
 describe('buildMessages', () => {
   const msgs = buildMessages({
     plan: PLAN, skills: SKILL_MAP, style: null, settings,
-    recent: Array.from({ length: 9 }, (_, i) => `lesson ${i}`), questions: Array.from({ length: 12 }, (_, i) => `question ${i}`),
+    recent: Array.from({ length: 9 }, (_, i) => `lesson ${i}`), questions: Array.from({ length: 12 }, (_, i) => `question ${i}`), metSkills: [],
   });
   const brief = briefOf(msgs[1].content);
 
@@ -20,13 +19,10 @@ describe('buildMessages', () => {
     expect(msgs[0]).toEqual({ role: 'system', content: SYSTEM_PROMPT });
     expect(msgs[1].content.startsWith("Write today's lesson for this plan:\n")).toBe(true);
     expect(PROMPT_VERSION).toMatch(/^gc-\d{4}-\d{2}-\d{2}[a-z]?$/);
-    expect(SYSTEM_PROMPT).toMatch(/reset: exactly one instruction/);
-    expect(SYSTEM_PROMPT).toMatch(/Plain words: the learner is a beginner/);
-    expect(SYSTEM_PROMPT).toMatch(/App tools: mention only these/);
-    expect(SYSTEM_PROMPT).toMatch(/Picking patterns: when the brief has picking_pattern/);
-    expect(SYSTEM_PROMPT).toMatch(/what the picking hand does on each beat/);
-    expect(SYSTEM_PROMPT).toMatch(/what the hands and the voice do/);
-    for (const id of NOTE_CALLER_SKILLS) expect(SYSTEM_PROMPT).toContain(id);
+    expect(PROMPT_VERSION).toBe('gc-2026-10-01');
+    expect(SYSTEM_PROMPT).toMatch(/do not restate or contradict/);
+    expect(SYSTEM_PROMPT).not.toMatch(/instructions: 2 to 5/);
+    expect(SYSTEM_PROMPT).not.toMatch(/App tools:/);
   });
   it('briefs the plan: skill, theory topic, key, chords and blocks in order', () => {
     expect(brief).toMatchObject({
@@ -37,13 +33,12 @@ describe('buildMessages', () => {
     });
     expect(brief.blocks.map((b: { kind: string }) => b.kind)).toEqual(PLAN.blocks.map(b => b.kind));
     expect(brief.blocks.find((b: { kind: string }) => b.kind === 'new_skill').items[0].target).toEqual({ metric: 'bpm', target: 70, start: 46 });
+    expect(brief.steps).toHaveLength(PLAN.blocks.length);
+    expect(brief.met_skills).toEqual([SKILL_MAP.get(PLAN.skill_id)!.name]);
   });
-  it('names the picking pattern for fingerstyle skills, null otherwise', () => {
-    expect(brief.picking_pattern).toBeNull(); // the fixture skill is a rhythm skill
+  it('keeps the rhythm counts in the music block', () => {
+    expect(brief.picking_pattern).toBeUndefined();
     expect(brief.music.rhythm_counts).toBe(PLAN.music.rhythm ? rhythmCounts(rhythmPattern(PLAN.music.rhythm.name, PLAN.music.rhythm.grid)) : null);
-    const plan = { ...PLAN, skill_id: 'fingerstyle.l1.giuliani_arpeggios' };
-    const b = briefOf(buildMessages({ plan, skills: SKILL_MAP, style: null, settings, recent: [], questions: [] })[1].content);
-    expect(b.picking_pattern).toBe('p-i-m');
   });
   it('caps history at 7 lessons and 10 questions', () => {
     expect(brief.recent_lessons).toHaveLength(7);
@@ -52,7 +47,7 @@ describe('buildMessages', () => {
   it('names today\'s style element', () => {
     const plan = planLesson(newUserState(), STYLE_CATALOG);
     const style = STYLE_CATALOG.profiles.find(p => p.id === plan.style_element!.style)!;
-    const b = briefOf(buildMessages({ plan, skills: SKILL_MAP, style, settings, recent: [], questions: [] })[1].content);
+    const b = briefOf(buildMessages({ plan, skills: SKILL_MAP, style, settings, recent: [], questions: [], metSkills: [] })[1].content);
     expect(b.style).toMatchObject({ name: style.name, element: { kind: plan.style_element!.kind, is_new: true } });
     expect(b.style.element.name).toBeTruthy();
   });
