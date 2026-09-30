@@ -3,6 +3,7 @@ import { planLesson } from '../../supabase/functions/_shared/engine/planner.ts';
 import { STYLE_CATALOG } from '../../supabase/functions/_shared/engine/styles.ts';
 import { PROMPT_VERSION, SYSTEM_PROMPT, buildMessages } from '../../supabase/functions/_shared/lesson/prompt.ts';
 import { PLAN, SKILL_MAP, newUserState } from './fixtures.ts';
+import { NOTE_CALLER_SKILLS } from '../../src/lib/noteCaller.ts';
 
 const briefOf = (content: string) => JSON.parse(content.slice(content.indexOf('\n') + 1));
 const settings = { ...newUserState().settings, vocal_low: 'A2', vocal_high: 'E4' };
@@ -20,6 +21,8 @@ describe('buildMessages', () => {
     expect(PROMPT_VERSION).toMatch(/^gc-\d{4}-\d{2}-\d{2}[a-z]?$/);
     expect(SYSTEM_PROMPT).toMatch(/reset: exactly one instruction/);
     expect(SYSTEM_PROMPT).toMatch(/Plain words: the learner is a beginner/);
+    expect(SYSTEM_PROMPT).toMatch(/App tools: mention only these/);
+    for (const id of NOTE_CALLER_SKILLS) expect(SYSTEM_PROMPT).toContain(id);
     expect(SYSTEM_PROMPT).toMatch(/The create block's instructions are a recipe/);
   });
   it('briefs the plan: skill, theory topic, key, chords and blocks in order', () => {

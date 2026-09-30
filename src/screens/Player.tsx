@@ -5,6 +5,7 @@ import { Burst } from '../components/Burst.tsx';
 import { ChordPanel } from '../components/ChordPanel.tsx';
 import { ChordText } from '../components/ChordText.tsx';
 import { Metronome } from '../components/Metronome.tsx';
+import { NoteCaller } from '../components/NoteCaller.tsx';
 import { PickingPattern } from '../components/PickingPattern.tsx';
 import { Rail } from '../components/Rail.tsx';
 import { ScaleBoard } from '../components/ScaleBoard.tsx';
@@ -15,6 +16,7 @@ import { clock } from '../lib/dates.ts';
 import { keyAction } from '../lib/keys.ts';
 import { tempoLadder } from '../lib/ladder.ts';
 import { BLOCK_META, bpmTarget, refLabel, startBpm, tonicOf, type TodayLesson } from '../lib/lesson.ts';
+import { NOTE_CALLER_SKILLS } from '../lib/noteCaller.ts';
 import { skillInfo } from '../lib/skillInfo.ts';
 import { goTo, loadSession, logVerdict, resumeSession, saveSession, slotsFor, verdictFor, type Log, type Session } from '../lib/session.ts';
 import { useWakeLock } from '../lib/wakeLock.ts';
@@ -134,6 +136,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
       {block.kind === 'create' && <section className="card"><p><ChordText text={content.create_prompt} onChord={setSheet} /></p></section>}
       {block.kind === 'record' && <Recorder onTake={onTake} />}
       {pattern && chords.length > 0 && <PickingPattern pattern={pattern} chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} bpm={metro.bpm} />}
+      {skillId && NOTE_CALLER_SKILLS.includes(skillId) && <NoteCaller bpm={metro.bpm} />}
       {hasMetro && (
         <Metronome metro={metro} target={target} ladder={target !== null ? tempoLadder(first, target) : null}
           drone={drone} onDrone={() => setDrone(!drone)} tonic={tonic} />
