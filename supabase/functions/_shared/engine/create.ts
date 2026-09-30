@@ -35,7 +35,7 @@ export const CREATE_TASKS: CreateTask[] = [
     id: 'new_feel', songwriting: ['songwriting.l5.style_transplant'],
     prompt: 'Keep {chords} and change one thing about the rhythm.',
     steps: [
-      'Play {chords} with the day\'s rhythm, one bar per chord.',
+      'Play {chords} with the rhythm from the Apply block, one bar per chord.',
       'Change exactly one thing: move the bass note to a different beat, or leave one strum out.',
       'Hum or sing any line over the new feel and notice what changed in the mood.', RECORD,
     ],

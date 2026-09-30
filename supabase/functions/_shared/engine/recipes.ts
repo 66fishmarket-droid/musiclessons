@@ -205,7 +205,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
     listenFor: 'Your sung note settling into the drone until you cannot hear two separate pitches.',
   },
   'ear_voice.l1.sing_135': {
-    card: 'scale', degrees: [1, 3, 5],
+    card: 'scale', degrees: [1, 2, 3, 4, 5], // step 3 also sings 5-4-3-2-1; the card must highlight all of it
     steps: [
       'Turn on the drone. Play {degrees:1} on the guitar and sing it: that is 1, the home note.',
       'Sing up 1-3-5, that is {degrees:1,3,5}, then back down. Play each note first if you lose it.',
@@ -375,7 +375,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
     listenFor: 'Each chord change covering the smallest possible distance up or down the neck.',
   },
   'fretboard.l4.triads_lower_sets': {
-    card: 'scale', degrees: [1, 5],
+    card: 'scale', degrees: [1, 2, 4, 5], // step 2 also names {degrees:4} (sus4) and {degrees:2} (sus2)
     steps: [
       'The same triad idea moves to strings 5-4-3, then 6-5-4: root, 3rd and 5th, one note per string, {degrees:1} and {degrees:5} as anchors.',
       'A sus chord swaps the 3rd for {degrees:4} (sus4) or {degrees:2} (sus2); a diminished triad flattens both the 3rd and the 5th a fret each.',

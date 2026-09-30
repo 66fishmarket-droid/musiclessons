@@ -73,6 +73,16 @@ describe('recipes', () => {
       }
     }
   });
+  it('highlights on the scale card every degree its own steps name via a {degrees:N} token', () => {
+    const TOKEN = /\{degrees:([\d,]+)\}/g;
+    for (const [id, r] of Object.entries(RECIPES)) {
+      if (r.card !== 'scale') continue;
+      const named = new Set<number>();
+      for (const step of r.steps) for (const [, nums] of step.matchAll(TOKEN)) nums.split(',').forEach(n => named.add(Number(n)));
+      const highlighted = new Set(r.degrees ?? []);
+      for (const n of named) expect(highlighted.has(n), `${id}: {degrees:${n}} named in steps but not highlighted on the card`).toBe(true);
+    }
+  });
   it('renders every recipe and every Create task without an unfilled slot, for every style\'s scale', () => {
     const seenScales = new Set<string>();
     for (const profile of STYLE_CATALOG.profiles) {

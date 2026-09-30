@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { planLesson } from '../../supabase/functions/_shared/engine/planner.ts';
+import { buildMusic } from '../../supabase/functions/_shared/engine/music.ts';
+import { planLesson, targetFor } from '../../supabase/functions/_shared/engine/planner.ts';
 import { rhythmCounts, rhythmPattern } from '../../supabase/functions/_shared/engine/patterns.ts';
 import { RECIPES } from '../../supabase/functions/_shared/engine/recipes.ts';
 import { romanToChords } from '../../supabase/functions/_shared/engine/roman.ts';
-import { STYLE_CATALOG } from '../../supabase/functions/_shared/engine/styles.ts';
+import { elementsOf, STYLE_CATALOG } from '../../supabase/functions/_shared/engine/styles.ts';
+import type { LessonPlan } from '../../supabase/functions/_shared/engine/types.ts';
 import { APPLY_DEFAULT_GRID, buildSteps } from '../../supabase/functions/_shared/lesson/steps.ts';
 import { SKILLS } from '../../supabase/seed/curriculum.ts';
-import { NO_STYLES, PLAN, SKILL_MAP, newUserState } from './fixtures.ts';
+import { PLAN, SKILL_MAP, newUserState } from './fixtures.ts';
 
 describe('buildSteps', () => {
   it('writes one block per plan block, same kinds, every block with at least one step', () => {
@@ -94,10 +96,39 @@ describe('buildSteps', () => {
       expect(() => buildSteps(plan, SKILL_MAP), id).not.toThrow();
     }
   });
-  it('builds for every non-theory skill as today\'s skill without throwing', () => {
-    for (const s of SKILLS.filter(x => x.track !== 'theory')) {
-      const plan = planLesson(newUserState({ skills: [s, ...SKILLS.filter(x => x.track === 'theory')] }), NO_STYLES);
-      expect(() => buildSteps({ ...plan, skill_id: s.id }, SKILL_MAP), s.id).not.toThrow();
+  it('never throws for every practice skill × a few keys × (no style + one element per style profile), with retest and review present', () => {
+    const KEYS = ['C', 'G', 'F', 'Bb', 'E', 'Ab'];
+    const practice = SKILLS.filter(s => s.track !== 'theory');
+    const retestSkill = SKILLS.find(s => s.id === 'rhythm.l1.locked_8ths')!;
+    const reviewSkill = SKILLS.find(s => s.id === 'fills.l1.sus_add_hammers')!;
+    const theoryTopic = SKILLS.find(s => s.track === 'theory')!;
+    const styleChoices = [
+      { profile: null, element: null },
+      ...STYLE_CATALOG.profiles.map(p => ({ profile: p, element: elementsOf(p)[0] })),
+    ];
+    for (const { profile, element } of styleChoices) {
+      for (const key of KEYS) {
+        const music = buildMusic({ key, track: 'rhythm', style: profile, element });
+        const reviewItems = [
+          { ref: `skill:${reviewSkill.id}`, target: null },
+          { ref: `theory:${theoryTopic.id}`, target: null },
+          ...(element ? [{ ref: `style:${element.id}`, target: null }] : []),
+        ];
+        for (const skill of practice) {
+          const plan: LessonPlan = {
+            ...PLAN, key, skill_id: skill.id, music,
+            style_element: element ? { style: profile!.id, element_id: element.id, kind: element.kind, is_new: false } : null,
+            retest: { skill_id: retestSkill.id, target: targetFor(retestSkill) },
+            review: reviewItems.map(({ ref }) => ({ item_type: ref.slice(0, ref.indexOf(':')) as 'skill' | 'theory' | 'style', ref: ref.slice(ref.indexOf(':') + 1) })),
+            blocks: [
+              { kind: 'retest', minutes: 2, items: [{ ref: `skill:${retestSkill.id}`, target: targetFor(retestSkill) }] },
+              { kind: 'new_skill', minutes: 10, items: [{ ref: `skill:${skill.id}`, target: targetFor(skill) }] },
+              { kind: 'review', minutes: 5, items: reviewItems },
+            ],
+          };
+          expect(() => buildSteps(plan, SKILL_MAP), `${skill.id} ${key} ${profile?.id ?? 'none'}`).not.toThrow();
+        }
+      }
     }
   });
 });

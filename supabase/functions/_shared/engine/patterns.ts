@@ -17,6 +17,9 @@ export interface PickPattern {
 }
 export interface PickNote { finger: Finger; role: Role; string: number; note: string; interval: string }
 
+/** The apply block's rhythm grid when the day has no style (steady down-strums, one per beat). */
+export const APPLY_DEFAULT_GRID = 'D---D---D---D---';
+
 const DEGREE = ['R', 'b9', '9', 'b3', '3', '4', 'b5', '5', '#5', '6', 'b7', '7'];
 const n = (finger: Finger, role: Role) => ({ finger, role });
 const P = n('p', 'bass'), PA = n('p', 'alt'), I = n('i', 't3'), M = n('m', 't2'), A = n('a', 't1');
