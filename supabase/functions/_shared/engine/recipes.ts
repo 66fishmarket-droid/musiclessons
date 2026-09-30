@@ -4,6 +4,7 @@ export type Card = 'pattern' | 'rhythm' | 'note_caller' | 'scale' | 'triads' | '
 export interface SkillRecipe {
   card: Card; patterns?: string[]; grid?: string; gridName?: string; degrees?: number[];
   steps: string[]; listenFor: string;
+  majorKeyOnly?: boolean; // planner.ts keeps this skill's day off a minor-family style scale; its steps assume a major key.
 }
 
 const LADDER = 'Start at {start_bpm} bpm. Add 5 bpm after each clean pass, up to {target_bpm}; drop back 5 after two misses in a row.';
@@ -511,7 +512,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
     steps: [
       'Play {chords}, one bar each, until it loops without a gap.',
       'Now start the same loop from the second chord, then from the third. Each start gives the same chords a different mood.',
-      'Hum over your favourite start and note which one felt most like a chorus.', 'Rate yourself 1–5 on how smooth the loop felt.',
+      'Hum over your favourite start and note which one felt most like a chorus, the song\'s most repeated section.', 'Rate yourself 1–5 on how smooth the loop felt.',
     ],
     listenFor: 'The loop landing back on its first chord without a hiccup.',
   },
@@ -558,7 +559,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
     listenFor: 'The last chord staying unresolved instead of settling home, so you want the next section to arrive.',
   },
   'songwriting.l3.borrowed_colour': {
-    card: 'chords',
+    card: 'chords', majorKeyOnly: true,
     steps: [
       'Borrowing means dropping one chord from the minor version of your key into an otherwise major progression, for a darker colour just for a moment.',
       'Play {chords}. Then, in place of one bar, play a major chord built a whole step below {degrees:1} — that borrowed chord is called bVII.',
@@ -579,12 +580,12 @@ export const RECIPES: Record<string, SkillRecipe> = {
     listenFor: 'The bridge ending on tension, then the chorus arriving like a resolved answer.',
   },
   'songwriting.l4.secondary_dominants': {
-    card: 'chords',
+    card: 'chords', majorKeyOnly: true,
     steps: [
       'A secondary dominant is a chord borrowed for one bar that pulls hard toward a chord other than home, the way a V chord normally pulls toward I.',
       'Play {chords}. Right before the chord built on {degrees:5}, insert a major chord built on {degrees:2} — that extra pull toward {degrees:5} is called V of V.',
       'Now pull toward {degrees:6} instead: insert a major chord built on {degrees:3} right before it — that is V of vi.',
-      'Play {chords} once more, treating {degrees:6} as home instead of {degrees:1} — that is the relative minor, the same notes with a different centre.',
+      'Play {chords} once more, treating {degrees:6} as home — that\'s the relative minor — then shift back to {degrees:1} as home, the relative major.',
       'Rate yourself 1–5 on how clearly each move pulled toward its target.',
     ],
     listenFor: 'Extra pull into the target chord, sharper than the plain diatonic move would give.',
@@ -605,7 +606,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
     steps: [
       'A style transplant takes a song you already have and moves it into another style by changing one lever at a time, not everything at once.',
       'Play {chords} in today\'s groove, then play the same {chords} with a different groove — swap straight time for a shuffle, or the reverse.',
-      'Now change one more lever: either the harmonic rhythm (how often chords change) or the colour, by borrowing one chord from the parallel minor.',
+      'Now change one more lever: the harmonic rhythm (how often chords change), or borrow one chord from the opposite mode — major borrows from minor, minor from major.',
       'Hum your melody over the new version and notice which lever changed the mood the most.',
       'Rate yourself 1–5 on how recognisable the song still was after the change.',
     ],

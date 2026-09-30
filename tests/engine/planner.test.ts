@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CREATE_TASKS } from '../../supabase/functions/_shared/engine/create.ts';
 import { planLesson } from '../../supabase/functions/_shared/engine/planner.ts';
-import { elementsOf, type StyleCatalog, type StyleProfile } from '../../supabase/functions/_shared/engine/styles.ts';
+import { elementsOf, STYLE_CATALOG, type StyleCatalog, type StyleProfile } from '../../supabase/functions/_shared/engine/styles.ts';
 import type { LessonSummary, PlannerState, Skill, StyleChoice } from '../../supabase/functions/_shared/engine/types.ts';
 import { SKILLS } from '../../supabase/seed/curriculum.ts';
 import { newUserState, NO_STYLES } from '../lesson/fixtures.ts';
@@ -141,6 +141,26 @@ describe('planLesson', () => {
     const plan = planLesson(state(), catalogOf(profile('folk', false)));
     expect(plan.style_element).toBeNull();
     expect(plan.music.progression.roman).toEqual(['I', 'IV', 'V', 'I']);
+  });
+
+  it('drops a minor-family style for a majorKeyOnly songwriting recipe, falling back to major', () => {
+    const songwritingSkills = [sk('songwriting.l3.borrowed_colour', 'self', null)];
+    const minorProfile = STYLE_CATALOG.profiles.find(p => p.id === 'blues')!; // scales[0] 'minor pentatonic'
+    const minorCatalog: StyleCatalog = { profiles: [minorProfile], elements: elementsOf(minorProfile) };
+    const plan = planLesson(state({ skills: songwritingSkills, settings: { session_minutes: 30, style_core: ['blues'], vocal_low: null, vocal_high: null } }), minorCatalog);
+    expect(plan.skill_id).toBe('songwriting.l3.borrowed_colour');
+    expect(plan.style_element).toBeNull();
+    expect(plan.music.scale.name).toBe('major');
+  });
+
+  it('keeps a major-family style for a majorKeyOnly songwriting recipe', () => {
+    const songwritingSkills = [sk('songwriting.l3.borrowed_colour', 'self', null)];
+    const majorProfile = STYLE_CATALOG.profiles.find(p => p.id === 'folk')!; // scales[0] 'major'
+    const majorCatalog: StyleCatalog = { profiles: [majorProfile], elements: elementsOf(majorProfile) };
+    const plan = planLesson(state({ skills: songwritingSkills, settings: { session_minutes: 30, style_core: ['folk'], vocal_low: null, vocal_high: null } }), majorCatalog);
+    expect(plan.skill_id).toBe('songwriting.l3.borrowed_colour');
+    expect(plan.style_element).not.toBeNull();
+    expect(plan.music.scale.name).toBe('major');
   });
 
   it('is deterministic', () => {

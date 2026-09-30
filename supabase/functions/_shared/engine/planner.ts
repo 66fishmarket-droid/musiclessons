@@ -1,6 +1,7 @@
 import { pickCreateTask } from './create.ts';
 import { nextKey } from './keys.ts';
 import { buildMusic } from './music.ts';
+import { MINOR_FAMILY_SCALE } from './render.ts';
 import { RECIPES } from './recipes.ts';
 import { STYLE_CATALOG, type StyleCatalog, type StyleElement } from './styles.ts';
 import { buildBlocks } from './templates.ts';
@@ -132,8 +133,13 @@ export function targetFor(skill: Skill, progress?: SkillProgress): Target {
 export function planLesson(state: PlannerState, catalog: StyleCatalog = STYLE_CATALOG): LessonPlan {
   const ctx = context(state);
   const track = pickTrack(state, ctx);
-  const style = pickStyleElement(state, ctx, catalog);
+  let style = pickStyleElement(state, ctx, catalog);
   const skill = pickSkill(state, ctx, track, style?.style ?? null);
+  // A majorKeyOnly recipe (recipes.ts) assumes a major key; drop today's style if it would force a minor-family scale.
+  if (style && RECIPES[skill.id]?.majorKeyOnly) {
+    const scale = catalog.profiles.find(p => p.id === style!.style)?.scales[0];
+    if (scale && MINOR_FAMILY_SCALE.test(scale)) style = null;
+  }
   const lastKey = state.recentLessons.find(l => l.track === track)?.key ?? ctx.progress.get(skill.id)?.last_key ?? null;
   const key = (ctx.isRepeat && ctx.yesterday!.key) || nextKey(lastKey, skill.allowed_keys);
   const theory = pickTheoryTopic(state, ctx, skill);

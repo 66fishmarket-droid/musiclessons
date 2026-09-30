@@ -3,8 +3,9 @@ import { PATTERNS, patternCounts, rhythmCounts, rhythmPattern, voiceRoles, type 
 import type { LessonPlan, Target } from './types.ts';
 
 /** Scale names whose {degrees:N} fallback (see resolveDegree) should use the key's natural minor, not major —
- * a rough but workable split: anything modal/coloured toward minor (including the blues family) counts as minor-family. */
-const MINOR_FAMILY_SCALE = /minor|dorian|phrygian|aeolian|locrian|blues/i;
+ * a rough but workable split: anything modal/coloured toward minor (including the blues family) counts as minor-family.
+ * Also reused by planner.ts to keep majorKeyOnly recipes (recipes.ts) off minor-family style days. */
+export const MINOR_FAMILY_SCALE = /minor|dorian|phrygian|aeolian|locrian|blues/i;
 const PLAIN_QUALITY = new Set(['P', 'M', 'm']); // prefer these over d/A when a degree has more than one note (blues' b5/5)
 
 /** The note the fretboard card actually labels degree N with, today. The card numbers dots by their tonal
