@@ -505,6 +505,112 @@ export const RECIPES: Record<string, SkillRecipe> = {
     ],
     listenFor: 'Exactly one fill every four bars, with the groove never missing a beat around it.',
   },
+  // Songwriting: chords or none; always end with the recorder or a written line.
+  'songwriting.l1.core_loops': {
+    card: 'chords',
+    steps: [
+      'Play {chords}, one bar each, until it loops without a gap.',
+      'Now start the same loop from the second chord, then from the third. Each start gives the same chords a different mood.',
+      'Hum over your favourite start and note which one felt most like a chorus.', 'Rate yourself 1–5 on how smooth the loop felt.',
+    ],
+    listenFor: 'The loop landing back on its first chord without a hiccup.',
+  },
+  'songwriting.l1.object_writing': {
+    card: 'none',
+    steps: [
+      'Set a 5-minute timer. Pick one thing nearby and write only what your senses notice about it — sight, sound, smell, touch, taste — no crossing out.',
+      'A stable line reads like a finished sentence; an unstable line trails off, like a question. Mark each line you wrote S or U.',
+      'Write one more line that flips your best line: stable if it was unstable, or the reverse.',
+      'Rate yourself 1–5 on how much of it was senses, not opinions.',
+    ],
+    listenFor: 'Concrete, sensory words rather than vague feelings or judgments.',
+  },
+  'songwriting.l2.section_contrast': {
+    card: 'chords',
+    steps: [
+      'Play {chords}, one chord per bar, starting on {chord1}: that\'s your verse, the section that tells the story between choruses.',
+      'For a chorus, the song\'s most repeated section, change two levers: start on a chord other than {chord1}, and double the harmonic rhythm, how often the chord changes.',
+      'Hum a line over each version, singing the chorus higher in your range than the verse: that\'s a third lever, register.',
+      'Rate yourself 1–5 on how different the two sections felt.',
+    ],
+    listenFor: 'A clearly different starting point, speed of change and register between the two.',
+  },
+  'songwriting.l2.melody_skeleton': {
+    card: 'chords',
+    steps: [
+      'Play {chords}, one chord per bar. A melody skeleton is the handful of long notes a tune is built from before it gets decorated.',
+      'Pick one note per bar to be your skeleton, favouring the stable notes {degrees:1,3,5}: four notes total, one per chord.',
+      'Sing just those four skeleton notes, holding each one for its whole bar.',
+      'Now decorate: add one short extra note before or after each skeleton note, then sing the decorated version.',
+      'Rate yourself 1–5 on how clearly the skeleton still shows through the decoration.',
+    ],
+    listenFor: 'The held skeleton note still landing on the beat once the decoration is added around it.',
+  },
+  'songwriting.l3.prechorus_tension': {
+    card: 'chords',
+    steps: [
+      'A pre-chorus is a short section between verse and chorus whose job is to raise tension before the chorus lands.',
+      'Play {chords} for two bars, then land the last bar on the chord built on {degrees:5} (or, for a softer pull, {degrees:4}) instead of back on {chord1}.',
+      'Speed up on the way there: change chords twice as often in that last bar as you did before.',
+      'Hum a rising line over it, ending unresolved on {degrees:5} itself.',
+      'Rate yourself 1–5 on how strongly it pulled you toward the next section.',
+    ],
+    listenFor: 'The last chord staying unresolved instead of settling home, so you want the next section to arrive.',
+  },
+  'songwriting.l3.borrowed_colour': {
+    card: 'chords',
+    steps: [
+      'Borrowing means dropping one chord from the minor version of your key into an otherwise major progression, for a darker colour just for a moment.',
+      'Play {chords}. Then, in place of one bar, play a major chord built a whole step below {degrees:1} — that borrowed chord is called bVII.',
+      'Try it again, this time playing a minor chord built on {degrees:4} in place of one bar of {chords} — that borrowed chord is called iv.',
+      'Rate yourself 1–5 on how clearly each borrowed chord changed the mood before it resolved back to {chord1}.',
+    ],
+    listenFor: 'A sudden, deliberate darkening of colour that still resolves cleanly back to the home chord.',
+  },
+  'songwriting.l4.bridge_backwards': {
+    card: 'chords',
+    steps: [
+      'A bridge is a section, used once, that breaks the verse/chorus pattern to set up the final chorus.',
+      'Decide your chorus starts on {chord1}. Work backwards: your bridge must end on the chord built on {degrees:5}, so {chord1} lands like the answer.',
+      'Start the bridge on a chord you have not used to open the verse or chorus, then find your own path from there to {degrees:5}.',
+      'Play the bridge straight into {chords} and listen for the chorus landing like a relief.',
+      'Rate yourself 1–5 on how clearly the bridge set up that landing.',
+    ],
+    listenFor: 'The bridge ending on tension, then the chorus arriving like a resolved answer.',
+  },
+  'songwriting.l4.secondary_dominants': {
+    card: 'chords',
+    steps: [
+      'A secondary dominant is a chord borrowed for one bar that pulls hard toward a chord other than home, the way a V chord normally pulls toward I.',
+      'Play {chords}. Right before the chord built on {degrees:5}, insert a major chord built on {degrees:2} — that extra pull toward {degrees:5} is called V of V.',
+      'Now pull toward {degrees:6} instead: insert a major chord built on {degrees:3} right before it — that is V of vi.',
+      'Play {chords} once more, treating {degrees:6} as home instead of {degrees:1} — that is the relative minor, the same notes with a different centre.',
+      'Rate yourself 1–5 on how clearly each move pulled toward its target.',
+    ],
+    listenFor: 'Extra pull into the target chord, sharper than the plain diatonic move would give.',
+  },
+  'songwriting.l5.modulation': {
+    card: 'chords',
+    steps: [
+      'A modulation is a permanent change of home note partway through a song, used only when the lyric\'s energy earns it, not as decoration.',
+      'Try a truck-driver modulation: play {chords}, then play the same shapes one fret higher — the whole song stepping up is the classic final-chorus lift.',
+      'Now try a pivot-chord modulation: end on the chord built on {degrees:4}, a chord that exists in both keys, then treat it as the new home and resolve into it.',
+      'Say in one sentence why this moment in your song would earn a key change — if you can\'t, skip it.',
+      'Rate yourself 1–5 on how smooth (pivot) or how earned (truck-driver) the shift felt.',
+    ],
+    listenFor: 'A shift that feels inevitable, not bolted on — earned by the lyric, not just louder.',
+  },
+  'songwriting.l5.style_transplant': {
+    card: 'chords',
+    steps: [
+      'A style transplant takes a song you already have and moves it into another style by changing one lever at a time, not everything at once.',
+      'Play {chords} in today\'s groove, then play the same {chords} with a different groove — swap straight time for a shuffle, or the reverse.',
+      'Now change one more lever: either the harmonic rhythm (how often chords change) or the colour, by borrowing one chord from the parallel minor.',
+      'Hum your melody over the new version and notice which lever changed the mood the most.',
+      'Rate yourself 1–5 on how recognisable the song still was after the change.',
+    ],
+    listenFor: 'The same song, one clearly different lever at a time, still recognisable underneath.',
+  },
 };
 
 /** The skill's recipe, or a generic one from its description until the recipe is written. */

@@ -57,6 +57,12 @@ describe('recipes', () => {
       expect(['chords'], s.id).toContain(RECIPES[s.id].card);
     }
   });
+  it('has a recipe for every songwriting skill with the right card', () => {
+    for (const s of SKILLS.filter(x => x.track === 'songwriting')) {
+      expect(RECIPES[s.id], s.id).toBeDefined();
+      expect(['chords', 'none'], s.id).toContain(RECIPES[s.id].card);
+    }
+  });
   it('has non-empty degrees within 1-7 for every ear_voice recipe', () => {
     for (const s of SKILLS.filter(x => x.track === 'ear_voice')) {
       const degrees = RECIPES[s.id]?.degrees ?? [];
