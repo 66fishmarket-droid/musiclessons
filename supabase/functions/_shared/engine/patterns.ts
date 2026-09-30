@@ -122,3 +122,17 @@ export function rhythmCounts(p: PickPattern): string {
   });
   return out.join(' · ');
 }
+
+const FINGER_WORD = { p: 'thumb', i: 'index', m: 'middle', a: 'ring' } as const;
+
+/** A picking pattern in words, count by count ("1 thumb + ring together · 2 index"), so steps match the animated card. */
+export function patternCounts(p: PickPattern): string {
+  const barLen = p.beatsPerBar * p.stepsPerBeat;
+  return p.steps.flatMap((step, k) => {
+    if (step.length === 0) return [];
+    const inBar = k % barLen;
+    const count = `${Math.floor(inBar / p.stepsPerBeat) + 1}${COUNT_SUB[p.stepsPerBeat][inBar % p.stepsPerBeat]}`;
+    const words = step.map(n => `${FINGER_WORD[n.finger]}${n.finger === 'p' && n.role === 'alt' ? ' (alternate bass)' : ''}`);
+    return [`${count} ${words.join(' + ')}${step.length > 1 ? ' together' : ''}`];
+  }).join(' · ');
+}
