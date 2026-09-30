@@ -4,6 +4,7 @@ import { STYLE_CATALOG } from '../../supabase/functions/_shared/engine/styles.ts
 import { PROMPT_VERSION, SYSTEM_PROMPT, buildMessages } from '../../supabase/functions/_shared/lesson/prompt.ts';
 import { PLAN, SKILL_MAP, newUserState } from './fixtures.ts';
 import { NOTE_CALLER_SKILLS } from '../../src/lib/noteCaller.ts';
+import { rhythmCounts, rhythmPattern } from '../../supabase/functions/_shared/engine/patterns.ts';
 
 const briefOf = (content: string) => JSON.parse(content.slice(content.indexOf('\n') + 1));
 const settings = { ...newUserState().settings, vocal_low: 'A2', vocal_high: 'E4' };
@@ -22,8 +23,10 @@ describe('buildMessages', () => {
     expect(SYSTEM_PROMPT).toMatch(/reset: exactly one instruction/);
     expect(SYSTEM_PROMPT).toMatch(/Plain words: the learner is a beginner/);
     expect(SYSTEM_PROMPT).toMatch(/App tools: mention only these/);
+    expect(SYSTEM_PROMPT).toMatch(/Picking patterns: when the brief has picking_pattern/);
+    expect(SYSTEM_PROMPT).toMatch(/what the picking hand does on each beat/);
+    expect(SYSTEM_PROMPT).toMatch(/what the hands and the voice do/);
     for (const id of NOTE_CALLER_SKILLS) expect(SYSTEM_PROMPT).toContain(id);
-    expect(SYSTEM_PROMPT).toMatch(/The create block's instructions are a recipe/);
   });
   it('briefs the plan: skill, theory topic, key, chords and blocks in order', () => {
     expect(brief).toMatchObject({
@@ -34,6 +37,13 @@ describe('buildMessages', () => {
     });
     expect(brief.blocks.map((b: { kind: string }) => b.kind)).toEqual(PLAN.blocks.map(b => b.kind));
     expect(brief.blocks.find((b: { kind: string }) => b.kind === 'new_skill').items[0].target).toEqual({ metric: 'bpm', target: 70, start: 46 });
+  });
+  it('names the picking pattern for fingerstyle skills, null otherwise', () => {
+    expect(brief.picking_pattern).toBeNull(); // the fixture skill is a rhythm skill
+    expect(brief.music.rhythm_counts).toBe(PLAN.music.rhythm ? rhythmCounts(rhythmPattern(PLAN.music.rhythm.name, PLAN.music.rhythm.grid)) : null);
+    const plan = { ...PLAN, skill_id: 'fingerstyle.l1.giuliani_arpeggios' };
+    const b = briefOf(buildMessages({ plan, skills: SKILL_MAP, style: null, settings, recent: [], questions: [] })[1].content);
+    expect(b.picking_pattern).toBe('p-i-m');
   });
   it('caps history at 7 lessons and 10 questions', () => {
     expect(brief.recent_lessons).toHaveLength(7);
