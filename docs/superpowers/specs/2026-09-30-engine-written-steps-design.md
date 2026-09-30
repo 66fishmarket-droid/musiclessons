@@ -104,8 +104,8 @@ These live in `lesson/steps.ts`, together with `buildSteps(plan, skills): BlockC
 |---|---|---|
 | warmup | hum/lip-trill 30 s · play {key} {scale} in the shown position saying the degree numbers · again, singing each note | scale |
 | new_skill | the skill's recipe steps | the recipe card |
-| retest | "Cold retest: {name}. One attempt at {target}, no practice run first." · first recipe step | that skill's card |
-| review | per item: "{name}: {first recipe step}" (style items: "{element name}: {rhythm_counts}") | none |
+| retest | "Cold retest: {name}. One attempt at {target}, no practice run first." · first two recipe steps (set-up plus the pattern/rhythm line) | that skill's card |
+| review | per item: "{name}: {first recipe step}" (style rhythm items: "{element name}: {rhythm_counts}"; style progression items: "{element name}: {chords}, one bar each.") | none |
 | apply | "{rhythm_name}: {rhythm_counts}" · on {chord1} until steady, then {chords}, one chord per bar · keep the hand going and hum or sing any tune over it | rhythm + chords |
 | create | the chosen Create task (§6) | chords + scale + recorder |
 | record | record one take of the Apply groove with singing · listen back · rate 1–5 and note one thing to fix | recorder |

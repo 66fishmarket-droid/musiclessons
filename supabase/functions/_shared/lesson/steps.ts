@@ -1,6 +1,7 @@
 import { CREATE_TASKS } from '../engine/create.ts';
 import { recipeFor } from '../engine/recipes.ts';
 import { renderSteps, slotContext } from '../engine/render.ts';
+import { romanToChords } from '../engine/roman.ts';
 import { STYLE_CATALOG } from '../engine/styles.ts';
 import type { BlockKind, LessonPlan, PlanBlock, Skill } from '../engine/types.ts';
 import type { Target } from '../engine/types.ts';
@@ -38,6 +39,24 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
     return { steps: renderSteps(r.steps, ctx), listen: r.listenFor };
   };
 
+  /** Style review item: the rhythm's counts, or the progression's chords; a safe line if either lookup fails. */
+  const reviewStyleLine = (ref: string): string => {
+    const element = STYLE_CATALOG.elements.find(e => e.id === ref);
+    const safe = renderSteps([`${element?.name ?? ref}: play it once through {chords}.`], base)[0];
+    if (!element) return safe;
+    const profile = STYLE_CATALOG.profiles.find(p => p.id === element.style);
+    if (element.kind === 'rhythm') {
+      const pattern = profile?.rhythm_patterns.find(p => p.id === element.id);
+      if (!pattern) return safe;
+      const ctx = slotContext(plan, { grid: pattern.grid.join(''), gridName: pattern.name });
+      return renderSteps(['{rhythm_name}: {rhythm_counts}'], ctx)[0];
+    }
+    const prog = profile?.progressions.find(p => p.id === element.id);
+    if (!prog) return safe;
+    const chords = romanToChords(plan.key, prog.roman);
+    return `${element.name}: ${chords.map(c => `{${c}}`).join(' ')}, one bar each.`;
+  };
+
   const build = (b: PlanBlock): EngineBlock => {
     const target_text = targetText(b.items[0]?.target ?? null);
     const make = (instructions: string[], listen_for = ''): EngineBlock => ({ kind: b.kind, instructions, target_text, listen_for });
@@ -58,7 +77,7 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
       }
       case 'review': return make(b.items.map(i => {
         const [type, ref] = [i.ref.slice(0, i.ref.indexOf(':')), i.ref.slice(i.ref.indexOf(':') + 1)];
-        if (type === 'style') return renderSteps([`${STYLE_CATALOG.elements.find(e => e.id === ref)?.name ?? ref}: play it once through {chords}.`], base)[0];
+        if (type === 'style') return reviewStyleLine(ref);
         if (type === 'skill' && skillOf(ref)) return `${skillOf(ref)!.name}: ${recipeSteps(ref, { ...b, items: [i] }, false).steps[0]}`;
         return `Review: ${skillOf(ref)?.name ?? ref}.`;
       }));
