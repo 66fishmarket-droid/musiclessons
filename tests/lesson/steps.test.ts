@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { planLesson } from '../../supabase/functions/_shared/engine/planner.ts';
 import { rhythmCounts, rhythmPattern } from '../../supabase/functions/_shared/engine/patterns.ts';
+import { RECIPES } from '../../supabase/functions/_shared/engine/recipes.ts';
 import { romanToChords } from '../../supabase/functions/_shared/engine/roman.ts';
 import { STYLE_CATALOG } from '../../supabase/functions/_shared/engine/styles.ts';
 import { APPLY_DEFAULT_GRID, buildSteps } from '../../supabase/functions/_shared/lesson/steps.ts';
@@ -74,6 +75,24 @@ describe('buildSteps', () => {
     expect(review.instructions[0]).toContain(skill.name);
     expect(review.instructions[1]).toBe(`${pattern.name}: ${expectedCounts}`);
     for (const c of chords) expect(review.instructions[2]).toContain(`{${c}}`);
+  });
+  it('review renders only the first recipe step, so a bpm-ladder skill with a null target doesn\'t throw', () => {
+    const skill = SKILLS.find(s => s.id === 'fingerstyle.l1.giuliani_arpeggios')!;
+    const plan = {
+      ...PLAN,
+      blocks: [{ kind: 'review' as const, minutes: 5, items: [{ ref: `skill:${skill.id}`, target: null }] }],
+    };
+    const [review] = buildSteps(plan, SKILL_MAP).blocks;
+    expect(review.instructions[0].startsWith(skill.name)).toBe(true);
+  });
+  it('builds a review item for every RECIPES skill with a null target without throwing', () => {
+    for (const id of Object.keys(RECIPES)) {
+      const plan = {
+        ...PLAN,
+        blocks: [{ kind: 'review' as const, minutes: 5, items: [{ ref: `skill:${id}`, target: null }] }],
+      };
+      expect(() => buildSteps(plan, SKILL_MAP), id).not.toThrow();
+    }
   });
   it('builds for every non-theory skill as today\'s skill without throwing', () => {
     for (const s of SKILLS.filter(x => x.track !== 'theory')) {

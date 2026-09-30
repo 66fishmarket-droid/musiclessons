@@ -30,13 +30,15 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
   const task = CREATE_TASKS.find(t => t.id === plan.create_task_id) ?? CREATE_TASKS[0];
   const base = slotContext(plan, {});
 
-  const recipeSteps = (skillId: string, b: PlanBlock, today: boolean) => {
+  // `limit` slices the templates before rendering, so a slot in a later step (e.g. the bpm ladder) is never
+  // evaluated when the caller only wants an early step — needed on review, where the item's target is always null.
+  const recipeSteps = (skillId: string, b: PlanBlock, today: boolean, limit = Infinity) => {
     const skill = skillOf(skillId);
     if (!skill) return { steps: [`Practise ${skillId}.`], listen: '' };
     const r = recipeFor(skill);
     const patternId = r.card === 'pattern' ? (today ? plan.pattern_id : r.patterns?.[0]) ?? null : null;
     const ctx = slotContext(plan, { target: b.items[0]?.target ?? null, patternId, grid: r.grid ?? null, gridName: r.gridName ?? null });
-    return { steps: renderSteps(r.steps, ctx), listen: r.listenFor };
+    return { steps: renderSteps(r.steps.slice(0, limit), ctx), listen: r.listenFor };
   };
 
   /** Style review item: the rhythm's counts, or the progression's chords; a safe line if either lookup fails. */
@@ -78,7 +80,7 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
       case 'review': return make(b.items.map(i => {
         const [type, ref] = [i.ref.slice(0, i.ref.indexOf(':')), i.ref.slice(i.ref.indexOf(':') + 1)];
         if (type === 'style') return reviewStyleLine(ref);
-        if (type === 'skill' && skillOf(ref)) return `${skillOf(ref)!.name}: ${recipeSteps(ref, { ...b, items: [i] }, false).steps[0]}`;
+        if (type === 'skill' && skillOf(ref)) return `${skillOf(ref)!.name}: ${recipeSteps(ref, { ...b, items: [i] }, false, 1).steps[0]}`;
         return `Review: ${skillOf(ref)?.name ?? ref}.`;
       }));
       case 'apply': {
