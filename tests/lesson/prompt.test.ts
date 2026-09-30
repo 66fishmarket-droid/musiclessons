@@ -17,7 +17,7 @@ describe('buildMessages', () => {
 
   it('sends the fixed system prompt first', () => {
     expect(msgs[0]).toEqual({ role: 'system', content: SYSTEM_PROMPT });
-    expect(msgs[1].content.startsWith("Write today's lesson for this plan:\n")).toBe(true);
+    expect(msgs[1].content.startsWith("Add colour to today's lesson. Plan and fixed steps:\n")).toBe(true);
     expect(PROMPT_VERSION).toMatch(/^gc-\d{4}-\d{2}-\d{2}[a-z]?$/);
     expect(PROMPT_VERSION).toBe('gc-2026-10-01');
     expect(SYSTEM_PROMPT).toMatch(/do not restate or contradict/);
@@ -43,6 +43,13 @@ describe('buildMessages', () => {
   it('caps history at 7 lessons and 10 questions', () => {
     expect(brief.recent_lessons).toHaveLength(7);
     expect(brief.recent_questions).toHaveLength(10);
+  });
+  it('lists avoid_names: non-theory skills neither met nor already named in the steps text', () => {
+    expect(brief.avoid_names).not.toContain(SKILL_MAP.get(PLAN.skill_id)!.name);
+    expect(brief.avoid_names).toContain('Travis picking'); // fingerstyle.l3.travis_basic: not met, not in today's rhythm steps
+    const stepsBlob = brief.steps
+      .flatMap((b: { instructions: string[]; listen_for: string }) => [...b.instructions, b.listen_for]).join(' ').toLowerCase();
+    for (const name of brief.avoid_names as string[]) expect(stepsBlob).not.toContain(name.toLowerCase());
   });
   it('names today\'s style element', () => {
     const plan = planLesson(newUserState(), STYLE_CATALOG);

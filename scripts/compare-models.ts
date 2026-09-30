@@ -15,7 +15,7 @@ import { parseJson } from '../supabase/functions/_shared/lesson/generate.ts';
 import { openRouterComplete } from '../supabase/functions/_shared/lesson/llm.ts';
 import { buildMessages } from '../supabase/functions/_shared/lesson/prompt.ts';
 import { DEFAULT_SETTINGS } from '../supabase/functions/_shared/lesson/state.ts';
-import { buildSteps } from '../supabase/functions/_shared/lesson/steps.ts';
+import { buildSteps, stepsText } from '../supabase/functions/_shared/lesson/steps.ts';
 import { SKILLS } from '../supabase/seed/curriculum.ts';
 import { REPO_ROOT, isMain, today } from './vault/lib.ts';
 
@@ -125,16 +125,17 @@ async function main(): Promise<void> {
   for (const f of FIXTURES) {
     const plan = planLesson(f.state, STYLE_CATALOG);
     const style = plan.style_element ? STYLE_CATALOG.profiles.find(p => p.id === plan.style_element!.style) ?? null : null;
-    const messages = buildMessages({ plan, skills: SKILL_MAP, style, settings: f.state.settings, recent: [], questions: [], metSkills: [] });
-    const stepsText = buildSteps(plan, SKILL_MAP).blocks.flatMap(b => b.instructions).join(' ');
+    const steps = buildSteps(plan, SKILL_MAP); // computed once per plan, shared by the prompt brief and validateColour/assembleLesson below
+    const messages = buildMessages({ plan, skills: SKILL_MAP, style, settings: f.state.settings, recent: [], questions: [], metSkills: [], steps });
+    const engineStepsText = stepsText(steps);
     await Promise.all(models.map(async model => {
       const t0 = Date.now();
       try {
         const { text, cost } = await complete(model, messages, COLOUR_JSON_SCHEMA);
         const parsed = parseJson(text);
-        const v = validateColour(parsed, plan, SKILL_MAP, { metSkills: [], stepsText });
+        const v = validateColour(parsed, plan, SKILL_MAP, { metSkills: [], stepsText: engineStepsText });
         results.push({ fixture: f.name, plan, model, ok: v.ok, errors: v.ok ? [] : v.errors,
-          content: v.ok ? assembleLesson(plan, SKILL_MAP, v.colour) : (parsed ?? null) as LessonContent | null, cost, ms: Date.now() - t0 });
+          content: v.ok ? assembleLesson(plan, SKILL_MAP, v.colour, false, steps) : (parsed ?? null) as LessonContent | null, cost, ms: Date.now() - t0 });
       } catch (e) {
         results.push({ fixture: f.name, plan, model, ok: false, errors: [(e as Error).message], content: null, cost: null, ms: Date.now() - t0 });
       }

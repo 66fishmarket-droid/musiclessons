@@ -31,6 +31,11 @@ describe('allowedChords', () => {
     const plan = { ...PLAN, skill_id: 'songwriting.l1.core_loops' }; // "I–IV–V–vi loops": numerals, not chords
     expect(allowedChords(plan, SKILL_MAP)).toEqual(['G', 'C', 'D']);
   });
+  it("adds a style-progression review item's chords in today's key, so echoing them isn't rejected", () => {
+    // country.prog_modern_nashville: I-V-VIm-IV → G-D-Em-C in key G; Em is outside the plan's own G/C/D.
+    const plan = { ...PLAN, review: [{ item_type: 'style' as const, ref: 'country.prog_modern_nashville' }] };
+    expect(allowedChords(plan, SKILL_MAP)).toEqual(expect.arrayContaining(['G', 'C', 'D', 'Em']));
+  });
 });
 
 describe('validateColour', () => {

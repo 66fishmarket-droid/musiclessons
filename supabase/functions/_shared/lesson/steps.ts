@@ -1,4 +1,5 @@
 import { CREATE_TASKS } from '../engine/create.ts';
+import { APPLY_DEFAULT_GRID } from '../engine/patterns.ts';
 import { recipeFor } from '../engine/recipes.ts';
 import { renderSteps, slotContext } from '../engine/render.ts';
 import { romanToChords } from '../engine/roman.ts';
@@ -15,7 +16,13 @@ export function targetText(t: Target | null): string {
 }
 
 export interface EngineBlock { kind: BlockKind; instructions: string[]; target_text: string; listen_for: string }
-export const APPLY_DEFAULT_GRID = 'D---D---D---D---';
+
+/** Every word the learner reads from the engine's steps (instructions plus each block's listen_for) — the
+ * allowance text for the no-unmet-skill-names check (contract.ts avoidNames) and the brief. */
+export function stepsText(steps: { blocks: EngineBlock[] }): string {
+  return steps.blocks.flatMap(b => [...b.instructions, b.listen_for]).join(' ');
+}
+export { APPLY_DEFAULT_GRID }; // moved to engine/patterns.ts so src/screens/Player.tsx doesn't pull steps.ts (and STYLE_CATALOG) into the client bundle
 const RESETS = [
   'Put the guitar down for 30 seconds and shake out both hands.',
   'Put the guitar down. Close your eyes and picture the shape you just played.',
@@ -36,7 +43,7 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
     const skill = skillOf(skillId);
     if (!skill) return { steps: [`Practise ${skillId}.`], listen: '' };
     const r = recipeFor(skill);
-    const patternId = r.card === 'pattern' ? (today ? plan.pattern_id : r.patterns?.[0]) ?? null : null;
+    const patternId = r.card === 'pattern' ? (today ? plan.pattern_id ?? r.patterns?.[0] : r.patterns?.[0]) ?? null : null;
     const ctx = slotContext(plan, { target: b.items[0]?.target ?? null, patternId, grid: r.grid ?? null, gridName: r.gridName ?? null });
     return { steps: renderSteps(r.steps.slice(0, limit), ctx), listen: r.listenFor };
   };

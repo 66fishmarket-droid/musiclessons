@@ -1,4 +1,6 @@
 import { Chord, Note } from 'tonal';
+import { romanToChords } from '../engine/roman.ts';
+import { STYLE_CATALOG } from '../engine/styles.ts';
 import type { BlockKind, LessonPlan, Skill } from '../engine/types.ts';
 
 export interface Song { title: string; artist: string; why: string; capo: number }
@@ -44,13 +46,35 @@ export function chordKey(name: string): string | null {
 // A progression written as dash-joined chords, e.g. "Dsus4–D–Dsus2" or "G–G/F#–Em" (bare letters count here).
 const RUN = /(?<![\w#/])[A-G][#b]?[\w#°ø]*(?:\/[A-G][#b]?)?(?:[–—-][A-G][#b]?[\w#°ø]*(?:\/[A-G][#b]?)?)+/g;
 
-/** Chords the lesson may name: the plan's progression and voicings plus every chord the day's curriculum text names. */
+/** A review item's style progression, transposed into today's key (steps.ts reviewStyleLine builds the same line). */
+function reviewProgressionChords(plan: LessonPlan): string[] {
+  return plan.review.flatMap(r => {
+    if (r.item_type !== 'style') return [];
+    const element = STYLE_CATALOG.elements.find(e => e.id === r.ref && e.kind === 'progression');
+    const prog = element && STYLE_CATALOG.profiles.find(p => p.id === element.style)?.progressions.find(p => p.id === element.id);
+    return prog ? romanToChords(plan.key, prog.roman) : [];
+  });
+}
+
+/** Chords the lesson may name: the plan's progression and voicings, every chord the day's curriculum text names,
+ * and any style-progression review item's chords in today's key (steps.ts already says these in the review block). */
 export function allowedChords(plan: LessonPlan, skills: Map<string, Skill>): string[] {
   const text = [plan.skill_id, plan.retest?.skill_id, plan.theory_topic_id]
     .map(id => (id ? skills.get(id)?.description ?? '' : '')).join(' ');
   const inRuns = [...text.matchAll(RUN)].flatMap(m => m[0].split(/[–—-]/));
   const named = [...inRuns, ...[...text.matchAll(BARE)].map(m => m[0])].filter(c => chordKey(c) !== null);
-  return [...new Set([...plan.music.progression.chords, ...Object.keys(plan.music.voicings), ...named])];
+  return [...new Set([...plan.music.progression.chords, ...Object.keys(plan.music.voicings), ...named, ...reviewProgressionChords(plan)])];
+}
+
+/** Non-theory curriculum skill names the model may not use: neither met nor already named in the engine's own
+ * steps text. Shared by validateColour (rejects them) and the brief's `avoid_names` (tells the model up front). */
+export function avoidNames(plan: LessonPlan, skills: Map<string, Skill>, metSkills: string[], stepsText: string): string[] {
+  const allowedNames = new Set([plan.skill_id, plan.retest?.skill_id, ...metSkills]
+    .map(id => (id ? skills.get(id)?.name.toLowerCase() : undefined)).filter((n): n is string => !!n));
+  const steps = stepsText.toLowerCase();
+  return [...skills.values()]
+    .filter(s => s.track !== 'theory' && !allowedNames.has(s.name.toLowerCase()) && !steps.includes(s.name.toLowerCase()))
+    .map(s => s.name);
 }
 
 const isStr = (v: unknown): v is string => typeof v === 'string';
@@ -103,16 +127,13 @@ export function validateColour(
 
   const allowedNames = new Set([plan.skill_id, plan.retest?.skill_id, ...ctx.metSkills]
     .map(id => (id ? skills.get(id)?.name.toLowerCase() : undefined)).filter((n): n is string => !!n));
-  const steps = ctx.stepsText.toLowerCase();
+  const avoid = avoidNames(plan, skills, ctx.metSkills, ctx.stepsText);
   for (const text of texts) {
     if (TEMPO.test(text)) errors.push(`tempo in text: ${text.match(TEMPO)![0]}`);
     if (REPS.test(text)) errors.push(`rep count in text: ${text.match(REPS)![0]}`);
     // Blank out allowed names first: "Melody over a steady thumb" must not count as naming "Steady thumb".
     const lower = [...allowedNames].reduce((t, n) => t.replaceAll(n, ' '), text.toLowerCase());
-    for (const s of skills.values()) {
-      const name = s.name.toLowerCase();
-      if (s.track !== 'theory' && lower.includes(name) && !allowedNames.has(name) && !steps.includes(name)) errors.push(`unmet skill named: ${s.name}`);
-    }
+    for (const name of avoid) if (lower.includes(name.toLowerCase())) errors.push(`unmet skill named: ${name}`);
   }
   return errors.length ? { ok: false, errors } : { ok: true, colour: o as unknown as Colour };
 }

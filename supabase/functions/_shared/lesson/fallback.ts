@@ -1,7 +1,7 @@
 import { STYLE_CATALOG } from '../engine/styles.ts';
 import type { LessonPlan, Skill } from '../engine/types.ts';
 import type { Colour, LessonContent } from './contract.ts';
-import { buildSteps } from './steps.ts';
+import { buildSteps, type EngineBlock } from './steps.ts';
 
 export { targetText } from './steps.ts';
 
@@ -19,9 +19,13 @@ export function fallbackColour(plan: LessonPlan, skills: Map<string, Skill>): Co
   };
 }
 
-/** The stored lesson: the engine's steps for every block, plus the model's (or the fallback's) colour. */
-export function assembleLesson(plan: LessonPlan, skills: Map<string, Skill>, colour: Colour, fallback = false): LessonContent {
-  const { blocks, create_prompt } = buildSteps(plan, skills);
+/** The stored lesson: the engine's steps for every block, plus the model's (or the fallback's) colour.
+ * `steps` lets a caller that already computed buildSteps for this plan (e.g. writeLesson) reuse it. */
+export function assembleLesson(
+  plan: LessonPlan, skills: Map<string, Skill>, colour: Colour, fallback = false,
+  steps: { blocks: EngineBlock[]; create_prompt: string } = buildSteps(plan, skills),
+): LessonContent {
+  const { blocks, create_prompt } = steps;
   return {
     title: colour.title, why_it_matters: colour.why_it_matters, theory_card: colour.theory_card, songs: colour.songs, create_prompt,
     blocks: blocks.map((b, i) => ({ ...b, more: colour.blocks[i]?.more ?? '' })),

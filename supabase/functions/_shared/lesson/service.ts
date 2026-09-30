@@ -6,6 +6,7 @@ import { writeLesson } from './generate.ts';
 import type { Complete } from './llm.ts';
 import { PROMPT_VERSION, buildMessages } from './prompt.ts';
 import { fetchStateRows, lessonSummaries, toPlannerState } from './state.ts';
+import { buildSteps } from './steps.ts';
 
 /** A bad request from the client (HTTP 400). */
 export class InputError extends Error {}
@@ -45,9 +46,10 @@ export async function getOrCreateLesson(
   const skills = new Map<string, Skill>(rows.skills.map(s => [s.id, s]));
   const style = plan.style_element ? STYLE_CATALOG.profiles.find(p => p.id === plan.style_element!.style) ?? null : null;
   const metSkills = rows.progress.map(p => p.skill_id);
-  const messages = buildMessages({ plan, skills, style, settings: state.settings, recent: lessonSummaries(rows.lessons), questions: rows.questions, metSkills });
+  const steps = buildSteps(plan, skills); // computed once per request; shared by the prompt brief and writeLesson/assembleLesson
+  const messages = buildMessages({ plan, skills, style, settings: state.settings, recent: lessonSummaries(rows.lessons), questions: rows.questions, metSkills, steps });
   // ponytail: two simultaneous first-opens both pay for a model call; the unique key keeps one row. Add a claim row if cost matters.
-  const written = await writeLesson(messages, plan, skills, complete, models, metSkills);
+  const written = await writeLesson(messages, plan, skills, complete, models, metSkills, steps);
 
   const { data, error } = await db.from('lessons').insert({
     lesson_date: date, template: plan.template, track: plan.track, skill_id: plan.skill_id, key: plan.key,
