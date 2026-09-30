@@ -1,10 +1,27 @@
-import { Scale } from 'tonal';
+import { Interval, Scale } from 'tonal';
 import { PATTERNS, patternCounts, rhythmCounts, rhythmPattern, voiceRoles, type PickPattern } from './patterns.ts';
 import type { LessonPlan, Target } from './types.ts';
 
-/** Scale names whose {degrees:N} should resolve against the key's natural minor, not major — a rough but
- * workable split: anything modal/coloured toward minor (including the blues family) counts as minor-family. */
+/** Scale names whose {degrees:N} fallback (see resolveDegree) should use the key's natural minor, not major —
+ * a rough but workable split: anything modal/coloured toward minor (including the blues family) counts as minor-family. */
 const MINOR_FAMILY_SCALE = /minor|dorian|phrygian|aeolian|locrian|blues/i;
+const PLAIN_QUALITY = new Set(['P', 'M', 'm']); // prefer these over d/A when a degree has more than one note (blues' b5/5)
+
+/** The note the fretboard card actually labels degree N with, today. The card numbers dots by their tonal
+ * interval degree (music.ts scalePositions), so {degrees:N} must agree: look first in the day's actual scale
+ * (which may be a mode, a pentatonic, or blues) for a note whose interval is degree N, preferring a plain
+ * (perfect/major/minor) quality over a diminished/augmented one when both exist. Only when the day's scale has
+ * no note at that degree at all (a pentatonic's 4th/7th, blues' 2nd/6th) fall back to the key's 7-note parent
+ * scale, which is the best a learner can do when the card itself has nothing there. */
+function resolveDegree(key: string, dayScaleName: string, n: number): string {
+  const day = Scale.get(`${key} ${dayScaleName}`);
+  const matches = day.notes.length
+    ? day.intervals.map((iv, i) => ({ iv, note: day.notes[i] })).filter(m => Interval.num(m.iv) === n)
+    : [];
+  if (matches.length) return (matches.find(m => PLAIN_QUALITY.has(Interval.get(m.iv).q)) ?? matches[0]).note;
+  const parent = MINOR_FAMILY_SCALE.test(dayScaleName) ? 'minor' : 'major';
+  return Scale.get(`${key} ${parent}`).notes[n - 1];
+}
 
 export interface SlotCtx {
   key: string; scale: string; chords: string[]; scaleNotes: string[]; target: Target | null;
@@ -41,12 +58,7 @@ export function renderSteps(templates: string[], ctx: SlotCtx): string[] {
     if (deg) {
       const nums = deg[1].split(',').map(Number);
       if (nums.some(n => n < 1 || n > 7)) return null;
-      // {degrees:N} always means a degree of the key's 7-note parent scale (major or natural minor), never
-      // an index into today's actual scale — that scale can be a 5-note pentatonic, a mode, or blues, where
-      // an array index doesn't mean "scale degree" and can silently be missing or mean the wrong note.
-      const parent = MINOR_FAMILY_SCALE.test(ctx.scale) ? 'minor' : 'major';
-      const parentNotes = Scale.get(`${ctx.key} ${parent}`).notes;
-      return listNotes(nums.map(n => parentNotes[n - 1]));
+      return listNotes(nums.map(n => resolveDegree(ctx.key, ctx.scale, n)));
     }
     switch (slot) {
       case 'key': return ctx.key;
