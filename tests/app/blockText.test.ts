@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { blockText } from '../../src/lib/lesson.ts';
+import { blockCard, blockText } from '../../src/lib/lesson.ts';
+import { SKILLS } from '../../supabase/seed/curriculum.ts';
 
 const base = { title: 't', why_it_matters: 'w', theory_card: 'c', songs: [], create_prompt: 'p' };
 describe('blockText', () => {
@@ -13,5 +14,24 @@ describe('blockText', () => {
   });
   it('is safe on a missing block', () => {
     expect(blockText({ ...base, blocks: [] }, 3)).toEqual({ instructions: [''], target_text: '', listen_for: '', more: [] });
+  });
+});
+
+describe('blockCard', () => {
+  const fingerstyle = SKILLS.find(s => s.id === 'fingerstyle.l1.giuliani_arpeggios')!;
+  it('apply always plays the rhythm card, whatever the skill', () => {
+    expect(blockCard('apply', fingerstyle).card).toBe('rhythm');
+    expect(blockCard('apply', undefined).card).toBe('rhythm');
+  });
+  it('a skill with a written recipe gives its card', () => {
+    expect(blockCard('new_skill', fingerstyle).card).toBe('pattern');
+  });
+  it('falls back to none, and never throws, for an unknown or missing skill (old stored lessons)', () => {
+    expect(() => blockCard('retest', undefined)).not.toThrow();
+    expect(blockCard('retest', undefined).card).toBe('none');
+    expect(blockCard('new_skill', undefined).card).toBe('none');
+  });
+  it('blocks with no skill (warmup etc.) get none', () => {
+    expect(blockCard('warmup', undefined).card).toBe('none');
   });
 });

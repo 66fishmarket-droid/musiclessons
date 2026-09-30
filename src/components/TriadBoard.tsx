@@ -15,7 +15,7 @@ export function TriadBoard({ triads }: { triads: TriadShape[] }) {
         const from = Math.min(...t.frets) - 1;
         const to = Math.max(...t.frets) + 1;
         const X = (fret: number) => 40 + (fret - from + 0.5) * COL;
-        const Y = (row: number) => 16 + row * 24;
+        const Y = (row: number) => 16 + (t.strings.length - 1 - row) * 24; // high string on top, matching ScaleBoard's tab view
         const W = 40 + (to - from + 1) * COL + 4;
         const H = 16 + t.strings.length * 24;
         const label = `${INVERSION_LABEL[t.inversion]}: ` + t.strings.map((s, i) => `${STRING_NAMES[s]} string fret ${t.frets[i]}`).join(', ');

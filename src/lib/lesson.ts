@@ -1,4 +1,5 @@
-import type { BlockKind, LessonPlan } from '../../supabase/functions/_shared/engine/types.ts';
+import { recipeFor, type Card, type SkillRecipe } from '../../supabase/functions/_shared/engine/recipes.ts';
+import type { BlockKind, LessonPlan, Skill } from '../../supabase/functions/_shared/engine/types.ts';
 import type { BlockContent, LessonContent } from '../../supabase/functions/_shared/lesson/contract.ts';
 
 /** The lessons row generate-lesson returns (the columns the app reads). */
@@ -43,6 +44,17 @@ export function tonicOf(key: string): string {
 export function refLabel(ref: string): string {
   const id = ref.slice(ref.indexOf(':') + 1);
   return (id.split('.').pop() ?? id).replaceAll('_', ' ');
+}
+
+/**
+ * The block's card and recipe: Apply always plays the rhythm card; every other kind's card comes from the skill's
+ * recipe, or 'none' when there is no skill (warmup/reset/review/create/record) or the skill is missing from the
+ * curriculum (an old stored lesson naming a since-removed skill) — never throws.
+ */
+export function blockCard(kind: BlockKind, skill: Skill | undefined): { card: Card; recipe: SkillRecipe | undefined } {
+  if (kind === 'apply') return { card: 'rhythm', recipe: undefined };
+  const recipe = skill ? recipeFor(skill) : undefined;
+  return { card: recipe?.card ?? 'none', recipe };
 }
 
 /** One block's text, reading both engine-written lessons and ones stored before them (tips/explanation). */
