@@ -21,7 +21,7 @@ export function SignIn() {
   const verify = async (e: FormEvent) => {
     e.preventDefault();
     setBusy(true); setError(null);
-    const { error } = await db.auth.verifyOtp({ email: email.trim(), token: code.trim(), type: 'email' });
+    const { error } = await db.auth.verifyOtp({ email: email.trim(), token: code.replace(/\s/g, ''), type: 'email' });
     setBusy(false);
     if (error) setError(error.message); // success: App's auth listener switches screens
   };
@@ -39,9 +39,10 @@ export function SignIn() {
         </form>
       ) : (
         <form className="stack-sm" onSubmit={verify}>
-          <p className="text-2">Check your email. Tap the link, or type the 6-digit code here.</p>
+          <p className="text-2">Check your email. Tap the link, or type the code here.</p>
+          {/* any code length 6+: hosted projects default to 8 digits, the local config uses 6; spaces are stripped */}
           <label className="stack-sm">Code
-            <input inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" required value={code} onChange={e => setCode(e.target.value)} />
+            <input inputMode="numeric" autoComplete="one-time-code" pattern="[0-9 ]{6,12}" required value={code} onChange={e => setCode(e.target.value)} />
           </label>
           <button className="btn-primary" disabled={busy}>Sign in</button>
         </form>
