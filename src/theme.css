@@ -105,6 +105,7 @@ details.card summary { cursor: pointer; font-weight: 600; min-height: 44px; disp
 
 .cd-nut { fill: var(--text); }
 .cd-fret { stroke: var(--line); stroke-width: 1.5; }
+.cd-nut-line { stroke: var(--text); stroke-width: 4; }
 .cd-string { stroke: var(--muted); stroke-width: 1.5; opacity: 0.7; }
 .cd-dot { fill: var(--text); }
 .cd-dot.cd-root { fill: var(--gold); }

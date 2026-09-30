@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { TUNINGS, noteAt } from '../../supabase/functions/_shared/engine/music.ts';
-import { PATTERNS, SKILL_PATTERNS, resolvePattern, voiceRoles } from '../../supabase/functions/_shared/engine/patterns.ts';
+import { PATTERNS, SKILL_PATTERNS, nextBarChord, resolvePattern, voiceRoles } from '../../supabase/functions/_shared/engine/patterns.ts';
 import { SKILLS } from '../../supabase/seed/curriculum.ts';
 
 const G = { frets: [3, 2, 0, 0, 0, 3], fingers: [2, 1, 0, 0, 0, 3], barres: [] };
@@ -54,5 +54,19 @@ describe('pattern library', () => {
       expect(SKILL_PATTERNS[s.id]?.length, s.id).toBeGreaterThan(0);
       for (const id of SKILL_PATTERNS[s.id]) expect(PATTERNS[id], id).toBeDefined();
     }
+  });
+});
+
+describe('nextBarChord', () => {
+  it('starts on the shown chord, then moves one chord per bar and wraps', () => {
+    expect(nextBarChord(-1, 0, 4)).toBe(0);
+    expect(nextBarChord(0, 0, 4)).toBe(1);
+    expect(nextBarChord(3, 3, 4)).toBe(0);
+  });
+  it('plays a tapped chord next bar instead of skipping past it', () => {
+    expect(nextBarChord(1, 3, 4)).toBe(3);
+  });
+  it('stays put on a single chord', () => {
+    expect(nextBarChord(0, 0, 1)).toBe(0);
   });
 });

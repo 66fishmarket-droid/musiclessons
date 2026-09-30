@@ -4,10 +4,9 @@ import type { DotMode } from '../lib/chordLabels.ts';
 import { ChordDiagram, ModeToggle } from './ChordDiagram.tsx';
 
 /** Progression blocks: the current chord large, the next chord, tappable progression chips (Instrument layout). */
-export function ChordPanel({ chords, voicings, onShapes }: {
-  chords: string[]; voicings: Record<string, Voicing[]>; onShapes: (chord: string) => void;
+export function ChordPanel({ chords, voicings, idx, onIdx, onShapes }: {
+  chords: string[]; voicings: Record<string, Voicing[]>; idx: number; onIdx: (i: number) => void; onShapes: (chord: string) => void;
 }) {
-  const [idx, setIdx] = useState(0);
   const [mode, setMode] = useState<DotMode>('fingers');
   if (chords.length === 0) return null;
   const cur = chords[idx];
@@ -28,7 +27,7 @@ export function ChordPanel({ chords, voicings, onShapes }: {
         </div>
       </section>
       <div className="prog" role="group" aria-label="Progression">
-        {chords.map((c, k) => <button key={k} type="button" aria-pressed={k === idx} onClick={() => setIdx(k)}>{c}</button>)}
+        {chords.map((c, k) => <button key={k} type="button" aria-pressed={k === idx} onClick={() => onIdx(k)}>{c}</button>)}
       </div>
     </>
   );

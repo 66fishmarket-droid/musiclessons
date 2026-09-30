@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Chord, Note } from 'tonal';
 import {
-  buildMusic, chordVoicings, noteAt, scalePositions, triadInversions,
+  buildMusic, chordVoicings, noteAt, scaleBox, scalePositions, triadInversions,
 } from '../../supabase/functions/_shared/engine/music.ts';
 import type { StyleProfile } from '../../supabase/functions/_shared/engine/styles.ts';
 
@@ -79,5 +79,21 @@ describe('buildMusic', () => {
     expect(m.scale.name).toBe('major');
     expect(m.rhythm).toBeNull();
     expect(m.triads.length).toBeGreaterThan(3);
+  });
+});
+
+describe('scaleBox', () => {
+  it('takes a four-fret position from one fret below the lowest root on the E or A string', () => {
+    const g = scaleBox(scalePositions('G', 'major'));
+    expect([g.from, g.to]).toEqual([2, 5]);
+    expect(g.notes.every(n => n.fret >= 2 && n.fret <= 5)).toBe(true);
+    expect(g.notes).toContainEqual({ string: 0, fret: 3, note: 'G', degree: 1 });
+    expect(g.notes).toHaveLength(17); // three notes on every string but B
+    const c = scaleBox(scalePositions('C', 'major'));
+    expect([c.from, c.to]).toEqual([2, 5]); // root on the A string, fret 3
+  });
+  it('uses open position when the root is an open string', () => {
+    expect(scaleBox(scalePositions('E', 'minor'))).toMatchObject({ from: 0, to: 3 });
+    expect(scaleBox(scalePositions('A', 'major'))).toMatchObject({ from: 0, to: 3 });
   });
 });

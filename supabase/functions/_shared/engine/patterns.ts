@@ -69,3 +69,8 @@ export function resolvePattern(p: PickPattern, v: Voicing, chord: string, tuning
     return { finger, role, string, note, interval };
   }));
 }
+
+/** Progression index for the next bar: the shown chord if the learner just tapped it (or on the first bar), else the one after the last bar's. */
+export function nextBarChord(lastPlayed: number, shown: number, count: number): number {
+  return shown !== lastPlayed ? shown : (shown + 1) % count;
+}
