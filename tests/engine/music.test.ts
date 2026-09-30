@@ -24,6 +24,15 @@ describe('scalePositions', () => {
     expect(pos.every(p => p.fret >= 0 && p.fret <= 12)).toBe(true);
   });
   it('throws on unknown scales', () => expect(() => scalePositions('C', 'wibble')).toThrow(/Unknown scale/));
+  it('labels a reduced scale by interval degree, not array index', () => {
+    const pos = scalePositions('G', 'major pentatonic');
+    for (const p of pos) expect([1, 2, 3, 5, 6]).toContain(p.degree);
+  });
+  it('gives both notes of a blues scale\'s b5/5 pair degree 5', () => {
+    const pos = scalePositions('C', 'blues');
+    const fifths = new Set(pos.filter(p => p.degree === 5).map(p => p.note));
+    expect(fifths.size).toBe(2);
+  });
 });
 
 describe('chordVoicings', () => {

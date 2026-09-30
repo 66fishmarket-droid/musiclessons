@@ -46,7 +46,19 @@ describe('renderSteps', () => {
     expect(renderSteps(['{degrees:1,3,5}'], slotContext(withKey('F#'), {}))).toEqual(['F#, A# and C#']);
   });
   it('spells degrees for an explicit minor scale', () => {
-    const minorPlan = { ...PLAN, music: { ...PLAN.music, scale: { ...PLAN.music.scale, name: 'minor', notes: ['E', 'F#', 'G', 'A', 'B', 'C', 'D'] } } };
+    const minorPlan = { ...PLAN, key: 'E', music: { ...PLAN.music, scale: { ...PLAN.music.scale, name: 'minor', notes: ['E', 'F#', 'G', 'A', 'B', 'C', 'D'] } } };
     expect(renderSteps(['{degrees:1,3,5}'], slotContext(minorPlan, {}))).toEqual(['E, G and B']);
+  });
+  it('resolves {degrees:N} against the key\'s 7-note parent scale, not today\'s actual (possibly reduced) scale', () => {
+    const pentPlan = { ...PLAN, key: 'G', music: { ...PLAN.music, scale: { ...PLAN.music.scale, name: 'major pentatonic', notes: ['G', 'A', 'B', 'D', 'E'] } } };
+    expect(renderSteps(['{degrees:1,3,5,7}'], slotContext(pentPlan, {}))).toEqual(['G, B, D and F#']);
+
+    for (const scaleName of ['dorian', 'blues']) {
+      const modalPlan = { ...PLAN, key: 'A', music: { ...PLAN.music, scale: { ...PLAN.music.scale, name: scaleName } } };
+      expect(renderSteps(['{degrees:1,3,5}'], slotContext(modalPlan, {})), scaleName).toEqual(['A, C and E']);
+    }
+  });
+  it('throws on a degree outside 1-7', () => {
+    expect(() => renderSteps(['{degrees:8}'], slotContext(PLAN, {}))).toThrow('unfilled slot {degrees:8}');
   });
 });

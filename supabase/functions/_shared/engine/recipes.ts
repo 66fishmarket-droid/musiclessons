@@ -326,7 +326,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
   'fretboard.l2.pentatonic_per_shape': {
     card: 'scale', degrees: [1, 3, 5],
     steps: [
-      'A pentatonic box is today\'s {scale} box with two notes dropped: skip the 2nd and 6th for a minor scale, the 4th and 7th for major.',
+      'A pentatonic box has five notes instead of seven: two notes fewer than the full scale box shown for today\'s position.',
       'Find {chord1}\'s CAGED shape, then play the pentatonic box wrapped around it, using {degrees:1,3,5} as your anchor notes.',
       'Climb the box root to root, saying "root" each time you land on {degrees:1}.',
       LADDER,

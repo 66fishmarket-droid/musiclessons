@@ -1,5 +1,10 @@
+import { Scale } from 'tonal';
 import { PATTERNS, patternCounts, rhythmCounts, rhythmPattern, voiceRoles, type PickPattern } from './patterns.ts';
 import type { LessonPlan, Target } from './types.ts';
+
+/** Scale names whose {degrees:N} should resolve against the key's natural minor, not major — a rough but
+ * workable split: anything modal/coloured toward minor (including the blues family) counts as minor-family. */
+const MINOR_FAMILY_SCALE = /minor|dorian|phrygian|aeolian|locrian|blues/i;
 
 export interface SlotCtx {
   key: string; scale: string; chords: string[]; scaleNotes: string[]; target: Target | null;
@@ -33,7 +38,16 @@ export function renderSteps(templates: string[], ctx: SlotCtx): string[] {
   const t = ctx.target;
   const value = (slot: string): string | null => {
     const deg = /^degrees:([\d,]+)$/.exec(slot);
-    if (deg) return listNotes(deg[1].split(',').map(d => ctx.scaleNotes[Number(d) - 1]).filter(Boolean));
+    if (deg) {
+      const nums = deg[1].split(',').map(Number);
+      if (nums.some(n => n < 1 || n > 7)) return null;
+      // {degrees:N} always means a degree of the key's 7-note parent scale (major or natural minor), never
+      // an index into today's actual scale — that scale can be a 5-note pentatonic, a mode, or blues, where
+      // an array index doesn't mean "scale degree" and can silently be missing or mean the wrong note.
+      const parent = MINOR_FAMILY_SCALE.test(ctx.scale) ? 'minor' : 'major';
+      const parentNotes = Scale.get(`${ctx.key} ${parent}`).notes;
+      return listNotes(nums.map(n => parentNotes[n - 1]));
+    }
     switch (slot) {
       case 'key': return ctx.key;
       case 'scale': return ctx.scale;
