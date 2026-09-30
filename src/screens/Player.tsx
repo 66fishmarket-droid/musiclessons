@@ -75,9 +75,11 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
   const chord = chords[chordIdx];
   const rhythm = plan.music.rhythm;
   // Apply plays the day's style rhythm (e.g. boom-chick); skill blocks play the skill's picking pattern.
+  const skillPatterns = useMemo(() => (skillId ? skillInfo(skillId)?.patterns ?? [] : []), [skillId]);
+  const [pi, setPi] = useState(0);
   const pattern = useMemo(() => (block.kind === 'apply' && rhythm
     ? rhythmPattern(rhythm.name, rhythm.grid)
-    : skillId ? skillInfo(skillId)?.patterns[0] : undefined), [block.kind, rhythm, skillId]);
+    : skillPatterns[pi]), [block.kind, rhythm, skillPatterns, pi]);
   const showChords = block.kind === 'apply' || block.kind === 'create' || (block.kind === 'new_skill' && !!pattern);
 
   const metro = useMetronome(first);
@@ -143,7 +145,12 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
       {block.kind === 'create' && <ScaleBoard scale={plan.music.scale} />}
       {block.kind === 'create' && <Recorder onTake={() => {}} />}
       {block.kind === 'record' && <Recorder onTake={onTake} />}
-      {pattern && chords.length > 0 && <PickingPattern pattern={pattern} chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} bpm={metro.bpm} />}
+      {pattern && !pattern.strokes && skillPatterns.length > 1 && (
+        <div className="toggle" role="group" aria-label="Pattern">
+          {skillPatterns.map((p, k) => <button key={p.id} type="button" aria-pressed={k === pi} onClick={() => setPi(k)}>{p.name}</button>)}
+        </div>
+      )}
+      {pattern && chords.length > 0 && <PickingPattern key={pattern.id} pattern={pattern} chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} bpm={metro.bpm} />}
       {skillId && block.kind !== 'apply' && NOTE_CALLER_SKILLS.includes(skillId) && <NoteCaller metro={metro} />}
       {hasMetro && (
         <Metronome metro={metro} target={target} ladder={target !== null ? tempoLadder(first, target) : null}
