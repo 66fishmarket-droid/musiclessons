@@ -148,3 +148,6 @@ audio { width: 100%; }
 .sheet-tall { max-height: 90dvh; overflow-y: auto; }
 .sheet-tall[open] { align-items: stretch; }
 @media (prefers-reduced-motion: reduce) { .pk-dot { transition: none; } }
+.pk-stroke { fill: var(--c, var(--text)); font: 800 30px 'IBM Plex Sans', sans-serif; text-anchor: middle; dominant-baseline: central; opacity: 0.55; transition: opacity 80ms; }
+.pk-stroke.pk-ghost { opacity: 0.2; }
+.pk-stroke.pk-on { opacity: 1; }

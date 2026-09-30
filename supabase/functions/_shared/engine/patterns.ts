@@ -4,10 +4,16 @@ import { TUNING, noteAt, type Voicing } from './music.ts';
 export type Finger = 'p' | 'i' | 'm' | 'a';
 /** bass = lowest root string; alt = alternate bass; t1/t2/t3 = highest, second- and third-highest sounding strings. */
 export type Role = 'bass' | 'alt' | 't1' | 't2' | 't3';
+/** Strum strokes from style rhythm grids: D/U down/up, d/u muted ghost strokes, x mute, choke or slap. */
+export type Stroke = 'D' | 'U' | 'd' | 'u' | 'x';
 export interface PickPattern {
-  id: string; name: string; beatsPerBar: 3 | 4; stepsPerBeat: 1 | 2 | 3;
-  /** One entry per step; several notes in a step sound together (a pinch); [] is a rest. */
+  id: string; name: string; beatsPerBar: 3 | 4; stepsPerBeat: 1 | 2 | 3 | 4;
+  /** Bars the steps span (default 1); the chord changes at each bar line. */
+  bars?: number;
+  /** One entry per step; several notes in a step sound together (a pinch); [] is a rest or a stroke. */
   steps: { finger: Finger; role: Role }[][];
+  /** Style rhythms only: the strum stroke on each step, null where the step is picked or silent. */
+  strokes?: (Stroke | null)[];
 }
 export interface PickNote { finger: Finger; role: Role; string: number; note: string; interval: string }
 
@@ -73,4 +79,46 @@ export function resolvePattern(p: PickPattern, v: Voicing, chord: string, tuning
 /** Progression index for the next bar: the shown chord if the learner just tapped it (or on the first bar), else the one after the last bar's. */
 export function nextBarChord(lastPlayed: number, shown: number, count: number): number {
   return shown !== lastPlayed ? shown : (shown + 1) % count;
+}
+
+const FINGERS = [I, M, A]; // P in a rhythm grid: the fingers pluck the top three strings together
+const PICKED: Record<string, PickPattern['steps'][number]> = { '-': [], B: [P], P: FINGERS, BP: [P, ...FINGERS], N: [n('i', 't1')] };
+
+/**
+ * A style rhythm grid as a playable pattern. Grids are 16 slots (4/4 in 16ths), 12 (3/4 in 16ths when the name says
+ * 3/4, else a 12/8 feel: 4 beats of triplets) or 32 (two bars of 16ths). B thumb bass, P fingers, BP pinch, N single note.
+ */
+export function rhythmPattern(name: string, grid: string[]): PickPattern {
+  const [beatsPerBar, stepsPerBeat, bars] =
+    grid.length === 12 ? (name.includes('3/4') ? [3, 4, 1] : [4, 3, 1])
+    : grid.length === 32 ? [4, 4, 2]
+    : [4, 4, grid.length / 16]; // ponytail: other lengths assume 16ths; the catalogue test catches a new one
+  return {
+    id: `rhythm:${name}`, name, beatsPerBar: beatsPerBar as 3 | 4, stepsPerBeat: stepsPerBeat as 3 | 4, bars,
+    steps: grid.map(t => PICKED[t] ?? []),
+    strokes: grid.map(t => (t in PICKED ? null : t as Stroke)),
+  };
+}
+
+const DOING: Record<string, string> = {
+  B: 'thumb plays the bass note', P: 'fingers pluck the top strings', BP: 'thumb and fingers pluck together', N: 'play a single note',
+  D: 'strum down', U: 'strum up', d: 'muted strum down', u: 'muted strum up', x: 'mute (slap or choke)',
+};
+const COUNT_SUB: Record<number, string[]> = { 1: [''], 2: ['', '&'], 3: ['', '-trip', '-let'], 4: ['', 'e', '&', 'a'] };
+
+/** The rhythm in words, count by count ("1 thumb plays the bass note · 2 strum down"), so the lesson text can't misread the grid. */
+export function rhythmCounts(p: PickPattern): string {
+  const barLen = p.beatsPerBar * p.stepsPerBeat;
+  const token = (k: number) => p.strokes?.[k] ?? (p.steps[k].length === 4 ? 'BP' : p.steps[k].length === 3 ? 'P' : p.steps[k][0]?.role === 'bass' ? 'B' : p.steps[k].length ? 'N' : null);
+  const out: string[] = [];
+  let lastBar = 0;
+  p.steps.forEach((_, k) => {
+    const t = token(k);
+    if (!t) return;
+    const bar = Math.floor(k / barLen), inBar = k % barLen;
+    const count = `${Math.floor(inBar / p.stepsPerBeat) + 1}${COUNT_SUB[p.stepsPerBeat][inBar % p.stepsPerBeat]}`;
+    out.push(`${bar > lastBar ? `bar ${bar + 1}: ` : ''}${count} ${DOING[t]}`);
+    lastBar = bar;
+  });
+  return out.join(' · ');
 }

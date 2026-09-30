@@ -1,4 +1,4 @@
-import { type CSSProperties, useEffect, useRef, useState } from 'react';
+import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
 import { audio, blip } from '../audio/clock.ts';
 import { useDrone, useMetronome } from '../audio/useMetronome.ts';
 import { Burst } from '../components/Burst.tsx';
@@ -18,6 +18,7 @@ import { tempoLadder } from '../lib/ladder.ts';
 import { BLOCK_META, bpmTarget, refLabel, startBpm, tonicOf, type TodayLesson } from '../lib/lesson.ts';
 import { NOTE_CALLER_SKILLS } from '../lib/noteCaller.ts';
 import { skillInfo } from '../lib/skillInfo.ts';
+import { rhythmPattern } from '../../supabase/functions/_shared/engine/patterns.ts';
 import { goTo, loadSession, logVerdict, resumeSession, saveSession, slotsFor, verdictFor, type Log, type Session } from '../lib/session.ts';
 import { useWakeLock } from '../lib/wakeLock.ts';
 
@@ -72,7 +73,12 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
   const chords = plan.music.progression.chords;
   const [chordIdx, setChordIdx] = useState(0);
   const chord = chords[chordIdx];
-  const pattern = skillId ? skillInfo(skillId)?.patterns[0] : undefined;
+  const rhythm = plan.music.rhythm;
+  // Apply plays the day's style rhythm (e.g. boom-chick); skill blocks play the skill's picking pattern.
+  const pattern = useMemo(() => (block.kind === 'apply' && rhythm
+    ? rhythmPattern(rhythm.name, rhythm.grid)
+    : skillId ? skillInfo(skillId)?.patterns[0] : undefined), [block.kind, rhythm, skillId]);
+  const showChords = block.kind === 'apply' || block.kind === 'create' || (block.kind === 'new_skill' && !!pattern);
 
   const metro = useMetronome(first);
   const [drone, setDrone] = useState(false);
@@ -132,8 +138,10 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
       </section>
 
       {block.kind === 'warmup' && <ScaleBoard scale={plan.music.scale} />}
-      {block.kind === 'apply' && <ChordPanel chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} onShapes={setSheet} />}
       {block.kind === 'create' && <section className="card"><p><ChordText text={content.create_prompt} onChord={setSheet} /></p></section>}
+      {showChords && <ChordPanel chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} onShapes={setSheet} />}
+      {block.kind === 'create' && <ScaleBoard scale={plan.music.scale} />}
+      {block.kind === 'create' && <Recorder onTake={() => {}} />}
       {block.kind === 'record' && <Recorder onTake={onTake} />}
       {pattern && chords.length > 0 && <PickingPattern pattern={pattern} chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} bpm={metro.bpm} />}
       {skillId && block.kind !== 'apply' && NOTE_CALLER_SKILLS.includes(skillId) && <NoteCaller metro={metro} />}
