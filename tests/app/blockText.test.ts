@@ -49,7 +49,7 @@ describe('blockTerms', () => {
   });
   it('works on lessons stored before engine-written steps (Review Focus 4)', () => {
     const old = { ...base, blocks: [{ kind: 'warmup', instructions: ['a'], target_text: '', tips: 'slide a half step' }] };
-    expect(blockTerms(old as never, 0).map(t => t.id)).toEqual(['half_step']);
+    expect(blockTerms(old as never, 0).map(t => t.id)).toEqual(['slide', 'half_step']);
     expect(blockTerms(old as never, 5)).toEqual([]);
   });
 });
