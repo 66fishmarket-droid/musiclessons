@@ -70,6 +70,19 @@ describe('neckMap', () => {
       expect(gaps(true, key), key).toBe('WHWWHWW');
     }
   });
+  it('spells notes from the key, including flat-side minor keys and Gb (final review I2)', () => {
+    expect(neckMap('one_string', 'G', true).dots.map(d => d.note)).toEqual(['G', 'A', 'Bb', 'C', 'D', 'Eb', 'F', 'G']);
+    expect(neckMap('one_string', 'Gb').dots.map(d => d.note)).toContain('Cb');
+    expect(neckMap('grid', 'Gb').dots.map(d => d.note)).toEqual(['Gb', 'Cb', 'Db', 'Ebm']);
+    expect(neckMap('octaves', 'Db').dots.every(d => d.label === 'Db')).toBe(true);
+  });
+  it('grid keeps the same shape in every key: 1 on string 6, 4/5/6 on string 5 at +0/+2/+4 (final review I3)', () => {
+    for (const key of ['G', 'D', 'A', 'E', 'C', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb']) {
+      const [one, ...rest] = neckMap('grid', key).dots;
+      expect(one.string, key).toBe(0);
+      expect(rest.map(d => [d.string, d.fret - one.fret]), key).toEqual([[1, 0], [1, 2], [1, 4]]);
+    }
+  });
   it('names notes with flats in flat keys (Review Focus 2)', () => {
     expect(neckMap('grid', 'Bb').dots.map(d => d.note)).toEqual(['Bb', 'Eb', 'F', 'Gm']);
     expect(neckMap('octaves', 'Eb').dots[0].label).toBe('Eb');

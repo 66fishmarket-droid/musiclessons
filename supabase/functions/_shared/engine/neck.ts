@@ -35,7 +35,7 @@ export function neckMap(kind: MapKind, key: string, minor = false): NeckMap {
     }
     case 'octaves': {
       const dots: NeckDot[] = [];
-      for (let s = 0; s < 6; s++) for (let f = fretOf(s, pc); f <= 12; f += 12) dots.push({ string: s, fret: f, label: name(at(s, f)), root: true });
+      for (let s = 0; s < 6; s++) for (let f = fretOf(s, pc); f <= 12; f += 12) dots.push({ string: s, fret: f, label: tonic, root: true });
       const links: [NeckDot, NeckDot][] = [];
       for (const a of dots) for (const b of dots) {
         const skip = b.string - a.string;
@@ -68,16 +68,15 @@ export function neckMap(kind: MapKind, key: string, minor = false): NeckMap {
         caption: `R is ${tonic}. From a root on string 6 or 5: the 3rd is one string up, one fret back; the 5th is one string up, two frets up; the b7 is two strings up, same fret; 8 is the octave.` };
     }
     case 'grid': {
+      // Fixed shape so it moves unchanged between keys: 1 on string 6, then 4, 5 and 6 on string 5 at +0, +2 and +4 frets.
       const r = fretOf(0, pc);
-      const dots: NeckDot[] = [[1, 0, ''], [4, 5, ''], [5, 7, ''], [6, 9, 'm']].map(([n, semi, suffix]) => {
-        let best: NeckDot | null = null;
-        for (const s of [0, 1]) for (const extra of [0, 12]) {
-          const f = fretOf(s, (pc + (semi as number)) % 12) + extra;
-          if (!best || Math.abs(f - r) < Math.abs(best.fret - r)) best = { string: s, fret: f, label: String(n), note: `${name(at(s, f))}${suffix}` };
-        }
-        if (n === 1) best!.root = true;
-        return best!;
-      });
+      const n = Scale.get(`${tonic} major`).notes;
+      const dots: NeckDot[] = [
+        { string: 0, fret: r, label: '1', note: n[0], root: true },
+        { string: 1, fret: r, label: '4', note: n[3] },
+        { string: 1, fret: r + 2, label: '5', note: n[4] },
+        { string: 1, fret: r + 4, label: '6', note: `${n[5]}m` },
+      ];
       return { ...span(dots), dots, links: [],
         caption: 'The 1, 4, 5 and 6 chords of the key as one grid of roots. The shape is the same in every key; only the starting fret moves.' };
     }
@@ -85,8 +84,9 @@ export function neckMap(kind: MapKind, key: string, minor = false): NeckMap {
       let s = 0;
       for (const c of [1, 2, 3]) if (fretOf(c, pc) < fretOf(s, pc)) s = c;
       const f0 = fretOf(s, pc);
-      const semis = [...Scale.get(`${tonic} ${minor ? 'minor' : 'major'}`).intervals.map(i => Interval.semitones(i)!), 12];
-      const dots: NeckDot[] = semis.map((x, k) => ({ string: s, fret: f0 + x, label: String((k % 7) + 1), note: name(at(s, f0 + x)), root: k % 7 === 0 }));
+      const scale = Scale.get(`${tonic} ${minor ? 'minor' : 'major'}`);
+      const semis = [...scale.intervals.map(i => Interval.semitones(i)!), 12];
+      const dots: NeckDot[] = semis.map((x, k) => ({ string: s, fret: f0 + x, label: String((k % 7) + 1), note: scale.notes[k % 7], root: k % 7 === 0 }));
       const gaps = dots.slice(1).map((d, k) => (d.fret - dots[k].fret === 1 ? 'H' : 'W'));
       return { ...span(dots), dots, links: dots.slice(1).map((d, k) => [dots[k], d] as [NeckDot, NeckDot]),
         caption: `${tonic} ${minor ? 'natural minor' : 'major'} along string ${6 - s}: ${gaps.join('-')}.` };

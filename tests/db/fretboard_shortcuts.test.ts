@@ -13,6 +13,16 @@ beforeAll(async () => { client = new pg.Client({ connectionString: DB_URL }); aw
 afterAll(async () => { await client.end(); });
 
 describe('fretboard shortcuts migration', () => {
+  it('is a no-op on a fresh database whose skills are not seeded yet (supabase db reset; final review C1)', async () => {
+    await client.query('begin');
+    try {
+      await client.query('truncate public.skills cascade');
+      await client.query(SQL);
+      expect((await client.query('select count(*)::int as n from public.skills')).rows[0].n).toBe(0);
+    } finally {
+      await client.query('rollback');
+    }
+  });
   it('upserts the new skills and leaves existing progress untouched, and is safe to re-run', async () => {
     await client.query('begin');
     try {

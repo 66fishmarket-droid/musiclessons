@@ -1,4 +1,5 @@
 import { termsIn, type GlossaryEntry } from '../../supabase/functions/_shared/engine/glossary.ts';
+import { MINOR_FAMILY_SCALE } from '../../supabase/functions/_shared/engine/render.ts';
 import { recipeFor, type Card, type SkillRecipe, type StepElement } from '../../supabase/functions/_shared/engine/recipes.ts';
 import type { BlockKind, LessonPlan, Skill } from '../../supabase/functions/_shared/engine/types.ts';
 import type { BlockContent, LessonContent } from '../../supabase/functions/_shared/lesson/contract.ts';
@@ -57,6 +58,13 @@ export function blockCard(kind: BlockKind, skill: Skill | undefined): { card: Ca
   const recipe = skill ? recipeFor(skill) : undefined;
   return { card: recipe?.card ?? 'none', recipe };
 }
+
+/** True for any minor-family scale name a style can set (minor pentatonic, dorian, harmonic minor…), same split as the planner. */
+export const isMinorScale = (name: string): boolean => MINOR_FAMILY_SCALE.test(name);
+
+/** Whether a step shows an element: always when the block isn't gated (null), when the step lists it, or while it is running. */
+export const elementVisible = (els: StepElement[] | null, e: StepElement, active = false): boolean =>
+  els === null || els.includes(e) || active;
 
 /**
  * What the current step shows besides its text, or null for the whole block's elements. Only new_skill blocks gate per

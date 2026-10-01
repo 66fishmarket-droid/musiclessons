@@ -17,7 +17,7 @@ import { VoicingSheet } from '../components/VoicingSheet.tsx';
 import { clock } from '../lib/dates.ts';
 import { keyAction } from '../lib/keys.ts';
 import { tempoLadder } from '../lib/ladder.ts';
-import { BLOCK_META, blockCard, blockTerms, blockText, bpmTarget, refLabel, startBpm, stepElements, tonicOf, type TodayLesson } from '../lib/lesson.ts';
+import { BLOCK_META, blockCard, blockTerms, blockText, bpmTarget, refLabel, startBpm, elementVisible, isMinorScale, stepElements, tonicOf, type TodayLesson } from '../lib/lesson.ts';
 import { neckMap } from '../../supabase/functions/_shared/engine/neck.ts';
 import { APPLY_DEFAULT_GRID, PATTERNS, rhythmPattern } from '../../supabase/functions/_shared/engine/patterns.ts';
 import type { StepElement } from '../../supabase/functions/_shared/engine/recipes.ts';
@@ -102,7 +102,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
   useDrone(drone ? tonic : null);
   const [step, setStep] = useState(0);
   const els = stepElements(recipe, block.kind, step, steps.length);
-  const on = (e: StepElement) => els === null || els.includes(e);
+  const on = (e: StepElement) => elementVisible(els, e);
   const [sheet, setSheet] = useState<string | null>(null);
   const [about, setAbout] = useState(false);
   const total = block.minutes * 60;
@@ -166,7 +166,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
       {card === 'scale' && on('card') && <ScaleBoard scale={plan.music.scale} highlight={recipe?.degrees} />}
       {card === 'triads' && on('card') && <TriadBoard triads={plan.music.triads} />}
       {card === 'neck_map' && recipe?.map && on('card') && (
-        <NeckMap title={SKILLS_BY_ID.get(cardSkill!)?.name ?? 'Neck map'} map={neckMap(recipe.map, plan.key, /^(minor|aeolian)$/.test(plan.music.scale.name))} />
+        <NeckMap title={SKILLS_BY_ID.get(cardSkill!)?.name ?? 'Neck map'} map={neckMap(recipe.map, plan.key, isMinorScale(plan.music.scale.name))} />
       )}
       {pattern && on('card') && !pattern.strokes && skillPatterns.length > 1 && (
         <div className="toggle" role="group" aria-label="Pattern">
@@ -175,7 +175,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
       )}
       {pattern && on('card') && chords.length > 0 && <PickingPattern key={pattern.id} pattern={pattern} chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} bpm={metro.bpm} />}
       {(card === 'note_caller' ? on('card') : !!els?.includes('note_caller')) && <NoteCaller metro={metro} />}
-      {hasMetro && on('metronome') && (
+      {hasMetro && elementVisible(els, 'metronome', metro.playing) && (
         <Metronome metro={metro} target={target} ladder={target !== null ? tempoLadder(first, target) : null}
           drone={drone} onDrone={() => setDrone(!drone)} tonic={tonic} />
       )}

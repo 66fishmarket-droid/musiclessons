@@ -374,7 +374,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
     card: 'neck_map', map: 'grid', majorKeyOnly: true,
     steps: [
       'Chords in a key are numbered from the home note: 1 is {degrees:1}, 4 is {degrees:4}, 5 is {degrees:5} and 6 is {degrees:6}. The card shows their roots as one grid.',
-      'Play the four roots as single notes, 1-4-5-6, saying the numbers out loud: 1 on string 6, 4 straight across on string 5, 5 two frets up from it, and 6 where the card shows it.',
+      'Play the four roots as single notes, 1-4-5-6, saying the numbers out loud: 1 on string 6, 4 straight across on string 5, 5 two frets up from it, and 6 two frets above that.',
       'If you know barre chords, play each root as its chord: 1, 4 and 5 major, 6 minor. Otherwise keep playing the roots, one per bar.',
       LADDER,
     ],

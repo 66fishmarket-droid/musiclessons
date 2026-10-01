@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { blockCard, blockTerms, blockText, stepElements } from '../../src/lib/lesson.ts';
+import { blockCard, blockTerms, blockText, elementVisible, isMinorScale, stepElements } from '../../src/lib/lesson.ts';
 import { RECIPES } from '../../supabase/functions/_shared/engine/recipes.ts';
 import { SKILLS } from '../../supabase/seed/curriculum.ts';
 
@@ -52,6 +52,19 @@ describe('blockTerms', () => {
     const old = { ...base, blocks: [{ kind: 'warmup', instructions: ['a'], target_text: '', tips: 'slide a half step' }] };
     expect(blockTerms(old as never, 0).map(t => t.id)).toEqual(['slide', 'half_step']);
     expect(blockTerms(old as never, 5)).toEqual([]);
+  });
+});
+
+describe('isMinorScale and elementVisible (final review I1, I4)', () => {
+  it('treats every minor-family style scale as minor', () => {
+    for (const s of ['minor', 'aeolian', 'minor pentatonic', 'dorian', 'harmonic minor', 'phrygian']) expect(isMinorScale(s), s).toBe(true);
+    for (const s of ['major', 'mixolydian', 'major pentatonic', 'lydian']) expect(isMinorScale(s), s).toBe(false);
+  });
+  it('keeps an element visible while it is active, even on a step that does not list it', () => {
+    expect(elementVisible(['card'], 'metronome', true)).toBe(true);
+    expect(elementVisible(['card'], 'metronome', false)).toBe(false);
+    expect(elementVisible(null, 'metronome')).toBe(true);
+    expect(elementVisible(['metronome'], 'metronome')).toBe(true);
   });
 });
 
