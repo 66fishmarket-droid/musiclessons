@@ -57,6 +57,17 @@ describe('renderGraph', () => {
     expect(byPath('Codebase/src/lib/lib.unused.md').frontmatter.dead_candidate).toBe(true);
     expect(byPath('Codebase/src/lib/lib.tested.md').frontmatter.test_only).toBe(true);
   });
+  it('records change history with created/last_changed dates', () => {
+    const g = buildGraph(root, { testSuffix: '.check.ts' });
+    g.fns.find(f => f.id === 'lib.helper')!.history = [
+      { date: '2026-09-30', sha: 'bbb2222', subject: 'fix: helper edge case' },
+      { date: '2026-09-28', sha: 'aaa1111', subject: 'feat: add helper' },
+    ];
+    const n = renderGraph(g, '2026-09-30').find(x => x.path === 'Codebase/src/lib/lib.helper.md')!;
+    expect(n.frontmatter).toMatchObject({ created: '2026-09-28', last_changed: '2026-09-30', change_count: 2 });
+    expect(n.body).toContain('## History\n- 2026-09-30 `bbb2222` fix: helper edge case\n- 2026-09-28 `aaa1111` feat: add helper');
+    expect(byPath('Codebase/src/lib/lib.addOne.md').body).toContain('## History\n- uncommitted');
+  });
   it('writes a hub per file and an action note per entry', () => {
     expect(byPath('Codebase/src/lib.md').body).toContain('- [[lib.helper]] — Adds one via a private helper.');
     expect(byPath('Codebase/_actions/action.run.md').frontmatter).toMatchObject({ kind: 'action', action_kind: 'script', handlers: ['[[run.main]]'] });

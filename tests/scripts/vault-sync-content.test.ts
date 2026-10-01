@@ -35,7 +35,8 @@ describe('curriculumNotes', () => {
 
 describe('devNotes', () => {
   const notes = devNotes('2026-09-29|abc1234|feat: planner\n2026-09-28|def5678|chore: toolchain',
-    [{ name: 'SESSION_HANDOFF_2026-09-28.md', text: '# Handoff\nDid things.' }], '2026-09-29');
+    [{ name: 'SESSION_HANDOFF_2026-09-28.md', text: '# Handoff\nDid things.' }], '2026-09-29',
+    [{ path: 'superpowers/specs/design.md', text: '# Design\nWhy.' }]);
   it('writes a dated timeline linking handoffs', () => {
     const t = notes.find(n => n.path === 'Development/Timeline.md')!.body;
     expect(t.indexOf('## 2026-09-29')).toBeLessThan(t.indexOf('## 2026-09-28'));
@@ -44,5 +45,8 @@ describe('devNotes', () => {
   });
   it('copies handoffs into the vault as generated notes', () => {
     expect(notes.find(n => n.path === 'Development/Handoffs/SESSION_HANDOFF_2026-09-28.md')!.body).toContain('Did things.');
+  });
+  it('copies other docs keeping their folders', () => {
+    expect(notes.find(n => n.path === 'Development/Docs/superpowers/specs/design.md')!.body).toContain('Why.');
   });
 });

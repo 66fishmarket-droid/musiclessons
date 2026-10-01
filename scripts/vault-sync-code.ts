@@ -6,7 +6,7 @@
  */
 import ts from 'typescript';
 import { createHash } from 'node:crypto';
-import { execSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
 import { appendFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmdirSync, statSync, writeFileSync } from 'node:fs';
 import { basename, dirname, extname, join, relative } from 'node:path';
 import { REPO_ROOT, VAULT, isMain, posix, syncNotes, today, type Note } from './vault/lib.ts';
@@ -19,8 +19,9 @@ const EXTS = ['.ts', '.tsx'];
 export interface Fn {
   id: string; module: string; name: string; file: string; line: number; loc: number; signature: string;
   summary: string; bodyHash: string; exported: boolean; layer: string; calls: Set<string>; calledBy: Set<string>;
-  unresolved: number; tables: Set<string>; testedBy: string[]; duplicates: number;
+  unresolved: number; tables: Set<string>; testedBy: string[]; duplicates: number; history?: Change[];
 }
+export interface Change { date: string; sha: string; subject: string }
 export interface Action { id: string; module: string; file: string; handlers: string[]; reaches: string[] }
 export interface Graph { fns: Fn[]; actions: Action[] }
 
@@ -175,6 +176,19 @@ export function buildGraph(root: string, { testSuffix = '.test.ts' } = {}): Grap
   return { fns, actions };
 }
 
+/** Commits that touched the function's current line range, newest first (git log -L follows it back through edits). */
+export function historyOf(root: string, fn: Fn): Change[] {
+  // ponytail: uses the committed line range; uncommitted edits can skew it until the next commit's hook run.
+  try {
+    const out = execFileSync('git', ['log', '-L', `${fn.line},${fn.line + fn.loc - 1}:${fn.file}`, '--date=short', '--format=%x01%ad|%h|%s'],
+      { cwd: root, stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 64 * 1024 * 1024 }).toString();
+    return out.split('\n').filter(l => l.startsWith('\x01')).map(l => {
+      const [date, sha, ...subject] = l.slice(1).split('|');
+      return { date, sha, subject: subject.join('|') };
+    });
+  } catch { return []; } // new, uncommitted file
+}
+
 const link = (id: string) => `[[${id}]]`;
 const hubDir = (file: string) => `${CODE_DIR}/${dirname(file)}`;
 const FN_META = { generated: true, promoted: false, source: 'scripts/vault-sync-code.ts' };
@@ -186,6 +200,7 @@ export function renderGraph(g: Graph, synced: string): Note[] {
   for (const f of g.fns) {
     byFile.set(f.file, [...(byFile.get(f.file) ?? []), f]);
     const noCallers = f.calledBy.size === 0;
+    const history = f.history ?? [];
     notes.push({
       path: `${hubDir(f.file)}/${f.module}/${f.id}.md`,
       frontmatter: {
@@ -195,12 +210,14 @@ export function renderGraph(g: Graph, synced: string): Note[] {
         unresolved_calls: f.unresolved, tables: [...f.tables].sort(), tested_by: f.testedBy,
         duplicate_count: f.duplicates, dead_candidate: noCallers && f.testedBy.length === 0,
         test_only: noCallers && f.testedBy.length > 0,
+        created: history.at(-1)?.date ?? null, last_changed: history[0]?.date ?? null, change_count: history.length,
         tags: ['code/ts', `layer/${f.layer}`, 'kind/function', `visibility/${f.exported ? 'public' : 'private'}`],
       },
       body: [
         `# ${f.id}`, '', f.summary || '_No summary yet: add a one-line JSDoc._', '', `\`${f.signature}\``, '',
         '## Calls', ...([...f.calls].sort().map(c => `- ${link(c)}`).concat(f.calls.size ? [] : ['- none'])), '',
-        '## Called by', ...([...f.calledBy].sort().map(c => `- ${link(c)}`).concat(f.calledBy.size ? [] : ['- none'])),
+        '## Called by', ...([...f.calledBy].sort().map(c => `- ${link(c)}`).concat(f.calledBy.size ? [] : ['- none'])), '',
+        '## History', ...(history.length ? history.map(h => `- ${h.date} \`${h.sha}\` ${h.subject}`) : ['- uncommitted']),
       ].join('\n'),
     });
   }
@@ -239,6 +256,17 @@ views:
       - summary
       - loc
       - tested_by
+  - type: table
+    name: Recently changed
+    order:
+      - file.name
+      - last_changed
+      - change_count
+      - created
+      - summary
+    sort:
+      - property: last_changed
+        direction: DESC
   - type: table
     name: Dead candidates
     filters:
@@ -285,6 +313,7 @@ function main(): void {
   mkdirSync(lock, { recursive: true });
   try {
     const graph = buildGraph(REPO_ROOT);
+    graph.fns.forEach(f => { f.history = historyOf(REPO_ROOT, f); });
     const dryRun = args.has('--dry-run');
     const stats = syncNotes(VAULT, CODE_DIR, renderGraph(graph, today()), { dryRun });
     if (!dryRun) writeFileSync(join(meta, 'Code Map.base'), CODE_MAP_BASE);
