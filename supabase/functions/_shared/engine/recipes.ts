@@ -1,10 +1,16 @@
+import type { MapKind } from './neck.ts';
 import type { Skill } from './types.ts';
 
-export type Card = 'pattern' | 'rhythm' | 'note_caller' | 'scale' | 'triads' | 'chords' | 'none';
+export type Card = 'pattern' | 'rhythm' | 'note_caller' | 'scale' | 'triads' | 'chords' | 'neck_map' | 'none';
+/** What a step shows besides its text: the recipe's card, the chord panel, the tempo card, or the note-calling drill. */
+export type StepElement = 'card' | 'chords' | 'metronome' | 'note_caller';
+
 export interface SkillRecipe {
   card: Card; patterns?: string[]; grid?: string; gridName?: string; degrees?: number[];
   steps: string[]; listenFor: string;
   majorKeyOnly?: boolean; // planner.ts keeps this skill's day off a minor-family style scale; its steps assume a major key.
+  map?: MapKind; // the neck map a 'neck_map' card draws (engine/neck.ts)
+  show?: StepElement[][]; // per step, what Player shows besides the text (new_skill blocks only); omit = whole block's elements
 }
 
 const LADDER = 'Start at {start_bpm} bpm. Add 5 bpm after each clean pass, up to {target_bpm}; drop back 5 after two misses in a row.';
@@ -299,40 +305,81 @@ export const RECIPES: Record<string, SkillRecipe> = {
   'fretboard.l1.notes_e_a': {
     card: 'note_caller',
     steps: [
-      'Strings 6 and 5 are E and A when played open; each fret up is the next note (E, F, F#, G…).',
-      'Press "Start calling notes". Find each called note on string 6 or 5 before the next bar.',
+      'Strings 6 and 5 are E and A when played open. The dots on the neck at frets 3, 5, 7, 9 and 12 are your landmarks: on string 6 they are G, A, B, C# and E; on string 5 they are C, D, E, F# and A.',
+      'Between two letter names there is one fret for the sharp or flat, except E to F and B to C, which sit right next to each other.',
+      'Press "Start calling notes". Find each called note on string 6 or 5 before the next bar, starting from the nearest landmark.',
       'Say the note out loud as you play it.', 'Aim for {target_reps} clean passes in a row.',
     ],
+    show: [[], [], ['card', 'metronome'], ['card', 'metronome'], ['card', 'metronome']],
     listenFor: 'Finding each note before the next click of beat 1.',
   },
-  'fretboard.l1.octave_shapes': {
-    card: 'note_caller',
+  'fretboard.l1.b_string_rule': {
+    card: 'neck_map', map: 'unisons',
     steps: [
-      'An octave is the same note, higher or lower. From a note on string 6 or 5, its octave sits two strings up and two frets over.',
-      'Press "Start calling notes". Find the called note on string 6 or 5, then find its octave with that shape.',
-      'Say the note name out loud at both spots.', 'Aim for {target_reps} clean passes in a row.',
+      'Play string 6 at fret 5, then string 5 open: the same note, A. Each string is tuned to fret 5 of the string below it.',
+      'Check each pair up the neck: fret 5 on string 5 matches open string 4, and fret 5 on string 4 matches open string 3. Then the odd one out: fret 4 on string 3 matches open string 2.',
+      'Why the odd one out? Strings are 5 frets apart (a 4th), except strings 3 to 2, which are 4 frets apart (a major 3rd); that keeps chord shapes small enough for one hand. Finish with fret 5 on string 2 against open string 1, saying "five, five, five, four, five".',
+      'Aim for {target_reps} clean passes in a row, hearing each pair ring as one note.',
     ],
+    show: [['card'], ['card'], ['card'], []],
+    listenFor: 'Each pair sounding as one note, with no wobble between them.',
+  },
+  'fretboard.l1.octave_shapes': {
+    card: 'neck_map', map: 'octaves',
+    steps: [
+      'An octave is the same note, 12 frets higher. The card shows every {degrees:1} on the neck, joined by octave shapes.',
+      'Skip one string and go up 2 frets: string 6 to 4, or string 5 to 3. Skip two strings and go back 3 frets: string 6 to 3.',
+      'When a shape crosses from string 3 to string 2, add one fret: string 5 to 2 is back 2 frets, string 4 to 2 is up 3. That is the B-string rule again.',
+      'Press "Start calling notes". Find the called note on string 6 or 5, then its octave with a shape, saying the note name at both spots.',
+      'Aim for {target_reps} clean passes in a row.',
+    ],
+    show: [['card'], ['card'], ['card'], ['note_caller', 'metronome'], ['note_caller', 'metronome']],
     listenFor: 'Landing on the note and its octave before the next click of beat 1.',
+  },
+  'fretboard.l2.interval_shapes': {
+    card: 'neck_map', map: 'intervals',
+    steps: [
+      'Find {degrees:1} on string 6: that is the root (R). Every other dot on the card is measured from it.',
+      'The 3rd (a major 3rd) is one string up and one fret back; the 5th is one string up and two frets up. Play R, 3, 5 and say "root, third, fifth".',
+      'The b7 is two strings up at the same fret, and the octave (8) is two strings up, two frets up. Play R, 3, 5, b7, 8.',
+      'Now start from {degrees:1} on string 5: the shapes are identical, because strings 5, 4 and 3 are also 5 frets apart.',
+      'Aim for {target_reps} clean passes in a row, naming each note\'s number as you play it.',
+    ],
+    show: [['card'], ['card'], ['card'], ['card'], []],
+    listenFor: 'Each note landing cleanly as you name it, with the root always found first.',
   },
   'fretboard.l2.caged_linked': {
     card: 'scale', degrees: [1],
     steps: [
       'CAGED links five chord shapes — C, A, G, E and D — that each play {chord1} at a different spot up the neck.',
       'Play {chord1} in a shape you know, then find the next CAGED shape up the neck sharing the same root note, {degrees:1}.',
-      'Move shape to shape up the neck in CAGED order, landing on {degrees:1} in each new shape before you strum.',
+      'Move shape to shape up the neck in CAGED order, saying "root" out loud as you land on {degrees:1} in each new shape before you strum.',
       'Aim for {target_reps} clean passes in a row.',
     ],
+    show: [['card'], ['card'], ['card'], []],
     listenFor: 'Every string ringing clean in each new shape, with the root always findable first.',
   },
   'fretboard.l2.pentatonic_per_shape': {
     card: 'scale', degrees: [1, 3, 5],
     steps: [
-      'A pentatonic box has five notes instead of seven: two notes fewer than the full scale box shown for today\'s position.',
+      'Start with box 1. A pentatonic box has five notes instead of seven: two notes fewer than the full scale box shown for today\'s position.',
       'Find {chord1}\'s CAGED shape, then play the pentatonic box wrapped around it, using {degrees:1,3,5} as your anchor notes.',
-      'Climb the box root to root, saying "root" each time you land on {degrees:1}.',
+      'Climb the box root to root, saying "root" out loud each time you land on {degrees:1}.',
       LADDER,
     ],
+    show: [['card'], ['card'], ['card'], ['card', 'metronome']],
     listenFor: 'Landing on the root note cleanly in tune every time you climb through the box.',
+  },
+  'fretboard.l2.progression_grid': {
+    card: 'neck_map', map: 'grid', majorKeyOnly: true,
+    steps: [
+      'Chords in a key are numbered from the home note: 1 is {degrees:1}, 4 is {degrees:4}, 5 is {degrees:5} and 6 is {degrees:6}. The card shows their roots as one grid.',
+      'Play the four roots as single notes, 1-4-5-6, saying the numbers out loud: 1 on string 6, 4 straight across on string 5, 5 two frets up from it, and 6 two frets above that.',
+      'If you know barre chords, play each root as its chord: 1, 4 and 5 major, 6 minor. Otherwise keep playing the roots, one per bar.',
+      LADDER,
+    ],
+    show: [['card'], ['card'], ['card', 'metronome'], ['card', 'metronome']],
+    listenFor: 'Each change landing on the beat as you say its number.',
   },
   'fretboard.l3.triads_321': {
     card: 'triads',
@@ -383,6 +430,17 @@ export const RECIPES: Record<string, SkillRecipe> = {
       LADDER,
     ],
     listenFor: 'All three notes on the lower strings ringing as clearly as the higher sets you already know.',
+  },
+  'fretboard.l4.one_string_scale': {
+    card: 'neck_map', map: 'one_string',
+    steps: [
+      'A scale is a recipe of whole steps (W, two frets) and half steps (H, one fret). The card shows today\'s scale along a single string, starting on {degrees:1}.',
+      'Climb it slowly from 1 up to 1 an octave higher, saying each W or H as you move.',
+      'Come back down the same string, saying the numbers this time: 1, 7, 6, 5, 4, 3, 2, 1.',
+      LADDER,
+    ],
+    show: [['card'], ['card'], ['card'], ['card', 'metronome']],
+    listenFor: 'Even notes up and down the string, with each gap the size the formula says.',
   },
   'fretboard.l5.thirds_sixths_shapes': {
     card: 'scale', degrees: [1, 3, 6],
