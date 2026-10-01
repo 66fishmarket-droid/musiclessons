@@ -88,6 +88,16 @@ describe('buildSteps', () => {
     const [review] = buildSteps(plan, SKILL_MAP).blocks;
     expect(review.instructions[0].startsWith(skill.name)).toBe(true);
   });
+  it('gives a theory review item a concrete task in the key of the day, not a bare "Review: topic"', () => {
+    const plan = {
+      ...PLAN, key: 'G',
+      blocks: [{ kind: 'review' as const, minutes: 5, items: [{ ref: 'theory:theory.l1.circle_of_fifths', target: null }] }],
+    };
+    const [review] = buildSteps(plan, SKILL_MAP).blocks;
+    expect(review.instructions[0]).toMatch(/^Circle of fifths: /);
+    expect(review.instructions[0]).toContain('G, C, D');
+    expect(review.instructions[0]).not.toMatch(/^Review:/);
+  });
   it('builds a review item for every RECIPES skill with a null target without throwing', () => {
     for (const id of Object.keys(RECIPES)) {
       const plan = {

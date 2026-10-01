@@ -14,22 +14,22 @@ What each step shows besides its text. "More about this" is on every step.
 ### melody_135
 
 1. A four-bar tune is a short melody that lasts four bars: one bar per chord, four beats per bar. → **text only**
-2. Find it first: pick {degrees:1,3,5} one note at a time on the top strings until you like the order. The fretboard shows them as 1, 3 and 5. → **scale board**
+2. Find it first: pick the notes {degrees:1,3,5} one at a time on the top strings until you like the order. The fretboard shows them as 1, 3 and 5. → **scale board**
 3. Now play {chords} with the day's rhythm and sing (or hum) the tune over it, one bar per chord. → **chords**
 4. Record it with the app's recorder and listen back once. → **chords + recorder**
 
 ### question_answer
 
 1. Play {chords}, one bar per chord. → **chords**
-2. Over the first two bars, sing a short phrase that ends on {degrees:5}. It sounds unfinished, like a question. → **chords + scale board**
-3. Over the last two bars, sing a phrase that ends on {degrees:1}. It sounds like home, the answer. → **chords + scale board**
+2. Over the first two bars, sing a short phrase that ends on the note {degrees:5}. It sounds unfinished, like a question. → **chords + scale board**
+3. Over the last two bars, sing a phrase that ends on the note {degrees:1}. It sounds like home, the answer. → **chords + scale board**
 4. Record it with the app's recorder and listen back once. → **chords + recorder**
 
 ### rhyming_couplet
 
 1. Look around and pick one object. Write two short lines about it that rhyme. → **text only**
-2. Play {chords}, one bar per chord, and say the lines in time with the strum. → **chords**
-3. Now sing them: the first line on {degrees:1}, the second on {degrees:5}. → **chords + scale board**
+2. Play {chords}, one bar per chord, and speak the lines in time with the strum: line one over the first two bars, line two over the last two. → **chords**
+3. Now sing them, each line on one held pitch: line one on the note {degrees:1} over the first two bars, line two on the note {degrees:5} over the last two. Keep the pitch steady and let the chords move under you. → **chords + scale board**
 4. Record it with the app's recorder and listen back once. → **chords + recorder**
 
 ### new_feel
@@ -42,7 +42,7 @@ What each step shows besides its text. "More about this" is on every step.
 ### one_note_verse
 
 1. Play {chords}, one bar per chord. → **chords**
-2. Sing or speak any line of words, keeping every syllable on {degrees:1}. → **chords + scale board**
+2. Sing or speak any line of words, keeping every syllable on the note {degrees:1}. → **chords + scale board**
 3. Listen to how the same note feels different over each chord. → **chords**
 4. Record it with the app's recorder and listen back once. → **chords + recorder**
 
