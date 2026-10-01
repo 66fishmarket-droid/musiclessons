@@ -1,16 +1,18 @@
 /**
- * Writes Development/Timeline.md (git log by day) and copies docs/SESSION_HANDOFF_*.md into Development/Handoffs/.
+ * Writes Development/Timeline.md (git log by day), copies docs/SESSION_HANDOFF_*.md into Development/Handoffs/
+ * and every other .md under docs/ (specs, plans, reviews) into Development/Docs/, keeping the folder layout.
  *   node scripts/vault-sync-dev.ts [--dry-run]
  */
 import { execFileSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { REPO_ROOT, VAULT, isMain, syncNotes, today, type Note } from './vault/lib.ts';
+import { REPO_ROOT, VAULT, isMain, posix, syncNotes, today, type Note } from './vault/lib.ts';
 
-const META = { generated: true, promoted: false, source: 'git log + docs/SESSION_HANDOFF_*.md' };
+const META = { generated: true, promoted: false, source: 'git log + docs/' };
 
-/** Timeline grouped by date (newest first) with handoffs linked on their date, plus a copy of each handoff. */
-export function devNotes(gitLog: string, handoffs: { name: string; text: string }[], synced: string): Note[] {
+/** Timeline grouped by date (newest first) with handoffs linked on their date, plus a copy of each handoff and doc. */
+export function devNotes(gitLog: string, handoffs: { name: string; text: string }[], synced: string,
+  docs: { path: string; text: string }[] = []): Note[] {
   const byDate = new Map<string, string[]>();
   for (const line of gitLog.split('\n').filter(Boolean)) {
     const [date, sha, ...subject] = line.split('|');
@@ -32,15 +34,24 @@ export function devNotes(gitLog: string, handoffs: { name: string; text: string 
       frontmatter: { ...META, synced, tags: ['development', 'handoff'] },
       body: h.text,
     })),
+    ...docs.map(d => ({
+      path: `Development/Docs/${d.path}`,
+      frontmatter: { ...META, synced, tags: ['development', 'doc'] },
+      body: d.text,
+    })),
   ];
 }
 
 if (isMain(import.meta.url)) {
   const log = execFileSync('git', ['log', '--date=short', '--pretty=format:%ad|%h|%s'], { cwd: REPO_ROOT }).toString();
-  const docs = join(REPO_ROOT, 'docs');
-  const handoffs = existsSync(docs)
-    ? readdirSync(docs).filter(f => /^SESSION_HANDOFF_.*\.md$/.test(f)).map(name => ({ name, text: readFileSync(join(docs, name), 'utf8') }))
+  const docsDir = join(REPO_ROOT, 'docs');
+  const all = existsSync(docsDir)
+    ? readdirSync(docsDir, { recursive: true, encoding: 'utf8' }).filter(f => f.endsWith('.md')).map(f => posix(f))
     : [];
-  const stats = syncNotes(VAULT, 'Development', devNotes(log, handoffs, today()), { dryRun: process.argv.includes('--dry-run') });
+  const read = (f: string) => readFileSync(join(docsDir, f), 'utf8');
+  const isHandoff = (f: string) => /^SESSION_HANDOFF_.*\.md$/.test(f);
+  const handoffs = all.filter(isHandoff).map(name => ({ name, text: read(name) }));
+  const docs = all.filter(f => !isHandoff(f)).map(path => ({ path, text: read(path) }));
+  const stats = syncNotes(VAULT, 'Development', devNotes(log, handoffs, today(), docs), { dryRun: process.argv.includes('--dry-run') });
   console.log(`Development: ${JSON.stringify(stats)}`);
 }

@@ -1,3 +1,4 @@
+import { termsIn, type GlossaryEntry } from '../../supabase/functions/_shared/engine/glossary.ts';
 import { recipeFor, type Card, type SkillRecipe } from '../../supabase/functions/_shared/engine/recipes.ts';
 import type { BlockKind, LessonPlan, Skill } from '../../supabase/functions/_shared/engine/types.ts';
 import type { BlockContent, LessonContent } from '../../supabase/functions/_shared/lesson/contract.ts';
@@ -63,4 +64,11 @@ export function blockText(content: LessonContent, i: number): { instructions: st
   if (!b) return { instructions: [''], target_text: '', listen_for: '', more: [] };
   const more = b.more !== undefined ? [b.more] : [b.tips ?? '', b.explanation ?? ''];
   return { instructions: b.instructions?.length ? b.instructions : [''], target_text: b.target_text ?? '', listen_for: b.listen_for ?? '', more: more.filter(Boolean) };
+}
+
+/** Glossary terms used in one block's text (steps, target, listen-for, create prompt on the create block, LLM more). */
+export function blockTerms(content: LessonContent, i: number): GlossaryEntry[] {
+  const t = blockText(content, i);
+  const createPrompt = content.blocks[i]?.kind === 'create' ? content.create_prompt : '';
+  return termsIn([...t.instructions, t.target_text, t.listen_for, createPrompt, ...t.more]);
 }

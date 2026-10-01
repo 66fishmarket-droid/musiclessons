@@ -9,7 +9,7 @@ const fn = (id: string) => graph.fns.find(f => f.id === id)!;
 describe('buildGraph', () => {
   it('finds top-level functions and arrow functions with JSDoc summaries', () => {
     expect(graph.fns.map(f => f.id).sort()).toEqual(
-      ['lib.addOne', 'lib.helper', 'lib.tested', 'lib.twinA', 'lib.twinB', 'lib.unused', 'run.main']);
+      ['lib.addOne', 'lib.helper', 'lib.tested', 'lib.twinA', 'lib.twinB', 'lib.unused', 'run.main', 'ui.Box', 'ui.Page', 'ui.pair']);
     expect(fn('lib.helper').summary).toBe('Adds one via a private helper.');
     expect(fn('lib.helper').signature).toBe('helper(n: number)');
     expect(fn('lib.helper').layer).toBe('ui'); // fixture uses src/
@@ -19,6 +19,11 @@ describe('buildGraph', () => {
     expect([...fn('lib.addOne').calledBy]).toEqual(['lib.helper']);
     expect([...fn('lib.helper').calledBy]).toEqual(['run.main']);
     expect([...fn('run.main').calledBy]).toEqual(['action.run']);
+  });
+  it('counts JSX renders and module-level code as callers', () => {
+    expect([...fn('ui.Box').calledBy]).toEqual(['ui.Page']);
+    expect([...fn('ui.pair').calledBy]).toEqual(['ui']);
+    expect(fn('ui.Page').calledBy.size).toBe(0);
   });
   it('builds an action hub for script entry files with everything reachable', () => {
     const action = graph.actions.find(a => a.id === 'action.run')!;
@@ -56,6 +61,17 @@ describe('renderGraph', () => {
   it('marks dead and test-only functions', () => {
     expect(byPath('Codebase/src/lib/lib.unused.md').frontmatter.dead_candidate).toBe(true);
     expect(byPath('Codebase/src/lib/lib.tested.md').frontmatter.test_only).toBe(true);
+  });
+  it('records change history with created/last_changed dates', () => {
+    const g = buildGraph(root, { testSuffix: '.check.ts' });
+    g.fns.find(f => f.id === 'lib.helper')!.history = [
+      { date: '2026-09-30', sha: 'bbb2222', subject: 'fix: helper edge case' },
+      { date: '2026-09-28', sha: 'aaa1111', subject: 'feat: add helper' },
+    ];
+    const n = renderGraph(g, '2026-09-30').find(x => x.path === 'Codebase/src/lib/lib.helper.md')!;
+    expect(n.frontmatter).toMatchObject({ created: '2026-09-28', last_changed: '2026-09-30', change_count: 2 });
+    expect(n.body).toContain('## History\n- 2026-09-30 `bbb2222` fix: helper edge case\n- 2026-09-28 `aaa1111` feat: add helper');
+    expect(byPath('Codebase/src/lib/lib.addOne.md').body).toContain('## History\n- uncommitted');
   });
   it('writes a hub per file and an action note per entry', () => {
     expect(byPath('Codebase/src/lib.md').body).toContain('- [[lib.helper]] — Adds one via a private helper.');
