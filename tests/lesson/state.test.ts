@@ -21,12 +21,14 @@ describe('toPlannerState', () => {
   it('drops lessons from today on, nulls tracks outside the six, and reads the style element from the plan', () => {
     const s = toPlannerState(rows({ lessons: [
       lesson('2026-10-10', 'rhythm'),
-      lesson('2026-10-09', 'theory', { skill_id: 'theory.l1.intervals' }),
-      lesson('2026-10-08', 'fills', { plan: { style_element: { style: 'folk', element_id: 'folk.boom_chick', kind: 'rhythm', is_new: true } } }),
+      lesson('2026-10-09', 'theory', { skill_id: 'theory.l1.intervals', plan: null }),
+      lesson('2026-10-08', 'fills', { plan: { style_element: { style: 'folk', element_id: 'folk.boom_chick', kind: 'rhythm', is_new: true }, create_task_id: 'rhyming_couplet' } }),
     ] }), '2026-10-10');
     expect(s.recentLessons.map(l => [l.date, l.track, l.skill_id])).toEqual([['2026-10-09', null, null], ['2026-10-08', 'fills', 'fills.x']]);
     expect(s.recentLessons[1].style_element?.element_id).toBe('folk.boom_chick');
     expect(s.recentLessons[0].style_element).toBeNull();
+    expect(s.recentLessons[1].create_task_id).toBe('rhyming_couplet');
+    expect(s.recentLessons[0].create_task_id).toBeNull();
   });
   it('keeps new-skill logs only for the six tracks and before today', () => {
     const s = toPlannerState(rows({ logs: [

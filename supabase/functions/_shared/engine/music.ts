@@ -33,16 +33,20 @@ export function noteAt(string: number, fret: number, tuning: readonly string[] =
   return Note.pitchClass(Note.transpose(tuning[string], Interval.fromSemitones(fret)));
 }
 
-/** Every fret 0..maxFret on every string whose note is in the scale, with its scale degree. */
+/** Every fret 0..maxFret on every string whose note is in the scale, with its interval degree
+ * (from tonal, e.g. '2M' → 2, '5d' and '5P' both → 5) — not its array index, which is wrong for
+ * any scale that isn't a plain 7-note major/minor (pentatonics, blues, modes all skip or repeat degrees). */
 export function scalePositions(tonic: string, scaleName: string, maxFret = 12): FretNote[] {
-  const notes = Scale.get(`${tonic} ${scaleName}`).notes;
-  if (notes.length === 0) throw new Error(`Unknown scale: ${tonic} ${scaleName}`);
+  const scale = Scale.get(`${tonic} ${scaleName}`);
+  if (scale.notes.length === 0) throw new Error(`Unknown scale: ${tonic} ${scaleName}`);
+  const { notes, intervals } = scale;
+  const degrees = intervals.map(iv => Interval.num(iv));
   const chromas = notes.map(n => Note.chroma(n));
   const out: FretNote[] = [];
   for (let s = 0; s < 6; s++) {
     for (let f = 0; f <= maxFret; f++) {
       const i = chromas.indexOf(Note.chroma(noteAt(s, f)));
-      if (i >= 0) out.push({ string: s, fret: f, note: notes[i], degree: i + 1 });
+      if (i >= 0) out.push({ string: s, fret: f, note: notes[i], degree: degrees[i] });
     }
   }
   return out;
@@ -133,6 +137,7 @@ export function buildMusic({ key, track, style, element }: MusicInput): MusicCon
     progression: { roman: roman.map(normalizeRoman), chords },
     voicings,
     rhythm: pattern ? { name: pattern.name, grid: pattern.grid } : null,
-    triads: track === 'fretboard' ? [...triadInversions(chords[0], [3, 4, 5]), ...triadInversions(chords[0], [2, 3, 4])] : [],
+    // Always built (a triad skill's retest can land on a non-fretboard day), not gated by track.
+    triads: [...triadInversions(chords[0], [3, 4, 5]), ...triadInversions(chords[0], [2, 3, 4])],
   };
 }

@@ -1,8 +1,9 @@
 import type { LessonPlan, Skill } from '../engine/types.ts';
-import { LESSON_JSON_SCHEMA, validateLesson, type LessonContent } from './contract.ts';
-import { fallbackLesson } from './fallback.ts';
+import { COLOUR_JSON_SCHEMA, validateColour, type LessonContent } from './contract.ts';
+import { assembleLesson, fallbackColour } from './fallback.ts';
 import type { Complete } from './llm.ts';
 import type { ChatMessage } from './prompt.ts';
+import { buildSteps, stepsText, type EngineBlock } from './steps.ts';
 
 export interface Attempt { model: string; errors: string[]; cost: number | null; ms: number }
 export interface Written { content: LessonContent; llm_model: string; attempts: Attempt[] }
@@ -17,21 +18,28 @@ export function parseJson(text: string): unknown {
   return undefined;
 }
 
-/** Tries each configured model in order; the first valid lesson wins, else the plan-only lesson. Never throws. */
+/**
+ * Tries each configured model in order; the first valid colour wins, else the fallback colour. Content is
+ * assembled with the engine's steps. Throws only if the plan itself can't be rendered (buildSteps/renderSteps
+ * hit a slot the plan has no data for) — never because every model failed or returned bad JSON.
+ */
 export async function writeLesson(
   messages: ChatMessage[], plan: LessonPlan, skills: Map<string, Skill>, complete: Complete, models: (string | undefined)[],
+  metSkills: string[] = [],
+  steps: { blocks: EngineBlock[]; create_prompt: string } = buildSteps(plan, skills), // computed once per request, shared with assembleLesson
 ): Promise<Written> {
   const attempts: Attempt[] = [];
+  const engineStepsText = stepsText(steps);
   for (const model of [...new Set(models.filter((m): m is string => !!m && m.trim() !== ''))]) {
     const t0 = Date.now();
     try {
-      const { text, cost } = await complete(model, messages, LESSON_JSON_SCHEMA);
-      const v = validateLesson(parseJson(text), plan, skills);
+      const { text, cost } = await complete(model, messages, COLOUR_JSON_SCHEMA);
+      const v = validateColour(parseJson(text), plan, skills, { metSkills, stepsText: engineStepsText });
       attempts.push({ model, errors: v.ok ? [] : v.errors, cost, ms: Date.now() - t0 });
-      if (v.ok) return { content: v.content, llm_model: model, attempts };
+      if (v.ok) return { content: assembleLesson(plan, skills, v.colour, false, steps), llm_model: model, attempts };
     } catch (e) {
       attempts.push({ model, errors: [(e as Error).message], cost: null, ms: Date.now() - t0 });
     }
   }
-  return { content: fallbackLesson(plan, skills), llm_model: 'fallback', attempts };
+  return { content: assembleLesson(plan, skills, fallbackColour(plan, skills), true, steps), llm_model: 'fallback', attempts };
 }

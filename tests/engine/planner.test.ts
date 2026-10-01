@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
+import { CREATE_TASKS } from '../../supabase/functions/_shared/engine/create.ts';
 import { planLesson } from '../../supabase/functions/_shared/engine/planner.ts';
-import { elementsOf, type StyleCatalog, type StyleProfile } from '../../supabase/functions/_shared/engine/styles.ts';
+import { RECIPES } from '../../supabase/functions/_shared/engine/recipes.ts';
+import { elementsOf, STYLE_CATALOG, type StyleCatalog, type StyleProfile } from '../../supabase/functions/_shared/engine/styles.ts';
 import type { LessonSummary, PlannerState, Skill, StyleChoice } from '../../supabase/functions/_shared/engine/types.ts';
+import { SKILLS } from '../../supabase/seed/curriculum.ts';
+import { newUserState, NO_STYLES } from '../lesson/fixtures.ts';
 
 const sk = (id: string, metric: Skill['pass_metric'], target: number | null, extra: Partial<Skill> = {}): Skill => {
   const [track, lvl] = id.split('.');
@@ -32,7 +36,7 @@ const state = (over: Partial<PlannerState> = {}): PlannerState => ({
   skills, progress: [], reviewItems: [], recentLessons: [], recentLogs: [], ...over,
 });
 const lesson = (date: string, track: LessonSummary['track'], skill_id: string, key: string, over: Partial<LessonSummary> = {}): LessonSummary =>
-  ({ date, track, skill_id, key, style_element: null, want_more_time: false, status: 'completed', ...over });
+  ({ date, track, skill_id, key, style_element: null, want_more_time: false, status: 'completed', create_task_id: null, ...over });
 const style = (s: string, el: string, is_new = false): StyleChoice => ({ style: s, element_id: el, kind: 'rhythm', is_new });
 
 describe('planLesson', () => {
@@ -140,7 +144,74 @@ describe('planLesson', () => {
     expect(plan.music.progression.roman).toEqual(['I', 'IV', 'V', 'I']);
   });
 
+  it('drops a minor-family style for a majorKeyOnly songwriting recipe, falling back to major', () => {
+    const songwritingSkills = [sk('songwriting.l3.borrowed_colour', 'self', null)];
+    const minorProfile = STYLE_CATALOG.profiles.find(p => p.id === 'blues')!; // scales[0] 'minor pentatonic'
+    const minorCatalog: StyleCatalog = { profiles: [minorProfile], elements: elementsOf(minorProfile) };
+    const plan = planLesson(state({ skills: songwritingSkills, settings: { session_minutes: 30, style_core: ['blues'], vocal_low: null, vocal_high: null } }), minorCatalog);
+    expect(plan.skill_id).toBe('songwriting.l3.borrowed_colour');
+    expect(plan.style_element).toBeNull();
+    expect(plan.music.scale.name).toBe('major');
+  });
+
+  it('keeps a major-family style for a majorKeyOnly songwriting recipe', () => {
+    const songwritingSkills = [sk('songwriting.l3.borrowed_colour', 'self', null)];
+    const majorProfile = STYLE_CATALOG.profiles.find(p => p.id === 'folk')!; // scales[0] 'major'
+    const majorCatalog: StyleCatalog = { profiles: [majorProfile], elements: elementsOf(majorProfile) };
+    const plan = planLesson(state({ skills: songwritingSkills, settings: { session_minutes: 30, style_core: ['folk'], vocal_low: null, vocal_high: null } }), majorCatalog);
+    expect(plan.skill_id).toBe('songwriting.l3.borrowed_colour');
+    expect(plan.style_element).not.toBeNull();
+    expect(plan.music.scale.name).toBe('major');
+  });
+
+  it('drops a minor-family style for every majorKeyOnly recipe, always landing on a major scale', () => {
+    const minorProfile = STYLE_CATALOG.profiles.find(p => p.id === 'blues')!; // scales[0] 'minor pentatonic'
+    const minorCatalog: StyleCatalog = { profiles: [minorProfile], elements: elementsOf(minorProfile) };
+    const majorOnlyIds = Object.entries(RECIPES).filter(([, r]) => r.majorKeyOnly).map(([id]) => id);
+    expect(majorOnlyIds.length).toBeGreaterThanOrEqual(5);
+    for (const id of majorOnlyIds) {
+      const plan = planLesson(state({ skills: [sk(id, 'self', null)],
+        settings: { session_minutes: 30, style_core: ['blues'], vocal_low: null, vocal_high: null } }), minorCatalog);
+      expect(plan.skill_id, id).toBe(id);
+      expect(plan.style_element, id).toBeNull();
+      expect(plan.music.scale.name, id).toBe('major');
+    }
+  });
+
   it('is deterministic', () => {
     expect(planLesson(state(), catalog)).toEqual(planLesson(state(), catalog));
+  });
+});
+
+describe('pattern and create task', () => {
+  const pinch = 'fingerstyle.l1.pima_pinches';
+  const seen = (n: number) => Array.from({ length: n }, (_, i) => ({
+    date: `2026-10-0${i + 1}`, track: 'fingerstyle' as const, skill_id: pinch, key: 'G', style_element: null,
+    want_more_time: null, status: 'completed' as const, create_task_id: null,
+  }));
+  const planFor = (n: number) => {
+    const skills = SKILLS.filter(s => s.id === pinch);
+    return planLesson(newUserState({ today: '2026-10-09', skills, recentLessons: seen(n) }), NO_STYLES);
+  };
+  it('starts on the first pattern and rotates each time the skill comes back', () => {
+    expect(planFor(0).pattern_id).toBe('pinch');
+    expect(planFor(1).pattern_id).toBe('giuliani_pima');
+    expect(planFor(2).pattern_id).toBe('pinch');
+  });
+  it('keeps yesterday\'s pattern on a repeat day instead of advancing', () => {
+    const skills = SKILLS.filter(s => s.id === pinch);
+    const yesterday = [{
+      date: '2026-10-08', track: 'fingerstyle' as const, skill_id: pinch, key: 'G', style_element: null,
+      want_more_time: true, status: 'completed' as const, create_task_id: null,
+    }];
+    const plan = planLesson(newUserState({ today: '2026-10-09', skills, recentLessons: yesterday }), NO_STYLES);
+    expect(plan.is_repeat).toBe(true);
+    expect(plan.pattern_id).toBe('pinch');
+  });
+  it('has no pattern for a skill without a pattern card', () => {
+    expect(planLesson(newUserState(), NO_STYLES).pattern_id).toBeNull();
+  });
+  it('always picks a known Create task', () => {
+    expect(CREATE_TASKS.map(t => t.id)).toContain(planLesson(newUserState(), NO_STYLES).create_task_id);
   });
 });

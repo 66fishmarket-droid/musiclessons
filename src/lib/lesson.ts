@@ -1,5 +1,6 @@
-import type { BlockKind, LessonPlan } from '../../supabase/functions/_shared/engine/types.ts';
-import type { LessonContent } from '../../supabase/functions/_shared/lesson/contract.ts';
+import { recipeFor, type Card, type SkillRecipe } from '../../supabase/functions/_shared/engine/recipes.ts';
+import type { BlockKind, LessonPlan, Skill } from '../../supabase/functions/_shared/engine/types.ts';
+import type { BlockContent, LessonContent } from '../../supabase/functions/_shared/lesson/contract.ts';
 
 /** The lessons row generate-lesson returns (the columns the app reads). */
 export interface TodayLesson {
@@ -43,4 +44,23 @@ export function tonicOf(key: string): string {
 export function refLabel(ref: string): string {
   const id = ref.slice(ref.indexOf(':') + 1);
   return (id.split('.').pop() ?? id).replaceAll('_', ' ');
+}
+
+/**
+ * The block's card and recipe: Apply always plays the rhythm card; every other kind's card comes from the skill's
+ * recipe, or 'none' when there is no skill (warmup/reset/review/create/record) or the skill is missing from the
+ * curriculum (an old stored lesson naming a since-removed skill) — never throws.
+ */
+export function blockCard(kind: BlockKind, skill: Skill | undefined): { card: Card; recipe: SkillRecipe | undefined } {
+  if (kind === 'apply') return { card: 'rhythm', recipe: undefined };
+  const recipe = skill ? recipeFor(skill) : undefined;
+  return { card: recipe?.card ?? 'none', recipe };
+}
+
+/** One block's text, reading both engine-written lessons and ones stored before them (tips/explanation). */
+export function blockText(content: LessonContent, i: number): { instructions: string[]; target_text: string; listen_for: string; more: string[] } {
+  const b = content.blocks[i] as (Partial<BlockContent> & { tips?: string; explanation?: string }) | undefined;
+  if (!b) return { instructions: [''], target_text: '', listen_for: '', more: [] };
+  const more = b.more !== undefined ? [b.more] : [b.tips ?? '', b.explanation ?? ''];
+  return { instructions: b.instructions?.length ? b.instructions : [''], target_text: b.target_text ?? '', listen_for: b.listen_for ?? '', more: more.filter(Boolean) };
 }

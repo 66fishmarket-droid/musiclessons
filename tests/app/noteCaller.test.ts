@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ALL_NOTES, NATURALS, NOTE_CALLER_SKILLS, nextCall, spoken } from '../../src/lib/noteCaller.ts';
-import { SKILLS } from '../../supabase/seed/curriculum.ts';
+import { ALL_NOTES, NATURALS, nextCall, spoken } from '../../src/lib/noteCaller.ts';
 
 describe('nextCall', () => {
   it('never repeats the last note', () => {
@@ -22,8 +21,4 @@ describe('spoken', () => {
     expect(spoken('F#')).toBe('F sharp');
     expect(spoken('A')).toBe('A');
   });
-});
-
-it('note-caller skills exist in the curriculum', () => {
-  for (const id of NOTE_CALLER_SKILLS) expect(SKILLS.some(s => s.id === id)).toBe(true);
 });

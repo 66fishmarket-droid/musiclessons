@@ -9,11 +9,13 @@ import { parseArgs } from 'node:util';
 import { planLesson } from '../supabase/functions/_shared/engine/planner.ts';
 import { STYLE_CATALOG } from '../supabase/functions/_shared/engine/styles.ts';
 import type { LessonPlan, PlannerState, Skill } from '../supabase/functions/_shared/engine/types.ts';
-import { LESSON_JSON_SCHEMA, validateLesson, type LessonContent } from '../supabase/functions/_shared/lesson/contract.ts';
+import { COLOUR_JSON_SCHEMA, validateColour, type LessonContent } from '../supabase/functions/_shared/lesson/contract.ts';
+import { assembleLesson } from '../supabase/functions/_shared/lesson/fallback.ts';
 import { parseJson } from '../supabase/functions/_shared/lesson/generate.ts';
 import { openRouterComplete } from '../supabase/functions/_shared/lesson/llm.ts';
 import { buildMessages } from '../supabase/functions/_shared/lesson/prompt.ts';
 import { DEFAULT_SETTINGS } from '../supabase/functions/_shared/lesson/state.ts';
+import { buildSteps, stepsText } from '../supabase/functions/_shared/lesson/steps.ts';
 import { SKILLS } from '../supabase/seed/curriculum.ts';
 import { REPO_ROOT, isMain, today } from './vault/lib.ts';
 
@@ -37,8 +39,8 @@ export const FIXTURES: { name: string; state: PlannerState }[] = [
       { item_type: 'theory', ref: 'theory.l1.intervals', interval_days: 1, next_due: '2026-10-09', last_result: true },
     ],
     recentLessons: [
-      { date: '2026-10-09', track: 'fills', skill_id: 'fills.l1.sus_add_hammers', key: 'G', style_element: null, want_more_time: false, status: 'completed' },
-      { date: '2026-10-07', track: 'rhythm', skill_id: 'rhythm.l1.accents_palm_mute', key: 'A', style_element: null, want_more_time: false, status: 'completed' },
+      { date: '2026-10-09', track: 'fills', skill_id: 'fills.l1.sus_add_hammers', key: 'G', style_element: null, want_more_time: false, status: 'completed', create_task_id: null },
+      { date: '2026-10-07', track: 'rhythm', skill_id: 'rhythm.l1.accents_palm_mute', key: 'A', style_element: null, want_more_time: false, status: 'completed', create_task_id: null },
     ],
   }) },
   { name: 'Repeat day, 25 minutes', state: base({
@@ -46,6 +48,7 @@ export const FIXTURES: { name: string; state: PlannerState }[] = [
     recentLessons: [{
       date: '2026-10-09', track: 'fingerstyle', skill_id: 'fingerstyle.l1.pima_pinches', key: 'D',
       style_element: { style: 'folk', element_id: 'folk.boom_chick', kind: 'rhythm', is_new: true }, want_more_time: true, status: 'completed',
+      create_task_id: null,
     }],
   }) },
 ];
@@ -64,8 +67,8 @@ function lessonHtml(c: Record<string, unknown>): string {
   const blocks = arr(c.blocks).map(rec).map(b => `<section class="block"><h4>${esc(b.kind)}</h4><ol>` +
     arr(b.instructions).map(i => `<li>${chordify(i)}</li>`).join('') + '</ol>' +
     (b.target_text ? `<p class="target">Target: ${chordify(b.target_text)}</p>` : '') +
-    (b.tips ? `<p class="muted">Tip: ${chordify(b.tips)}</p>` : '') +
-    (b.explanation ? `<p class="muted">${chordify(b.explanation)}</p>` : '') + '</section>').join('');
+    (b.listen_for ? `<p class="muted">Listen for: ${chordify(b.listen_for)}</p>` : '') +
+    (b.more ? `<p class="muted">${chordify(b.more)}</p>` : '') + '</section>').join('');
   const songs = arr(c.songs).map(rec).map(s => `<li>${esc(s.title)} (${esc(s.artist)}, capo ${esc(s.capo)}): ${esc(s.why)}</li>`).join('');
   return `<h3>${esc(c.title)}</h3><p>${chordify(c.why_it_matters)}</p>` +
     `<details><summary>Theory card</summary><p>${chordify(c.theory_card)}</p></details>${blocks}` +
@@ -122,15 +125,17 @@ async function main(): Promise<void> {
   for (const f of FIXTURES) {
     const plan = planLesson(f.state, STYLE_CATALOG);
     const style = plan.style_element ? STYLE_CATALOG.profiles.find(p => p.id === plan.style_element!.style) ?? null : null;
-    const messages = buildMessages({ plan, skills: SKILL_MAP, style, settings: f.state.settings, recent: [], questions: [] });
+    const steps = buildSteps(plan, SKILL_MAP); // computed once per plan, shared by the prompt brief and validateColour/assembleLesson below
+    const messages = buildMessages({ plan, skills: SKILL_MAP, style, settings: f.state.settings, recent: [], questions: [], metSkills: [], steps });
+    const engineStepsText = stepsText(steps);
     await Promise.all(models.map(async model => {
       const t0 = Date.now();
       try {
-        const { text, cost } = await complete(model, messages, LESSON_JSON_SCHEMA);
+        const { text, cost } = await complete(model, messages, COLOUR_JSON_SCHEMA);
         const parsed = parseJson(text);
-        const v = validateLesson(parsed, plan, SKILL_MAP);
+        const v = validateColour(parsed, plan, SKILL_MAP, { metSkills: [], stepsText: engineStepsText });
         results.push({ fixture: f.name, plan, model, ok: v.ok, errors: v.ok ? [] : v.errors,
-          content: (parsed ?? null) as LessonContent | null, cost, ms: Date.now() - t0 });
+          content: v.ok ? assembleLesson(plan, SKILL_MAP, v.colour, false, steps) : (parsed ?? null) as LessonContent | null, cost, ms: Date.now() - t0 });
       } catch (e) {
         results.push({ fixture: f.name, plan, model, ok: false, errors: [(e as Error).message], content: null, cost: null, ms: Date.now() - t0 });
       }

@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { TUNINGS, noteAt } from '../../supabase/functions/_shared/engine/music.ts';
-import { PATTERNS, SKILL_PATTERNS, nextBarChord, resolvePattern, rhythmCounts, rhythmPattern, voiceRoles } from '../../supabase/functions/_shared/engine/patterns.ts';
-import { SKILLS } from '../../supabase/seed/curriculum.ts';
+import { PATTERNS, nextBarChord, patternCounts, resolvePattern, rhythmCounts, rhythmPattern, voiceRoles } from '../../supabase/functions/_shared/engine/patterns.ts';
 import { STYLE_CATALOG } from '../../supabase/functions/_shared/engine/styles.ts';
 
 const G = { frets: [3, 2, 0, 0, 0, 3], fingers: [2, 1, 0, 0, 0, 3], barres: [] };
@@ -49,12 +48,6 @@ describe('resolvePattern', () => {
 describe('pattern library', () => {
   it('fills exactly one bar per pattern', () => {
     for (const p of Object.values(PATTERNS)) expect(p.steps.length, p.id).toBe(p.beatsPerBar * p.stepsPerBeat);
-  });
-  it('maps every fingerstyle skill to known patterns', () => {
-    for (const s of SKILLS.filter(x => x.track === 'fingerstyle')) {
-      expect(SKILL_PATTERNS[s.id]?.length, s.id).toBeGreaterThan(0);
-      for (const id of SKILL_PATTERNS[s.id]) expect(PATTERNS[id], id).toBeDefined();
-    }
   });
 });
 
@@ -118,5 +111,22 @@ describe('rhythmCounts', () => {
   });
   it('marks the second bar of a two-bar rhythm', () => {
     expect(rhythmCounts(rhythmPattern('Guajeo', 'P'.concat('-'.repeat(15), 'P', '-'.repeat(15)).split('')))).toBe('1 fingers pluck the top strings · bar 2: 1 fingers pluck the top strings');
+  });
+});
+
+describe('patternCounts', () => {
+  it('spells a pinch pattern count by count', () => {
+    expect(patternCounts(PATTERNS.pinch))
+      .toBe('1 thumb + ring together · 2 index · 3 thumb (alternate bass) + middle together · 4 index');
+  });
+  it('labels off-beats and triplets like rhythmCounts', () => {
+    expect(patternCounts(PATTERNS.giuliani_pimi)).toBe('1 thumb · 1& index · 2 middle · 2& index · 3 thumb · 3& index · 4 middle · 4& index');
+    expect(patternCounts(PATTERNS.giuliani_pim).startsWith('1 thumb · 1-trip index · 1-let middle · 2 thumb')).toBe(true);
+  });
+  it('skips rests (Travis beat 1&)', () => {
+    expect(patternCounts(PATTERNS.travis).startsWith('1 thumb + middle together · 2 thumb (alternate bass) · 2& index')).toBe(true);
+  });
+  it('covers every pattern without throwing', () => {
+    for (const p of Object.values(PATTERNS)) expect(patternCounts(p).length).toBeGreaterThan(0);
   });
 });

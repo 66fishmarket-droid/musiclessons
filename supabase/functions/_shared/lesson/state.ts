@@ -8,7 +8,7 @@ export const DEFAULT_SETTINGS: Settings = { session_minutes: 30, style_core: ['f
 
 export interface LessonRowLite {
   lesson_date: string; track: string | null; skill_id: string | null; key: string | null; want_more_time: boolean | null;
-  status: 'planned' | 'completed' | 'skipped'; plan: { style_element?: StyleChoice | null } | null;
+  status: 'planned' | 'completed' | 'skipped'; plan: { style_element?: StyleChoice | null; create_task_id?: string | null } | null;
   confidence: number | null; notes: string | null;
 }
 export interface StateRows {
@@ -33,6 +33,7 @@ export function toPlannerState(rows: StateRows, today: string): PlannerState {
       return {
         date: l.lesson_date, track, skill_id: track ? l.skill_id : null, key: l.key,
         style_element: l.plan?.style_element ?? null, want_more_time: l.want_more_time, status: l.status,
+        create_task_id: l.plan?.create_task_id ?? null,
       };
     }),
     recentLogs: rows.logs.flatMap(l => {

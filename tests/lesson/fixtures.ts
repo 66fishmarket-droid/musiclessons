@@ -1,7 +1,7 @@
 import { planLesson } from '../../supabase/functions/_shared/engine/planner.ts';
 import type { StyleCatalog } from '../../supabase/functions/_shared/engine/styles.ts';
 import type { LessonPlan, PlannerState, Skill } from '../../supabase/functions/_shared/engine/types.ts';
-import type { LessonContent } from '../../supabase/functions/_shared/lesson/contract.ts';
+import type { Colour } from '../../supabase/functions/_shared/lesson/contract.ts';
 import { SKILLS } from '../../supabase/seed/curriculum.ts';
 
 export const SKILL_MAP = new Map<string, Skill>(SKILLS.map(s => [s.id, s]));
@@ -13,12 +13,12 @@ export const newUserState = (over: Partial<PlannerState> = {}): PlannerState => 
 /** Brand-new user, no styles: rhythm in G over I–IV–V–I, blocks warmup/new_skill/reset/apply/create/record. */
 export const PLAN: LessonPlan = planLesson(newUserState(), NO_STYLES);
 
-/** Minimal content that passes validateLesson for `plan`. */
-export function validContent(plan: LessonPlan = PLAN): LessonContent {
+/** Minimal colour that passes validateColour for `plan`. */
+export function validColour(plan: LessonPlan = PLAN): Colour {
   return {
     title: `Accents in ${plan.key}`, why_it_matters: 'Accents make a strum sound like a song.', theory_card: 'Keys relate by fifths.',
-    create_prompt: `Write two lines over {${plan.music.progression.chords[0]}}.`,
     songs: [1, 2, 3].map(i => ({ title: `Song ${i}`, artist: 'Artist', why: 'Steady strumming.', capo: 0 })),
-    blocks: plan.blocks.map(b => ({ kind: b.kind, instructions: [`Do the ${b.kind} block.`], target_text: '', tips: '', explanation: '' })),
+    blocks: plan.blocks.map(b => ({ kind: b.kind, more: `Why the ${b.kind} block matters.` })),
   };
 }
+export const MET = { metSkills: [] as string[], stepsText: '' };

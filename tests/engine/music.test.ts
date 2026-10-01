@@ -24,6 +24,15 @@ describe('scalePositions', () => {
     expect(pos.every(p => p.fret >= 0 && p.fret <= 12)).toBe(true);
   });
   it('throws on unknown scales', () => expect(() => scalePositions('C', 'wibble')).toThrow(/Unknown scale/));
+  it('labels a reduced scale by interval degree, not array index', () => {
+    const pos = scalePositions('G', 'major pentatonic');
+    for (const p of pos) expect([1, 2, 3, 5, 6]).toContain(p.degree);
+  });
+  it('gives both notes of a blues scale\'s b5/5 pair degree 5', () => {
+    const pos = scalePositions('C', 'blues');
+    const fifths = new Set(pos.filter(p => p.degree === 5).map(p => p.note));
+    expect(fifths.size).toBe(2);
+  });
 });
 
 describe('chordVoicings', () => {
@@ -71,7 +80,11 @@ describe('buildMusic', () => {
     expect(m.scale).toMatchObject({ tonic: 'A', name: 'minor pentatonic', notes: ['A', 'C', 'D', 'E', 'G'] });
     expect(Object.keys(m.voicings)).toEqual(['A7', 'D7', 'E7']);
     expect(m.rhythm?.name).toBe('Shuffle');
-    expect(m.triads).toEqual([]);
+    expect(m.triads.length).toBeGreaterThan(0); // triads are always built from chords[0], not gated by track
+  });
+  it('builds triads for a non-fretboard (rhythm) track too, so a triad-skill retest on that day has a card', () => {
+    const m = buildMusic({ key: 'G', track: 'rhythm', style: null, element: null });
+    expect(m.triads.length).toBeGreaterThan(3);
   });
   it('defaults to I–IV–V–I in major without a style, with triads for fretboard lessons', () => {
     const m = buildMusic({ key: 'G', track: 'fretboard', style: null, element: null });

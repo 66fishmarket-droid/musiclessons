@@ -17,6 +17,9 @@ export interface PickPattern {
 }
 export interface PickNote { finger: Finger; role: Role; string: number; note: string; interval: string }
 
+/** The apply block's rhythm grid when the day has no style (steady down-strums, one per beat). */
+export const APPLY_DEFAULT_GRID = 'D---D---D---D---';
+
 const DEGREE = ['R', 'b9', '9', 'b3', '3', '4', 'b5', '5', '#5', '6', 'b7', '7'];
 const n = (finger: Finger, role: Role) => ({ finger, role });
 const P = n('p', 'bass'), PA = n('p', 'alt'), I = n('i', 't3'), M = n('m', 't2'), A = n('a', 't1');
@@ -35,20 +38,6 @@ export const PATTERNS: Record<string, PickPattern> = {
   travis: { id: 'travis', name: 'Travis', beatsPerBar: 4, stepsPerBeat: 2, steps: [[P, M1], [], [PA], [I2], [P], [M1], [PA], [I2]] },
   ballad: { id: 'ballad', name: 'Ballad p-i-m-a-m-i', beatsPerBar: 3, stepsPerBeat: 2, steps: [[P], [I], [M], [A], [M], [I]] },
   waltz: { id: 'waltz', name: 'Waltz boom-chuck-chuck', beatsPerBar: 3, stepsPerBeat: 1, steps: [[P], [I, M, A], [I, M, A]] },
-};
-
-/** Which patterns each fingerstyle skill practises, easiest first. */
-export const SKILL_PATTERNS: Record<string, string[]> = {
-  'fingerstyle.l1.pima_pinches': ['giuliani_pima', 'pinch'],
-  'fingerstyle.l1.giuliani_arpeggios': ['giuliani_pim', 'giuliani_pmi', 'giuliani_pimi', 'giuliani_pima'],
-  'fingerstyle.l2.thumb_single_bass': ['thumb_steady'],
-  'fingerstyle.l2.alternating_thumb': ['thumb_alt'],
-  'fingerstyle.l3.travis_basic': ['thumb_alt', 'travis'],
-  'fingerstyle.l3.travis_changes': ['travis'],
-  'fingerstyle.l4.accompaniment_patterns': ['ballad', 'waltz', 'travis'],
-  'fingerstyle.l4.sing_over_pattern': ['thumb_alt', 'ballad', 'travis'],
-  'fingerstyle.l5.melody_over_thumb': ['thumb_steady', 'thumb_alt'],
-  'fingerstyle.l5.arrange_own_song': ['travis', 'ballad'],
 };
 
 /** String index (0 = lowest) for each role on this voicing, worked out from semitones in the given tuning. */
@@ -121,4 +110,18 @@ export function rhythmCounts(p: PickPattern): string {
     lastBar = bar;
   });
   return out.join(' · ');
+}
+
+const FINGER_WORD = { p: 'thumb', i: 'index', m: 'middle', a: 'ring' } as const;
+
+/** A picking pattern in words, count by count ("1 thumb + ring together · 2 index"), so steps match the animated card. */
+export function patternCounts(p: PickPattern): string {
+  const barLen = p.beatsPerBar * p.stepsPerBeat;
+  return p.steps.flatMap((step, k) => {
+    if (step.length === 0) return [];
+    const inBar = k % barLen;
+    const count = `${Math.floor(inBar / p.stepsPerBeat) + 1}${COUNT_SUB[p.stepsPerBeat][inBar % p.stepsPerBeat]}`;
+    const words = step.map(n => `${FINGER_WORD[n.finger]}${n.finger === 'p' && n.role === 'alt' ? ' (alternate bass)' : ''}`);
+    return [`${count} ${words.join(' + ')}${step.length > 1 ? ' together' : ''}`];
+  }).join(' · ');
 }

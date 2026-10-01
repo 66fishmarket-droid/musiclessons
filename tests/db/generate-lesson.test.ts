@@ -21,9 +21,9 @@ function stub(calls: string[], fail = false): Complete {
     const user = messages[1].content;
     const brief = JSON.parse(user.slice(user.indexOf('\n') + 1)) as { blocks: { kind: string }[] };
     return { cost: 0, text: JSON.stringify({
-      title: 't', why_it_matters: 'w', theory_card: 'c', create_prompt: 'p',
+      title: 't', why_it_matters: 'w', theory_card: 'c',
       songs: [1, 2, 3].map(i => ({ title: `Song ${i}`, artist: 'Artist', why: 'w', capo: 0 })),
-      blocks: brief.blocks.map(b => ({ kind: b.kind, instructions: [`Do ${b.kind}.`], target_text: '', tips: '', explanation: '' })),
+      blocks: brief.blocks.map(b => ({ kind: b.kind, more: `Why ${b.kind} matters.` })),
     }) };
   };
 }
@@ -48,6 +48,9 @@ describe('getOrCreateLesson', () => {
     const again = await getOrCreateLesson(db, '2026-10-01', stub(calls), ['stub-a']);
     expect(again.id).toBe(first.id);
     expect(calls).toEqual(['stub-a']);
+    const block0 = (first.content as { blocks: { kind: string; instructions: string[]; listen_for: string; more: string }[] }).blocks[0];
+    expect(block0).toMatchObject({ more: `Why ${block0.kind} matters.`, listen_for: expect.any(String) });
+    expect(block0.instructions.length).toBeGreaterThan(0);
 
     const plan = first.plan as { skill_id: string; blocks: { kind: string }[] };
     const blockIndex = plan.blocks.findIndex(b => b.kind === 'new_skill');

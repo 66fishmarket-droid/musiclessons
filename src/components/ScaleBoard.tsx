@@ -6,7 +6,7 @@ const COL = 44;
 const Y = (string: number) => 16 + (5 - string) * 24; // tab view: high e on top, as in the picking pattern
 
 /** Today's scale in one position on a horizontal fretboard: dots show the scale degree, roots in marigold. */
-export function ScaleBoard({ scale }: { scale: MusicContent['scale'] }) {
+export function ScaleBoard({ scale, highlight }: { scale: MusicContent['scale']; highlight?: number[] }) {
   const { from, to, notes } = scaleBox(scale.positions);
   const X = (fret: number) => 40 + (fret - from + 0.5) * COL;
   const W = 40 + (to - from + 1) * COL + 4;
@@ -32,8 +32,9 @@ export function ScaleBoard({ scale }: { scale: MusicContent['scale'] }) {
           ))}
           {notes.map(n => {
             const root = n.degree === 1 ? ' cd-root' : '';
+            const dim = highlight && !highlight.includes(n.degree) ? 0.25 : undefined;
             return (
-              <g key={`${n.string}-${n.fret}`}>
+              <g key={`${n.string}-${n.fret}`} opacity={dim}>
                 <circle cx={X(n.fret)} cy={Y(n.string)} r={10} className={`cd-dot${root}`} />
                 <text x={X(n.fret)} y={Y(n.string) + 1} className={`cd-label${root}`}>{n.degree}</text>
               </g>
@@ -41,7 +42,7 @@ export function ScaleBoard({ scale }: { scale: MusicContent['scale'] }) {
           })}
         </svg>
       </div>
-      <p className="muted" style={{ fontSize: 13 }}>Numbers are scale degrees: 1 is {scale.tonic}, the home note (marigold).{from === 0 ? ' The first column is open strings.' : ''}</p>
+      <p className="muted" style={{ fontSize: 13 }}>Numbers are scale degrees: 1 is {scale.tonic}, the home note (marigold).{from === 0 ? ' The first column is open strings.' : ''}{highlight ? ' Bright dots: the notes to sing.' : ''}</p>
     </section>
   );
 }
