@@ -48,6 +48,10 @@ Check with `node scripts/render-glossary.ts`.
 
 When writing any lesson text, ask: which foundation does this connect to, and does it say so?
 
+## Visual style notes
+- Fret numbers (under fretboards, base-fret labels on chord boxes) are bold and high-contrast: use the `.fret-num` class
+  (`--text-2`, 700, 13px). Never draw them in `--muted`.
+
 ## Where the truth lives
 | What | Where |
 |---|---|

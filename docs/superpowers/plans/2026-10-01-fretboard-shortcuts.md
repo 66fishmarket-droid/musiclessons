@@ -570,7 +570,7 @@ export function FretGrid({ from, to, dots, links = [], label }: { from: number; 
           <line key={f} x1={40 + (f - from) * COL} x2={40 + (f - from) * COL} y1={Y(5)} y2={Y(0)} className={f === 1 ? 'cd-nut-line' : 'cd-fret'} />
         ))}
         {Array.from({ length: to - from + 1 }, (_, k) => from + k).filter(f => f > 0).map(f => (
-          <text key={f} x={X(f)} y={152} className="pk-count">{f}</text>
+          <text key={f} x={X(f)} y={152} className="fret-num">{f}</text>
         ))}
         {links.map(([a, b]) => (
           <line key={`${a.string}-${a.fret}-${b.string}-${b.fret}`} x1={X(a.fret)} y1={Y(a.string)} x2={X(b.fret)} y2={Y(b.string)} className="nm-link" />

@@ -28,7 +28,7 @@ export function ScaleBoard({ scale, highlight }: { scale: MusicContent['scale'];
               className={f === 1 ? 'cd-nut-line' : 'cd-fret'} />
           ))}
           {Array.from({ length: to - from + 1 }, (_, k) => from + k).filter(f => f > 0).map(f => (
-            <text key={f} x={X(f)} y={152} className="pk-count">{f}</text>
+            <text key={f} x={X(f)} y={152} className="fret-num">{f}</text>
           ))}
           {notes.map(n => {
             const root = n.degree === 1 ? ' cd-root' : '';
