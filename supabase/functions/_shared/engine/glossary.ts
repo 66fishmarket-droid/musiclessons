@@ -216,6 +216,13 @@ export const GLOSSARY: GlossaryEntry[] = [
     sources: ["vault:Research/glossary/fifth.md", "HyperPhysics, Musical Scales and Intervals — http://hyperphysics.phy-astr.gsu.edu/hbase/Music/mussca.html", "Open Music Theory, Intervals — https://viva.pressbooks.pub/openmusictheory/chapter/intervals/", "MTSU (W. Roberts), Scientific Theory of Consonance — https://w1.mtsu.edu/faculty/wroberts/teaching/consonance.php"],
   },
   {
+    id: "fourth", term: "4th",
+    match: ["4th", "4ths", "fourth", "fourths"],
+    plain: "The interval spanning four letter names, normally five half steps (five frets): G up to C. Most neighbouring guitar strings are a 4th apart.",
+    why: "Its 4:3 ratio is the most consonant interval after the octave and the 5th, so strings tuned in 4ths ring together cleanly and keep finger shapes within one hand's reach.",
+    sources: ["vault:Research/glossary/fourth.md", "Open Music Theory — Intervals — https://viva.pressbooks.pub/openmusictheory/chapter/intervals/"],
+  },
+  {
     id: "sixth", term: "6th",
     match: ["6th", "6ths", "sixth", "sixths"],
     plain: "The interval spanning six letter names: eight or nine half steps, as in C up to A (nine). Turn a 3rd upside down, moving its lower note up an octave, and you get a 6th.",

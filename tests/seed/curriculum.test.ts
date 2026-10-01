@@ -8,6 +8,12 @@ import { skillsToSql } from '../../scripts/gen-seed-sql.ts';
 const byId = new Map(SKILLS.map(s => [s.id, s]));
 
 describe('curriculum', () => {
+  it('has the fretboard shortcut skills at the agreed levels', () => {
+    expect(byId.get('fretboard.l1.b_string_rule')).toMatchObject({ level: 1, pass_metric: 'clean_reps' });
+    expect(byId.get('fretboard.l2.interval_shapes')).toMatchObject({ level: 2, pass_metric: 'clean_reps' });
+    expect(byId.get('fretboard.l2.progression_grid')).toMatchObject({ level: 2, pass_metric: 'bpm' });
+    expect(byId.get('fretboard.l4.one_string_scale')).toMatchObject({ level: 4, pass_metric: 'bpm' });
+  });
   it('has unique ids of the form track.lN.slug matching track and level', () => {
     expect(byId.size).toBe(SKILLS.length);
     for (const s of SKILLS) expect(s.id).toMatch(new RegExp(`^${s.track}\\.l${s.level}\\.[a-z0-9_]+$`));

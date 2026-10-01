@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { buildMusic } from '../../supabase/functions/_shared/engine/music.ts';
 import { PATTERNS, rhythmPattern } from '../../supabase/functions/_shared/engine/patterns.ts';
 import { RECIPES, recipeFor } from '../../supabase/functions/_shared/engine/recipes.ts';
+import { MAP_KINDS } from '../../supabase/functions/_shared/engine/neck.ts';
 import { CREATE_TASKS } from '../../supabase/functions/_shared/engine/create.ts';
 import { renderSteps, slotContext } from '../../supabase/functions/_shared/engine/render.ts';
 import { targetFor } from '../../supabase/functions/_shared/engine/planner.ts';
@@ -48,7 +49,7 @@ describe('recipes', () => {
   it('has a recipe for every fretboard skill with the right card', () => {
     for (const s of SKILLS.filter(x => x.track === 'fretboard')) {
       expect(RECIPES[s.id], s.id).toBeDefined();
-      expect(['note_caller', 'triads', 'scale'], s.id).toContain(RECIPES[s.id].card);
+      expect(['note_caller', 'triads', 'scale', 'neck_map'], s.id).toContain(RECIPES[s.id].card);
     }
   });
   it('has a recipe for every fills skill with the right card', () => {
@@ -105,5 +106,40 @@ describe('recipes', () => {
   });
   it('has a recipe for every practice skill', () => {
     expect(SKILLS.filter(s => s.track !== 'theory' && !RECIPES[s.id]).map(s => s.id)).toEqual([]);
+  });
+});
+
+describe('fretboard shortcuts recipes', () => {
+  const SHORTCUTS = ['fretboard.l1.notes_e_a', 'fretboard.l1.b_string_rule', 'fretboard.l1.octave_shapes',
+    'fretboard.l2.interval_shapes', 'fretboard.l2.caged_linked', 'fretboard.l2.pentatonic_per_shape',
+    'fretboard.l2.progression_grid', 'fretboard.l4.one_string_scale'];
+  const ELEMENTS = ['card', 'chords', 'metronome', 'note_caller'];
+  it('gives every shortcut skill a per-step show list matching its steps', () => {
+    for (const id of SHORTCUTS) {
+      const r = RECIPES[id];
+      expect(r, id).toBeDefined();
+      expect(r.show?.length, id).toBe(r.steps.length);
+    }
+  });
+  it('uses only known step elements, and never note_caller on a note_caller card', () => {
+    for (const [id, r] of Object.entries(RECIPES)) for (const els of r.show ?? []) {
+      for (const e of els) expect(ELEMENTS, id).toContain(e);
+      if (r.card === 'note_caller') expect(els, id).not.toContain('note_caller');
+    }
+  });
+  it('shows the metronome on every step that carries the bpm ladder', () => {
+    for (const [id, r] of Object.entries(RECIPES)) r.show?.forEach((els, k) => {
+      if (r.steps[k].includes('{start_bpm}')) expect(els, `${id} step ${k + 1}`).toContain('metronome');
+    });
+  });
+  it('gives every neck_map recipe a valid map kind', () => {
+    for (const [id, r] of Object.entries(RECIPES)) if (r.card === 'neck_map') expect(MAP_KINDS, id).toContain(r.map);
+  });
+  it('wires the new skills to the agreed cards and maps', () => {
+    expect(RECIPES['fretboard.l1.b_string_rule']).toMatchObject({ card: 'neck_map', map: 'unisons' });
+    expect(RECIPES['fretboard.l1.octave_shapes']).toMatchObject({ card: 'neck_map', map: 'octaves' });
+    expect(RECIPES['fretboard.l2.interval_shapes']).toMatchObject({ card: 'neck_map', map: 'intervals' });
+    expect(RECIPES['fretboard.l2.progression_grid']).toMatchObject({ card: 'neck_map', map: 'grid', majorKeyOnly: true });
+    expect(RECIPES['fretboard.l4.one_string_scale']).toMatchObject({ card: 'neck_map', map: 'one_string' });
   });
 });

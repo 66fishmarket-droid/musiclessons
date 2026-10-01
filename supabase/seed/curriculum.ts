@@ -47,15 +47,19 @@ export const SKILLS: Skill[] = [
   skill('rhythm.l5.offbeat_stabs', 'Offbeat stabs', 'Short muted stabs on the offbeats: reggae skank, funk chank.', 'bpm', 85, { styles: ['reggae', 'funk', 'neo_soul'] }),
 
   // Fretboard & Voicings
-  skill('fretboard.l1.notes_e_a', 'Notes on strings 6 and 5', 'Name any note on the low E and A strings instantly.', 'clean_reps', 3, { theory_topic_id: 'theory.l1.degrees' }),
-  skill('fretboard.l1.octave_shapes', 'Octave shapes', 'Find every octave of a note across the neck.', 'clean_reps', 3, { theory_topic_id: 'theory.l1.intervals' }),
-  skill('fretboard.l2.caged_linked', 'CAGED shapes linked', 'Play one chord in all five CAGED shapes up the neck.', 'clean_reps', 3),
-  skill('fretboard.l2.pentatonic_per_shape', 'Pentatonic per CAGED shape', 'The pentatonic box that sits around each CAGED shape.', 'bpm', 70, { theory_topic_id: 'theory.l1.scale_construction' }),
+  skill('fretboard.l1.notes_e_a', 'Notes on strings 6 and 5', 'Landmark frets 3-5-7-9-12, then name any note on the low E and A strings instantly.', 'clean_reps', 3, { theory_topic_id: 'theory.l1.degrees' }),
+  skill('fretboard.l1.b_string_rule', 'The B-string rule', 'Strings are 5 frets apart except G to B (4): why, and how it shifts every shape.', 'clean_reps', 3, { theory_topic_id: 'theory.l1.intervals' }),
+  skill('fretboard.l1.octave_shapes', 'Octave shapes', 'Find every octave of a note: skip one string up 2, skip two back 3, plus the B-string shift.', 'clean_reps', 3, { theory_topic_id: 'theory.l1.intervals' }),
+  skill('fretboard.l2.interval_shapes', 'Interval shapes', 'Where the 3rd, 5th, b7 and octave sit from any root on strings 6 and 5.', 'clean_reps', 3, { theory_topic_id: 'theory.l1.intervals' }),
+  skill('fretboard.l2.caged_linked', 'CAGED shapes linked', 'Play one chord in all five CAGED shapes up the neck, naming the root in each.', 'clean_reps', 3),
+  skill('fretboard.l2.pentatonic_per_shape', 'Pentatonic per CAGED shape', 'Box 1 first, then the pentatonic box that sits around each CAGED shape.', 'bpm', 70, { theory_topic_id: 'theory.l1.scale_construction' }),
+  skill('fretboard.l2.progression_grid', 'The progression grid', 'I-IV-V-vi as one movable grid of roots on strings 6 and 5, by number.', 'bpm', 60, { theory_topic_id: 'theory.l2.diatonic_qualities' }),
   skill('fretboard.l3.triads_321', 'Triads on strings 3-2-1', 'Major triads in all inversions on the top three strings.', 'bpm', 60, { theory_topic_id: 'theory.l2.triads' }),
   skill('fretboard.l3.triads_432', 'Triads on strings 4-3-2', 'Major triads in all inversions on the middle strings.', 'bpm', 60, { theory_topic_id: 'theory.l2.triads' }),
   skill('fretboard.l3.minor_triads', 'Minor triads', 'Minor triad inversions on both top string sets.', 'bpm', 60, { theory_topic_id: 'theory.l2.triads' }),
   skill('fretboard.l4.voice_leading_inversions', 'Voice-leading inversions', 'Move I–IV–V–vi using the nearest inversion each time.', 'bpm', 60, { theory_topic_id: 'theory.l4.slash_inversions' }),
   skill('fretboard.l4.triads_lower_sets', 'Lower string-set triads', 'Triads on 5-4-3 and 6-5-4; sus and diminished shapes.', 'bpm', 60, { theory_topic_id: 'theory.l3.sus_add' }),
+  skill('fretboard.l4.one_string_scale', 'Scales on one string', 'The key\'s scale along a single string, counting whole and half steps.', 'bpm', 70, { theory_topic_id: 'theory.l1.scale_construction' }),
   skill('fretboard.l5.thirds_sixths_shapes', '3rds and 6ths shapes', 'Two-string 3rd and 6th shapes through a key.', 'bpm', 70, { theory_topic_id: 'theory.l1.intervals' }),
   skill('fretboard.l5.seventh_shells', 'Seventh-chord shells', 'Root–3rd–7th shells on 6th and 5th string roots.', 'clean_reps', 4, { theory_topic_id: 'theory.l3.sevenths', styles: ['jazz_swing', 'neo_soul', 'bossa_samba'] }),
 
