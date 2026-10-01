@@ -16,7 +16,7 @@ import { VoicingSheet } from '../components/VoicingSheet.tsx';
 import { clock } from '../lib/dates.ts';
 import { keyAction } from '../lib/keys.ts';
 import { tempoLadder } from '../lib/ladder.ts';
-import { BLOCK_META, blockCard, blockText, bpmTarget, refLabel, startBpm, tonicOf, type TodayLesson } from '../lib/lesson.ts';
+import { BLOCK_META, blockCard, blockTerms, blockText, bpmTarget, refLabel, startBpm, tonicOf, type TodayLesson } from '../lib/lesson.ts';
 import { APPLY_DEFAULT_GRID, PATTERNS, rhythmPattern } from '../../supabase/functions/_shared/engine/patterns.ts';
 import { SKILLS } from '../../supabase/seed/curriculum.ts';
 import { goTo, loadSession, logVerdict, resumeSession, saveSession, slotsFor, verdictFor, type Log, type Session } from '../lib/session.ts';
@@ -64,6 +64,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
   const i = session.index;
   const block = plan.blocks[i];
   const text = blockText(content, i);
+  const terms = blockTerms(content, i);
   const meta = BLOCK_META[block.kind];
   const target = bpmTarget(plan, i);
   const first = startBpm(plan, i);
@@ -170,10 +171,17 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
         <Metronome metro={metro} target={target} ladder={target !== null ? tempoLadder(first, target) : null}
           drone={drone} onDrone={() => setDrone(!drone)} tonic={tonic} />
       )}
-      {text.more.length > 0 && (
+      {(text.more.length > 0 || terms.length > 0) && (
         <details className="card">
           <summary>More about this</summary>
           {text.more.map(m => <p key={m}>{m}</p>)}
+          {terms.length > 0 && <h3 className="muted">Words in this block</h3>}
+          {terms.map(t => (
+            <p key={t.id}>
+              <b>{t.term}</b> — {t.plain}
+              <br /><small className="muted"><i>Why it works:</i> {t.why}</small>
+            </p>
+          ))}
         </details>
       )}
 

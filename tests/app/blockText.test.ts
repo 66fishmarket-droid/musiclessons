@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { blockCard, blockText } from '../../src/lib/lesson.ts';
+import { blockCard, blockTerms, blockText } from '../../src/lib/lesson.ts';
 import { SKILLS } from '../../supabase/seed/curriculum.ts';
 
 const base = { title: 't', why_it_matters: 'w', theory_card: 'c', songs: [], create_prompt: 'p' };
@@ -33,5 +33,23 @@ describe('blockCard', () => {
   });
   it('blocks with no skill (warmup etc.) get none', () => {
     expect(blockCard('warmup', undefined).card).toBe('none');
+  });
+});
+
+describe('blockTerms', () => {
+  const block = (over: object) => ({ kind: 'warmup' as const, instructions: ['a'], target_text: '', listen_for: '', more: '', ...over });
+  it('finds terms in steps even when there is no LLM more text (Review Focus 5)', () => {
+    const c = { ...base, blocks: [block({ instructions: ['Move up one half step'] })] };
+    expect(blockTerms(c, 0).map(t => t.id)).toEqual(['half_step']);
+  });
+  it('reads create_prompt only on the create block', () => {
+    const c = { ...base, create_prompt: 'Climb by whole steps', blocks: [block({}), block({ kind: 'create' })] };
+    expect(blockTerms(c as never, 0)).toEqual([]);
+    expect(blockTerms(c as never, 1).map(t => t.id)).toEqual(['whole_step']);
+  });
+  it('works on lessons stored before engine-written steps (Review Focus 4)', () => {
+    const old = { ...base, blocks: [{ kind: 'warmup', instructions: ['a'], target_text: '', tips: 'slide a half step' }] };
+    expect(blockTerms(old as never, 0).map(t => t.id)).toEqual(['half_step']);
+    expect(blockTerms(old as never, 5)).toEqual([]);
   });
 });
