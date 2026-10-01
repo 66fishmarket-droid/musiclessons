@@ -42,6 +42,10 @@ explanation. A gap in practice is a signal to bring the refreshers back, not jus
 - Scale formulas: major W-W-H-W-W-W-H; natural minor W-H-W-W-H-W-W; how keys and diatonic chords fall out of them.
 - Rhythm: pulse, subdivision, bars, and how strumming and picking patterns map onto them.
 
+**Glossary upkeep:** a new music term in engine-written text (recipes, create tasks, step text) needs an entry in
+`supabase/functions/_shared/engine/glossary.ts` in the same commit, placed after the terms its definition uses.
+Check with `node scripts/render-glossary.ts`.
+
 When writing any lesson text, ask: which foundation does this connect to, and does it say so?
 
 ## Where the truth lives

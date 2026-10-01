@@ -161,7 +161,7 @@ export const GLOSSARY: GlossaryEntry[] = [
   },
   {
     id: "sharp_flat", term: "Sharp and flat (# and b)",
-    match: ["sharp", "sharps", "flat", "flats", "flattens", "flattened", "sharpened"],
+    match: ["sharps", "flats", "flattens", "flattened", "sharpened", "flat 2nd", "flat 3rd", "flat 5th", "flat 6th", "flat 7th", "sharp 4th", "sharp 5th"],
     plain: "A sharp (#) raises a note by one half step, one fret higher; a flat (b) lowers it by one half step, one fret lower. F# is one fret above F; Bb is one fret below B.",
     why: "There are 12 half steps in an octave but only seven letters, so the five notes in between are named as sharps or flats of their neighbours.",
     sources: ["vault:Research/glossary/sharp_flat.md", "musictheory.net, Steps and Accidentals — https://www.musictheory.net/lessons/20", "Open Music Theory, Half Steps, Whole Steps, and Accidentals — https://viva.pressbooks.pub/openmusictheory/chapter/half-and-whole-steps/"],
@@ -182,7 +182,7 @@ export const GLOSSARY: GlossaryEntry[] = [
   },
   {
     id: "third", term: "3rd",
-    match: ["3rd", "3rds", "third", "thirds"],
+    match: ["3rd", "3rds"],
     plain: "The interval spanning three letter names, such as C up to E. It comes in two sizes: three half steps (three frets) or four half steps (four frets).",
     why: "Stacking 3rds on a root is the basic way notes are combined, and which size sits on the root decides whether the result sounds bright or dark.",
     sources: ["vault:Research/glossary/third.md", "Open Music Theory, Intervals — https://viva.pressbooks.pub/openmusictheory/chapter/intervals/", "HyperPhysics, Musical Scales and Intervals — http://hyperphysics.phy-astr.gsu.edu/hbase/Music/mussca.html"],
@@ -324,7 +324,7 @@ export const GLOSSARY: GlossaryEntry[] = [
     id: "pentatonic", term: "Pentatonic",
     match: ["pentatonic", "pentatonics"],
     plain: "Pentatonic means a scale with five notes per octave ('penta' is Greek for five). The two common ones, major and minor, use the same five notes from different home notes: the G major and E minor versions share the same five notes.",
-    why: "Five-note scales skip the two half steps of the seven-note scale, so every note is consonant with the rest, which is why they turn up worldwide.",
+    why: "Five-note scales skip the two half steps of the seven-note scale, so no two notes are a half step apart; that makes clashes rare, which is why they turn up worldwide.",
     sources: ["vault:Research/glossary/pentatonic.md", "Wikipedia, Pentatonic scale — https://en.wikipedia.org/wiki/Pentatonic_scale", "Open Music Theory, Introduction to Diatonic Modes and the Chromatic Scale — https://viva.pressbooks.pub/openmusictheory/chapter/intro-to-diatonic-modes-and-the-chromatic-scale/"],
   },
   {
@@ -352,7 +352,7 @@ export const GLOSSARY: GlossaryEntry[] = [
     id: "blue_note", term: "Blue note",
     match: ["blue note", "blue notes"],
     plain: "A blue note is a note played slightly flat, or bent, for expression: usually the flat 3rd, flat 5th or flat 7th. On guitar you often bend the minor 3rd a little towards the major 3rd.",
-    why: "Blue notes sit between the 12 notes of standard tuning, so the ear hears them as expressive, bittersweet clashes rather than mistakes.",
+    why: "Blue notes sit between the 12 notes of the usual Western system, so the ear hears them as expressive, bittersweet clashes rather than mistakes.",
     sources: ["vault:Research/glossary/blue_note.md", "Open Music Theory, Chord-Scale Theory — https://viva.pressbooks.pub/openmusictheory/chapter/chord-scale-theory/", "Wikipedia, Blue note — https://en.wikipedia.org/wiki/Blue_note"],
   },
   {
