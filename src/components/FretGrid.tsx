@@ -11,7 +11,7 @@ export function FretGrid({ from, to, dots, links = [], label }: { from: number; 
   const W = 40 + (to - from + 1) * COL + 4;
   return (
     <div style={{ overflowX: 'auto' }}>
-      <svg width={W} height={160} viewBox={`0 0 ${W} 160`} role="img" aria-label={label}>
+      <svg width={W} height={172} viewBox={`0 0 ${W} 172`} role="img" aria-label={label}>
         {[0, 1, 2, 3, 4, 5].map(s => (
           <g key={s}>
             <text x={8} y={Y(s)} className="pk-name">{STRING_NAMES[s]}</text>
@@ -22,7 +22,7 @@ export function FretGrid({ from, to, dots, links = [], label }: { from: number; 
           <line key={f} x1={40 + (f - from) * COL} x2={40 + (f - from) * COL} y1={Y(5)} y2={Y(0)} className={f === 1 ? 'cd-nut-line' : 'cd-fret'} />
         ))}
         {Array.from({ length: to - from + 1 }, (_, k) => from + k).filter(f => f > 0).map(f => (
-          <text key={f} x={X(f)} y={152} className="fret-num">{f}</text>
+          <text key={f} x={X(f)} y={166} className="fret-num">{f}</text>
         ))}
         {links.map(([a, b]) => (
           <line key={`${a.string}-${a.fret}-${b.string}-${b.fret}`} x1={X(a.fret)} y1={Y(a.string)} x2={X(b.fret)} y2={Y(b.string)} className="nm-link" />
