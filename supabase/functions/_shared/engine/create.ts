@@ -1,4 +1,7 @@
-export interface CreateTask { id: string; prompt: string; steps: string[]; songwriting?: string[] }
+import type { StepElement } from './recipes.ts';
+
+/** `show`: per step, what Player shows besides the text (the prompt card is always on); the recorder only on RECORD. */
+export interface CreateTask { id: string; prompt: string; steps: string[]; show: StepElement[][]; songwriting?: string[] }
 
 const RECORD = 'Record it with the app\'s recorder and listen back once.';
 
@@ -6,30 +9,33 @@ const RECORD = 'Record it with the app\'s recorder and listen back once.';
 export const CREATE_TASKS: CreateTask[] = [
   {
     id: 'melody_135', songwriting: ['songwriting.l1.core_loops'],
-    prompt: 'Make up a four-bar tune using only {degrees:1,3,5} while you play {chords}, one bar each.',
+    prompt: 'Make up a four-bar tune using only the notes {degrees:1,3,5} while you play {chords}, one bar each.',
     steps: [
       'A four-bar tune is a short melody that lasts four bars: one bar per chord, four beats per bar.',
-      'Find it first: pick {degrees:1,3,5} one note at a time on the top strings until you like the order. The fretboard shows them as 1, 3 and 5.',
+      'Find it first: pick the notes {degrees:1,3,5} one at a time on the top strings until you like the order. The fretboard shows them as 1, 3 and 5.',
       'Now play {chords} with the day\'s rhythm and sing (or hum) the tune over it, one bar per chord.', RECORD,
     ],
+    show: [[], ['scale'], ['chords'], ['chords', 'recorder']],
   },
   {
     id: 'question_answer', songwriting: ['songwriting.l2.melody_skeleton', 'songwriting.l2.section_contrast'],
-    prompt: 'Sing a two-bar question that ends on {degrees:5}, then a two-bar answer that ends on {degrees:1}, over {chords}.',
+    prompt: 'Sing a two-bar question that ends on the note {degrees:5}, then a two-bar answer that ends on the note {degrees:1}, over {chords}.',
     steps: [
       'Play {chords}, one bar per chord.',
-      'Over the first two bars, sing a short phrase that ends on {degrees:5}. It sounds unfinished, like a question.',
-      'Over the last two bars, sing a phrase that ends on {degrees:1}. It sounds like home, the answer.', RECORD,
+      'Over the first two bars, sing a short phrase that ends on the note {degrees:5}. It sounds unfinished, like a question.',
+      'Over the last two bars, sing a phrase that ends on the note {degrees:1}. It sounds like home, the answer.', RECORD,
     ],
+    show: [['chords'], ['chords', 'scale'], ['chords', 'scale'], ['chords', 'recorder']],
   },
   {
     id: 'rhyming_couplet', songwriting: ['songwriting.l1.object_writing'],
-    prompt: 'Write two rhyming lines about something in the room and sing them on {degrees:1} and {degrees:5} over {chords}.',
+    prompt: 'Write two rhyming lines about something in the room, then sing the first on the note {degrees:1} and the second on the note {degrees:5} over {chords}.',
     steps: [
       'Look around and pick one object. Write two short lines about it that rhyme.',
-      'Play {chords}, one bar per chord, and say the lines in time with the strum.',
-      'Now sing them: the first line on {degrees:1}, the second on {degrees:5}.', RECORD,
+      'Play {chords}, one bar per chord, and speak the lines in time with the strum: line one over the first two bars, line two over the last two.',
+      'Now sing them, each line on one held pitch: line one on the note {degrees:1} over the first two bars, line two on the note {degrees:5} over the last two. Keep the pitch steady and let the chords move under you.', RECORD,
     ],
+    show: [[], ['chords'], ['chords', 'scale'], ['chords', 'recorder']],
   },
   {
     id: 'new_feel', songwriting: ['songwriting.l5.style_transplant'],
@@ -39,15 +45,17 @@ export const CREATE_TASKS: CreateTask[] = [
       'Change exactly one thing: move the bass note to a different beat, or leave one strum out.',
       'Hum or sing any line over the new feel and notice what changed in the mood.', RECORD,
     ],
+    show: [['chords'], ['chords'], ['chords'], ['chords', 'recorder']],
   },
   {
     id: 'one_note_verse', songwriting: ['songwriting.l3.prechorus_tension'],
-    prompt: 'Sing a line on one note, {degrees:1}, over {chords} and let the chords do the moving.',
+    prompt: 'Sing a line on one held pitch, the note {degrees:1}, over {chords} and let the chords do the moving.',
     steps: [
       'Play {chords}, one bar per chord.',
-      'Sing or speak any line of words, keeping every syllable on {degrees:1}.',
+      'Sing or speak any line of words, keeping every syllable on the note {degrees:1}.',
       'Listen to how the same note feels different over each chord.', RECORD,
     ],
+    show: [['chords'], ['chords', 'scale'], ['chords'], ['chords', 'recorder']],
   },
 ];
 

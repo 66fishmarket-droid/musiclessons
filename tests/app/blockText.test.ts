@@ -74,14 +74,29 @@ describe('stepElements', () => {
     expect(stepElements(r, 'new_skill', 0, r.steps.length)).toEqual(['card']);
     expect(stepElements(r, 'new_skill', 3, r.steps.length)).toEqual(['note_caller', 'metronome']);
   });
-  it('falls back to per-block (null) for retest blocks, whose steps shift (Review Focus 5)', () => {
-    expect(stepElements(r, 'retest', 0, 3)).toBeNull();
+  it('shifts retest blocks by one for the prepended "Cold retest" line', () => {
+    expect(stepElements(r, 'retest', 0, 3)).toEqual(r.show![0]);
+    expect(stepElements(r, 'retest', 1, 3)).toEqual(r.show![0]);
+    expect(stepElements(r, 'retest', 2, 3)).toEqual(r.show![1]);
   });
   it('falls back when the stored lesson has a different number of steps (Review Focus 4)', () => {
     expect(stepElements(r, 'new_skill', 0, r.steps.length - 1)).toBeNull();
   });
-  it('falls back for recipes without show, and with no recipe', () => {
-    expect(stepElements(RECIPES['fretboard.l3.triads_321'], 'new_skill', 0, 4)).toBeNull();
-    expect(stepElements(undefined, 'warmup', 0, 3)).toBeNull();
+  it('gates the fixed blocks: warm-up hums with nothing, apply adds chords after the counts, record keeps the recorder', () => {
+    expect(stepElements(undefined, 'warmup', 0, 3)).toEqual([]);
+    expect(stepElements(undefined, 'warmup', 1, 3)).toEqual(['scale', 'metronome']);
+    expect(stepElements(undefined, 'apply', 0, 3)).toEqual(['card', 'metronome']);
+    expect(stepElements(undefined, 'apply', 1, 3)).toEqual(['card', 'chords', 'metronome']);
+    for (const k of [0, 1, 2]) expect(stepElements(undefined, 'record', k, 3)).toEqual(['recorder']);
+  });
+  it('gates create blocks by the task of the day, with the recorder only on its record step', () => {
+    expect(stepElements(undefined, 'create', 0, 4, 'melody_135')).toEqual([]);
+    expect(stepElements(undefined, 'create', 3, 4, 'melody_135')).toEqual(['chords', 'recorder']);
+    expect(stepElements(undefined, 'create', 0, 4, 'no_such_task')).toBeNull();
+  });
+  it('leaves review and reset blocks ungated, and falls back on a step-count mismatch', () => {
+    expect(stepElements(undefined, 'review', 0, 2)).toBeNull();
+    expect(stepElements(undefined, 'reset', 0, 1)).toBeNull();
+    expect(stepElements(undefined, 'warmup', 0, 4)).toBeNull();
   });
 });

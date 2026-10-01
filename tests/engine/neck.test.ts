@@ -51,6 +51,13 @@ describe('neckMap', () => {
       for (const [r, d] of m.links) expect(midi(d) - midi(r), `${key} ${d.label}`).toBe(SEMI[d.label]);
     }
   });
+  it('intervals: adds a b3 (3 half steps up) on minor days only', () => {
+    const minor = neckMap('intervals', 'A', true);
+    const b3 = minor.links.filter(([, d]) => d.label === 'b3');
+    expect(b3).toHaveLength(2);
+    for (const [r, d] of b3) expect(midi(d) - midi(r)).toBe(3);
+    expect(neckMap('intervals', 'A').dots.some(d => d.label === 'b3')).toBe(false);
+  });
   it('grid: roots spell I, IV, V and vi of the key, labelled 1/4/5/6 with chord names', () => {
     const m = neckMap('grid', 'G');
     expect(m.dots.map(d => `${d.label} ${d.note}`)).toEqual(['1 G', '4 C', '5 D', '6 Em']);

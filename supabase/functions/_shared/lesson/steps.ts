@@ -4,6 +4,7 @@ import { recipeFor } from '../engine/recipes.ts';
 import { renderSteps, slotContext } from '../engine/render.ts';
 import { romanToChords } from '../engine/roman.ts';
 import { STYLE_CATALOG } from '../engine/styles.ts';
+import { THEORY_REVIEWS } from '../engine/theory.ts';
 import type { BlockKind, LessonPlan, PlanBlock, Skill } from '../engine/types.ts';
 import type { Target } from '../engine/types.ts';
 
@@ -88,6 +89,9 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
         const [type, ref] = [i.ref.slice(0, i.ref.indexOf(':')), i.ref.slice(i.ref.indexOf(':') + 1)];
         if (type === 'style') return reviewStyleLine(ref);
         if (type === 'skill' && skillOf(ref)) return `${skillOf(ref)!.name}: ${recipeSteps(ref, { ...b, items: [i] }, false, 1).steps[0]}`;
+        if (type === 'theory' && THEORY_REVIEWS[ref]) {
+          return renderSteps([`${skillOf(ref)?.name ?? ref}: ${THEORY_REVIEWS[ref]}`], { ...base, scale: 'major' })[0];
+        }
         return `Review: ${skillOf(ref)?.name ?? ref}.`;
       }));
       case 'apply': {

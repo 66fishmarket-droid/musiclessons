@@ -1,5 +1,5 @@
 import type { MusicContent } from '../../supabase/functions/_shared/engine/music.ts';
-import { scaleBox } from '../../supabase/functions/_shared/engine/music.ts';
+import { degreeLabel, scaleBox } from '../../supabase/functions/_shared/engine/music.ts';
 import { FretGrid } from './FretGrid.tsx';
 
 const STRING_NAMES = ['E', 'A', 'D', 'G', 'B', 'e'];
@@ -13,8 +13,8 @@ export function ScaleBoard({ scale, highlight }: { scale: MusicContent['scale'];
     <section className="card" aria-label={`${scale.tonic} ${scale.name} scale`}>
       <div className="row"><b>{scale.tonic} {scale.name}</b><small className="muted">{scale.notes.join(' ')}</small></div>
       <FretGrid from={from} to={to} label={label}
-        dots={notes.map(n => ({ string: n.string, fret: n.fret, label: String(n.degree), root: n.degree === 1, dim: !!highlight && !highlight.includes(n.degree) }))} />
-      <p className="muted" style={{ fontSize: 13 }}>Numbers are scale degrees: 1 is {scale.tonic}, the home note (marigold).{from === 0 ? ' The first column is open strings.' : ''}{highlight ? ' Bright dots: the notes to sing.' : ''}</p>
+        dots={notes.map(n => ({ string: n.string, fret: n.fret, label: degreeLabel(scale.tonic, n.note), root: n.degree === 1, dim: !!highlight && !highlight.includes(n.degree) }))} />
+      <p className="muted" style={{ fontSize: 13 }}>Labels count up from the home note: 1 is {scale.tonic} (marigold); b3 or b7 means one fret lower than in the major scale.{from === 0 ? ' The first column is open strings.' : ''}{highlight ? ' Bright dots: the notes to sing.' : ''}</p>
     </section>
   );
 }

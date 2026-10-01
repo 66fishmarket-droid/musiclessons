@@ -1,3 +1,4 @@
+import { stepElements } from '../../src/lib/lesson.ts';
 import { describe, expect, it } from 'vitest';
 import { buildMusic } from '../../supabase/functions/_shared/engine/music.ts';
 import { planLesson, targetFor } from '../../supabase/functions/_shared/engine/planner.ts';
@@ -87,6 +88,16 @@ describe('buildSteps', () => {
     const [review] = buildSteps(plan, SKILL_MAP).blocks;
     expect(review.instructions[0].startsWith(skill.name)).toBe(true);
   });
+  it('gives a theory review item a concrete task in the key of the day, not a bare "Review: topic"', () => {
+    const plan = {
+      ...PLAN, key: 'G',
+      blocks: [{ kind: 'review' as const, minutes: 5, items: [{ ref: 'theory:theory.l1.circle_of_fifths', target: null }] }],
+    };
+    const [review] = buildSteps(plan, SKILL_MAP).blocks;
+    expect(review.instructions[0]).toMatch(/^Circle of fifths: /);
+    expect(review.instructions[0]).toContain('G, C, D');
+    expect(review.instructions[0]).not.toMatch(/^Review:/);
+  });
   it('builds a review item for every RECIPES skill with a null target without throwing', () => {
     for (const id of Object.keys(RECIPES)) {
       const plan = {
@@ -130,5 +141,18 @@ describe('buildSteps', () => {
         }
       }
     }
+  });
+});
+
+describe('per-step elements line up with the engine-written steps', () => {
+  it('gives every block of a real lesson a per-step list of the right length (review/reset excepted)', () => {
+    const { blocks } = buildSteps(PLAN, SKILL_MAP);
+    PLAN.blocks.forEach((b, i) => {
+      if (b.kind === 'review' || b.kind === 'reset') return;
+      const skillId = b.kind === 'retest' ? PLAN.retest?.skill_id : PLAN.skill_id;
+      const recipe = skillId ? RECIPES[skillId] : undefined;
+      const n = blocks[i].instructions.length;
+      expect(stepElements(recipe, b.kind, 0, n, PLAN.create_task_id), `${b.kind} (${n} steps)`).not.toBeNull();
+    });
   });
 });
