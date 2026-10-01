@@ -9,7 +9,7 @@ const fn = (id: string) => graph.fns.find(f => f.id === id)!;
 describe('buildGraph', () => {
   it('finds top-level functions and arrow functions with JSDoc summaries', () => {
     expect(graph.fns.map(f => f.id).sort()).toEqual(
-      ['lib.addOne', 'lib.helper', 'lib.tested', 'lib.twinA', 'lib.twinB', 'lib.unused', 'run.main']);
+      ['lib.addOne', 'lib.helper', 'lib.tested', 'lib.twinA', 'lib.twinB', 'lib.unused', 'run.main', 'ui.Box', 'ui.Page', 'ui.pair']);
     expect(fn('lib.helper').summary).toBe('Adds one via a private helper.');
     expect(fn('lib.helper').signature).toBe('helper(n: number)');
     expect(fn('lib.helper').layer).toBe('ui'); // fixture uses src/
@@ -19,6 +19,11 @@ describe('buildGraph', () => {
     expect([...fn('lib.addOne').calledBy]).toEqual(['lib.helper']);
     expect([...fn('lib.helper').calledBy]).toEqual(['run.main']);
     expect([...fn('run.main').calledBy]).toEqual(['action.run']);
+  });
+  it('counts JSX renders and module-level code as callers', () => {
+    expect([...fn('ui.Box').calledBy]).toEqual(['ui.Page']);
+    expect([...fn('ui.pair').calledBy]).toEqual(['ui']);
+    expect(fn('ui.Page').calledBy.size).toBe(0);
   });
   it('builds an action hub for script entry files with everything reachable', () => {
     const action = graph.actions.find(a => a.id === 'action.run')!;

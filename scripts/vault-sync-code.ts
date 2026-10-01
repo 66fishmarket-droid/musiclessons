@@ -56,7 +56,7 @@ export function moduleNames(rels: string[]): Map<string, string> {
 }
 
 const isEntry = (rel: string) =>
-  /^scripts\/[^/]+\.tsx?$/.test(rel) || /^supabase\/functions\/[^_/][^/]*\/index\.ts$/.test(rel) || rel.startsWith('src/screens/');
+  rel === 'src/main.tsx' || /^scripts\/[^/]+\.tsx?$/.test(rel) || /^supabase\/functions\/[^_/][^/]*\/index\.ts$/.test(rel) || rel.startsWith('src/screens/');
 
 function summaryOf(node: ts.Node): string {
   const doc = ts.getJSDocCommentsAndTags(node).find(ts.isJSDoc);
@@ -79,6 +79,7 @@ export function buildGraph(root: string, { testSuffix = '.test.ts' } = {}): Grap
   const byDecl = new Map<ts.Node, Fn>();
   const bodies = new Map<Fn, ts.Node>();
   const entryStatements = new Map<string, ts.Node[]>();
+  const moduleStatements = new Map<string, ts.Node[]>();
 
   files.forEach((file, i) => {
     const sf = program.getSourceFile(file);
@@ -119,7 +120,7 @@ export function buildGraph(root: string, { testSuffix = '.test.ts' } = {}): Grap
         }
       } else rest.push(st);
     }
-    if (isEntry(rel)) entryStatements.set(rel, rest);
+    (isEntry(rel) ? entryStatements : moduleStatements).set(rel, rest);
   });
 
   // undefined = unresolved symbol, null = external (library/global), Fn = ours
@@ -133,6 +134,10 @@ export function buildGraph(root: string, { testSuffix = '.test.ts' } = {}): Grap
   const eachCall = (node: ts.Node, cb: (t: Fn | null | undefined) => void) => {
     const visit = (n: ts.Node) => {
       if (ts.isCallExpression(n) || ts.isNewExpression(n)) cb(resolveCall(n.expression));
+      // <Component /> renders count as calls; lower-case tags are HTML elements
+      else if ((ts.isJsxOpeningElement(n) || ts.isJsxSelfClosingElement(n)) && !/^[a-z]/.test(n.tagName.getText())) {
+        cb(resolveCall(n.tagName as ts.Expression));
+      }
       ts.forEachChild(n, visit);
     };
     visit(node);
@@ -142,6 +147,11 @@ export function buildGraph(root: string, { testSuffix = '.test.ts' } = {}): Grap
       if (t === undefined) fn.unresolved++;
       else if (t && t !== fn) { fn.calls.add(t.id); t.calledBy.add(fn.id); }
     });
+  }
+
+  // Module-level code (constant tables, registrations) counts as a caller: the file hub.
+  for (const [rel, statements] of moduleStatements) {
+    statements.forEach(s => eachCall(s, t => { if (t) t.calledBy.add(modules.get(rel)!); }));
   }
 
   const byId = new Map(fns.map(f => [f.id, f]));

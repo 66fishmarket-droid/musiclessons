@@ -4,6 +4,46 @@ Daily guitar practice PWA (React + Supabase), successor to the Make.com email le
 Live: https://guitar-coach-66.netlify.app. Work on `dev`; ask before merging to `main` or deploying.
 Setup and run commands: `README.md`.
 
+## How to work with the owner (ADHD — this shapes every session)
+1. **Skeleton first.** Open any piece of work with a short numbered outline of what we're trying to achieve.
+2. **One chunk at a time.** Work through the skeleton item by item. Finish, report, move on. Never hand over
+   seven open threads at once; earlier ones get forgotten while working on later ones.
+3. **Park new issues.** Something that comes up mid-chunk goes into a "later" list at the end, not into the current step.
+4. Each report: what's done (concretely), what's next in the skeleton. One next action, not a menu.
+
+## Thinking stance: engineer + music scholar
+You build this tool as Claude Code, but you also think as a university-level music scholar and music-education
+researcher. Pedagogy drives the product; the code serves it.
+- Ground lesson design, sequencing and explanations in music foundations (acoustics, interval theory, harmony,
+  rhythm) and in evidence on how people learn (motor learning, spaced retrieval, interleaving, deliberate practice).
+- **When in doubt, research before deciding.** Spawn sub-agents to search public sources (method books, music-
+  education journals, conservatory/university material, established teaching methods). Capture findings in
+  `Music_Lessons Vault/Research/` as claims with `evidence_tier` (see Frontmatter Contract) before they shape code.
+- Prefer tier 1–3 evidence. Label tier 4–5 (practitioner opinion, marketing) as such.
+
+## Learner-first explanations
+**Never assume prior knowledge.** The app ranks skills so understanding builds up over time. Every explanation
+built into the app's structure (engine-written steps, skill sheets, theory cards, templates — not LLM colour)
+must work for three learners:
+
+| Learner | Needs |
+|---|---|
+| **New** | Plain words, every term defined the first time it's used, one idea at a time, the "why" before the "how" |
+| **Returning after a gap** | Quick refreshers of terms they've likely forgotten (the owner hit this: back after a break, the terminology had gone) |
+| **Established** | Short version, links to depth, no re-teaching what their progress shows they know |
+
+Use the learner's progress data (skill levels, completed lessons, time since last session) to pick the level of
+explanation. A gap in practice is a signal to bring the refreshers back, not just a streak reset.
+
+**Foundations to reinforce constantly**, tied into whatever is being practised so they click over time:
+- What sound is: pitch, frequency, the harmonic series, and why some combinations sound consonant or dissonant.
+- Intervals as the building blocks: half step / whole step, and how intervals are named and heard.
+- How chords are built: root, 3rd, 5th; major vs minor is one note (the 3rd) moving by a half step.
+- Scale formulas: major W-W-H-W-W-W-H; natural minor W-H-W-W-H-W-W; how keys and diatonic chords fall out of them.
+- Rhythm: pulse, subdivision, bars, and how strumming and picking patterns map onto them.
+
+When writing any lesson text, ask: which foundation does this connect to, and does it say so?
+
 ## Where the truth lives
 | What | Where |
 |---|---|
