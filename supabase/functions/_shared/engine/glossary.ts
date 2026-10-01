@@ -50,7 +50,7 @@ export const GLOSSARY: GlossaryEntry[] = [
   {
     id: "chord_diagram", term: "Chord diagram / chord box",
     match: ["chord diagram", "chord diagrams", "chord box", "chord boxes", "card"],
-    plain: "A grid picture of the neck as if the guitar stood upright facing you: vertical lines are strings (string 6 on the left), horizontal lines are frets, dots show where fingers go. In this app, \"the card\" is the diagram panel under the practice steps.",
+    plain: "A grid picture of the neck as if the guitar stood upright facing you: vertical lines are strings (string 6 on the left), horizontal lines are frets, dots show where fingers go. In this app, \"the card\" is the panel under the practice steps; besides finger diagrams it can show a fretboard map or a picking pattern.",
     why: "It turns where your fingers go into a picture you read at a glance, so you can spend your attention on how it sounds.",
     sources: ["vault:Research/glossary/chord_diagram.md", "Berklee Online, Guitar Notation Basics — https://online.berklee.edu/takenote/guitar-notation-basics/"],
   },
@@ -81,6 +81,13 @@ export const GLOSSARY: GlossaryEntry[] = [
     plain: "Brushing the pick or fingers across several strings in one sweeping movement, downwards (towards the floor) or upwards, so the strings sound together.",
     why: "Strumming sounds several strings at once and keeps time, so it is how a guitar fills out a song and drives it forward.",
     sources: ["vault:Research/glossary/strum.md", "Berklee Online, Guitar Notation Basics — https://online.berklee.edu/takenote/guitar-notation-basics/"],
+  },
+  {
+    id: "mute", term: "Mute / muted",
+    match: ["mute", "mutes", "muted", "muting"],
+    plain: "Stopping strings from ringing by touching them lightly, with either hand, so a strum gives a short thud or \"chk\" instead of a ringing sound. A muted strum still moves in time; it just sounds dull.",
+    why: "Silence is part of rhythm: cutting the ring short lets you place sounds and gaps exactly where you want them.",
+    sources: ["vault:Research/glossary/mute.md", "JustinGuitar — Muting techniques — https://www.justinguitar.com/"],
   },
   {
     id: "shape", term: "Shape",
@@ -351,7 +358,7 @@ export const GLOSSARY: GlossaryEntry[] = [
   {
     id: "blue_note", term: "Blue note",
     match: ["blue note", "blue notes"],
-    plain: "A blue note is a note played slightly flat, or bent, for expression: usually the flat 3rd, flat 5th or flat 7th. On guitar you often bend the minor 3rd a little towards the major 3rd.",
+    plain: "A blue note is a bent or slightly flattened version of a note, played for expression: usually somewhere around the flat 3rd, flat 5th or flat 7th. On guitar you often bend the minor 3rd a little towards the major 3rd.",
     why: "Blue notes sit between the 12 notes of the usual Western system, so the ear hears them as expressive, bittersweet clashes rather than mistakes.",
     sources: ["vault:Research/glossary/blue_note.md", "Open Music Theory, Chord-Scale Theory — https://viva.pressbooks.pub/openmusictheory/chapter/chord-scale-theory/", "Wikipedia, Blue note — https://en.wikipedia.org/wiki/Blue_note"],
   },
@@ -485,7 +492,7 @@ export const GLOSSARY: GlossaryEntry[] = [
     id: "augmented", term: "Augmented",
     match: ["augmented"],
     plain: "A triad with a major 3rd and a 5th raised by one fret (a sharp 5th). It sounds dreamy and unstable, and it is written with \"aug\" or a plus sign, as in Caug or C+.",
-    why: "Two major 3rds stacked push the 5th a half step too wide, so the chord sounds neither plainly major nor minor and seems to be waiting to move on.",
+    why: "Two major 3rds stacked push the 5th a half step too wide; it still has a major 3rd, but that stretched 5th makes it sound unstable, as if waiting to move on.",
     sources: ["vault:Research/glossary/augmented.md", "Open Music Theory, \"Triads\" — https://viva.pressbooks.pub/openmusictheory/chapter/triads/", "musictheory.net, \"Introduction to Chords\" — https://www.musictheory.net/lessons/40"],
   },
   {
@@ -575,7 +582,7 @@ export const GLOSSARY: GlossaryEntry[] = [
   {
     id: "double_stop", term: "Double-stop",
     match: ["double-stop", "double-stops", "double stop", "double stops"],
-    plain: "Two notes played together on two neighbouring strings, picked or strummed. They are often taken from the chord being played, such as the top two strings of a barre shape.",
+    plain: "Two notes played together on two strings, usually neighbours (sometimes with one string skipped), picked or strummed. They are often taken from the chord being played, such as the top two strings of a barre shape.",
     why: "Two notes make one interval, the core of every chord; 3rds and 6ths sound sweet and consonant, which is why players reach for them most.",
     sources: ["vault:Research/glossary/double_stop.md", "Fender, \"Justus West Teaches Double Stops\" (tier 4) — https://www.youtube.com/watch?v=SRDuZ2AGRJM", "Open Music Theory, \"Intervals\" — https://viva.pressbooks.pub/openmusictheory/chapter/intervals/"],
   },
@@ -639,12 +646,12 @@ export const GLOSSARY: GlossaryEntry[] = [
     id: "secondary_dominant", term: "Secondary dominant",
     match: ["secondary dominant", "secondary dominants", "v of v"],
     plain: "A major or dominant 7th chord that acts as the V of a chord other than home. In G, A7 is the V of D (written V/V), so it pulls toward D rather than G.",
-    why: "It copies the pull of a V chord by adding a sharp that is not in the key, so the target chord briefly sounds like a new home note.",
+    why: "It copies the pull of a V chord by adding a note from outside the key (often a sharp), so the target chord briefly sounds like a new home note.",
     sources: ["vault:Research/glossary/secondary_dominant.md", "Open Music Theory, \"Tonicization\" — https://viva.pressbooks.pub/openmusictheory/chapter/tonicization/", "Open Music Theory, \"Roman Numerals\" — https://viva.pressbooks.pub/openmusictheory/chapter/roman-numerals/"],
   },
   {
     id: "borrowed", term: "Borrowed chord",
-    match: ["borrowed chord", "borrowed chords", "borrowing", "borrowed", "borrow", "borrows"],
+    match: ["borrowed chord", "borrowed chords", "borrowing", "borrow", "borrows"],
     plain: "A chord taken from the parallel key, the minor key with the same home note (or the major, if you are in minor). In G major, C minor (iv) and F major (bVII) are borrowed from G minor.",
     why: "Swapping a note of the major scale for its flat version, such as the 3rd, 6th or 7th, darkens the chord while the home note stays the same.",
     sources: ["vault:Research/glossary/borrowed.md", "Open Music Theory, \"Modal Mixture\" — https://viva.pressbooks.pub/openmusictheory/chapter/modal-mixture/", "Open Music Theory, \"Roman Numerals\" — https://viva.pressbooks.pub/openmusictheory/chapter/roman-numerals/"],

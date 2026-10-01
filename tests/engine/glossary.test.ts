@@ -29,6 +29,18 @@ describe('termsIn', () => {
   });
 });
 
+describe('termsIn on real recipe wording (final review)', () => {
+  const real = (t: string) => termsIn([t]).map(g => g.id);
+  it('defines bare mute/muted strums, while palm muting keeps its own entry', () => {
+    expect(real('2 muted strum down')).toContain('mute');
+    expect(real('Palm muting: rest the edge')).not.toContain('mute');
+  });
+  it('does not show the borrowed-chord concept for "a chord borrowed for one bar"', () => {
+    expect(real('a chord borrowed for one bar')).not.toContain('borrowed');
+    expect(real('that borrowed chord is called bVII')).toContain('borrowed');
+  });
+});
+
 describe('GLOSSARY integrity', () => {
   it('has unique ids and non-empty text', () => {
     expect(new Set(GLOSSARY.map(g => g.id)).size).toBe(GLOSSARY.length);
