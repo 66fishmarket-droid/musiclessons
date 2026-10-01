@@ -5,6 +5,7 @@ import { Burst } from '../components/Burst.tsx';
 import { ChordPanel } from '../components/ChordPanel.tsx';
 import { ChordText } from '../components/ChordText.tsx';
 import { Metronome } from '../components/Metronome.tsx';
+import { NeckMap } from '../components/NeckMap.tsx';
 import { NoteCaller } from '../components/NoteCaller.tsx';
 import { PickingPattern } from '../components/PickingPattern.tsx';
 import { Rail } from '../components/Rail.tsx';
@@ -16,8 +17,10 @@ import { VoicingSheet } from '../components/VoicingSheet.tsx';
 import { clock } from '../lib/dates.ts';
 import { keyAction } from '../lib/keys.ts';
 import { tempoLadder } from '../lib/ladder.ts';
-import { BLOCK_META, blockCard, blockTerms, blockText, bpmTarget, refLabel, startBpm, tonicOf, type TodayLesson } from '../lib/lesson.ts';
+import { BLOCK_META, blockCard, blockTerms, blockText, bpmTarget, refLabel, startBpm, stepElements, tonicOf, type TodayLesson } from '../lib/lesson.ts';
+import { neckMap } from '../../supabase/functions/_shared/engine/neck.ts';
 import { APPLY_DEFAULT_GRID, PATTERNS, rhythmPattern } from '../../supabase/functions/_shared/engine/patterns.ts';
+import type { StepElement } from '../../supabase/functions/_shared/engine/recipes.ts';
 import { SKILLS } from '../../supabase/seed/curriculum.ts';
 import { goTo, loadSession, logVerdict, resumeSession, saveSession, slotsFor, verdictFor, type Log, type Session } from '../lib/session.ts';
 import { useWakeLock } from '../lib/wakeLock.ts';
@@ -98,6 +101,8 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
   const [drone, setDrone] = useState(false);
   useDrone(drone ? tonic : null);
   const [step, setStep] = useState(0);
+  const els = stepElements(recipe, block.kind, step, steps.length);
+  const on = (e: StepElement) => els === null || els.includes(e);
   const [sheet, setSheet] = useState<string | null>(null);
   const [about, setAbout] = useState(false);
   const total = block.minutes * 60;
@@ -154,20 +159,23 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
 
       {block.kind === 'warmup' && <ScaleBoard scale={plan.music.scale} />}
       {block.kind === 'create' && <section className="card"><p><ChordText text={content.create_prompt} onChord={setSheet} /></p></section>}
-      {showChords && <ChordPanel chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} onShapes={setSheet} />}
+      {showChords && on('chords') && <ChordPanel chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} onShapes={setSheet} />}
       {block.kind === 'create' && <ScaleBoard scale={plan.music.scale} />}
       {block.kind === 'create' && <Recorder onTake={() => {}} />}
       {block.kind === 'record' && <Recorder onTake={onTake} />}
-      {card === 'scale' && <ScaleBoard scale={plan.music.scale} highlight={recipe?.degrees} />}
-      {card === 'triads' && <TriadBoard triads={plan.music.triads} />}
-      {pattern && !pattern.strokes && skillPatterns.length > 1 && (
+      {card === 'scale' && on('card') && <ScaleBoard scale={plan.music.scale} highlight={recipe?.degrees} />}
+      {card === 'triads' && on('card') && <TriadBoard triads={plan.music.triads} />}
+      {card === 'neck_map' && recipe?.map && on('card') && (
+        <NeckMap title={SKILLS_BY_ID.get(cardSkill!)?.name ?? 'Neck map'} map={neckMap(recipe.map, plan.key, /^(minor|aeolian)$/.test(plan.music.scale.name))} />
+      )}
+      {pattern && on('card') && !pattern.strokes && skillPatterns.length > 1 && (
         <div className="toggle" role="group" aria-label="Pattern">
           {skillPatterns.map((p, k) => <button key={p.id} type="button" aria-pressed={k === pi} onClick={() => setPi(k)}>{p.name}</button>)}
         </div>
       )}
-      {pattern && chords.length > 0 && <PickingPattern key={pattern.id} pattern={pattern} chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} bpm={metro.bpm} />}
-      {card === 'note_caller' && <NoteCaller metro={metro} />}
-      {hasMetro && (
+      {pattern && on('card') && chords.length > 0 && <PickingPattern key={pattern.id} pattern={pattern} chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} bpm={metro.bpm} />}
+      {(card === 'note_caller' ? on('card') : !!els?.includes('note_caller')) && <NoteCaller metro={metro} />}
+      {hasMetro && on('metronome') && (
         <Metronome metro={metro} target={target} ladder={target !== null ? tempoLadder(first, target) : null}
           drone={drone} onDrone={() => setDrone(!drone)} tonic={tonic} />
       )}

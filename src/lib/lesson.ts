@@ -1,5 +1,5 @@
 import { termsIn, type GlossaryEntry } from '../../supabase/functions/_shared/engine/glossary.ts';
-import { recipeFor, type Card, type SkillRecipe } from '../../supabase/functions/_shared/engine/recipes.ts';
+import { recipeFor, type Card, type SkillRecipe, type StepElement } from '../../supabase/functions/_shared/engine/recipes.ts';
 import type { BlockKind, LessonPlan, Skill } from '../../supabase/functions/_shared/engine/types.ts';
 import type { BlockContent, LessonContent } from '../../supabase/functions/_shared/lesson/contract.ts';
 
@@ -56,6 +56,15 @@ export function blockCard(kind: BlockKind, skill: Skill | undefined): { card: Ca
   if (kind === 'apply') return { card: 'rhythm', recipe: undefined };
   const recipe = skill ? recipeFor(skill) : undefined;
   return { card: recipe?.card ?? 'none', recipe };
+}
+
+/**
+ * What the current step shows besides its text, or null for the whole block's elements. Only new_skill blocks gate per
+ * step: retest prepends a line (indexes shift) and stored lessons may predate the recipe's current steps.
+ */
+export function stepElements(recipe: SkillRecipe | undefined, kind: BlockKind, step: number, stepCount: number): StepElement[] | null {
+  if (kind !== 'new_skill' || !recipe?.show || recipe.show.length !== stepCount) return null;
+  return recipe.show[step] ?? null;
 }
 
 /** One block's text, reading both engine-written lessons and ones stored before them (tips/explanation). */
