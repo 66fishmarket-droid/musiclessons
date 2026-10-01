@@ -42,7 +42,10 @@ Research: `Music_Lessons Vault/Research/fretboard_shortcuts/`.
   - "4th" double-fires inside "sharp 4th";
   - wide maps scroll sideways at phone width.
 
-## Deploy (needs the owner's go-ahead), in this order
+## Deploy status
+- 2026-10-01: migration pushed to `uoytcppwovhteqklezmq` (5 checked skills present, 27 progress rows intact). `generate-lesson` deployed; an unauthenticated call returns 401. PR #10 is open for the Netlify step.
+
+## Deploy order
 1. `supabase db push`: the migration.
 2. `supabase functions deploy generate-lesson`: the recipes live in the shared engine.
 3. Merge `dev` → `main`: Netlify.
