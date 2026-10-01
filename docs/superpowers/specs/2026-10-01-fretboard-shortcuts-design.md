@@ -64,11 +64,12 @@ export function neckMap(kind: MapKind, key: string): NeckMap;
 
 ## Per-step elements
 ```ts
-export type StepElement = 'card' | 'chords' | 'metronome';
+export type StepElement = 'card' | 'chords' | 'metronome' | 'note_caller';
 // SkillRecipe gains: show?: StepElement[][]  — one entry per step, same length as steps
 ```
 - `'card'` is the recipe's card (neck map, scale, triads, pattern, rhythm or note caller). `'chords'` is the chord panel.
-  `'metronome'` is the tempo card.
+  `'metronome'` is the tempo card. `'note_caller'` adds the note-calling drill to a recipe whose card is something else
+  (octave shapes: learn on the neck map, then drill with the caller). It's only valid when `card !== 'note_caller'`.
 - In a **new_skill** block whose recipe has `show`, Player renders only the current step's elements. A step with `[]`
   shows only its text.
 - "More about this" and "About this skill" stay on every step.
@@ -102,7 +103,7 @@ New engine-text terms get entries per the upkeep rule. Expected candidates: "lan
    - the gaps between neighbouring `one_string` dots match the key's scale formula;
    - all frets are within 0–15.
 2. Recipes: every `neck_map` recipe has a valid `map`; every `show` has the same length as `steps` and holds only known
-   elements; any step whose text has the `{start_bpm}` ladder includes `'metronome'`.
+   elements; `'note_caller'` never appears when the card is already `note_caller`; any step whose text has the `{start_bpm}` ladder includes `'metronome'`.
 3. Curriculum: every new skill has a recipe, its level and track are as in the table, and `majorKeyOnly` is set on the grid.
 4. A pure helper `stepElements(recipe, kind, step)` in `src/lib/lesson.ts`, tested: the new_skill block with `show`
    returns that step's list; any other kind, or no `show`, returns null (meaning per-block behaviour).
