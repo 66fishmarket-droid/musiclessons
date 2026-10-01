@@ -7,7 +7,27 @@ each definition may only use terms listed above it.
 descriptions, and the scale names the styles feed into the warmup ("Play G mixolydian…").
 **Owner addition:** every scale and mode, whether or not the current text uses it.
 
-**About 95 terms in total.** The "Probably skip" list at the bottom is the easiest place to trim.
+**Owner decisions (2026-10-01):** include everyday guitar words (group 0). One "bridge" entry explains both
+meanings. "Blues" alone matches the blues scale entry; 12-bar blues and blues structures are added. 9th, 11th and 13th
+(and add9/add11) are added.
+
+**About 115 terms in total.**
+
+## 0. The guitar itself
+| id | term | match words | seen in |
+|---|---|---|---|
+| string_numbers | Strings and string numbers | string, strings, string 1, string 6, low e, high e | everywhere ("string 6") |
+| fret | Fret | fret, frets, fretted, fretting | everywhere |
+| fretboard | Fretboard / neck | fretboard, neck | CAGED, triads |
+| nut | Nut | nut | chord diagrams, open strings |
+| bridge | Bridge (two meanings) | bridge, bridges | palm muting (guitar part), bridges designed backwards (song section) |
+| chord_diagram | Chord diagram / chord box | chord diagram, chord diagrams, chord box, card | chord panel, "the card shows" |
+| tab | Tab | tab, tablature | picking pattern card |
+| fretting_hand | Fretting hand / picking hand | fretting hand, fretting-hand, picking hand, pick hand | many recipes |
+| pick | Pick | pick, plectrum | rhythm |
+| strum | Strum | strum, strums, strumming | everywhere |
+| shape | Shape | shape, shapes | CAGED, triads, octaves |
+| position | Position | position | warmup ("in the position shown") |
 
 ## 1. Sound & pitch
 | id | term | match words | seen in |
@@ -34,6 +54,9 @@ descriptions, and the scale names the styles feed into the warmup ("Play G mixol
 | fifth | 5th | 5th, fifth | triads, shells |
 | sixth | 6th | 6th, 6ths, sixth, sixths | sliding 6ths |
 | seventh | 7th | 7th, seventh | shells |
+| ninth | 9th | 9th, ninth | extensions theory |
+| eleventh | 11th | 11th, eleventh | extensions theory, add11 chords |
+| thirteenth | 13th | 13th, thirteenth | extensions theory |
 
 ## 3. Scales & keys
 | id | term | match words | seen in |
@@ -52,7 +75,8 @@ descriptions, and the scale names the styles feed into the warmup ("Play G mixol
 | major_pentatonic | Major pentatonic | major pentatonic | warmup (styles) |
 | minor_pentatonic | Minor pentatonic | minor pentatonic | warmup (styles) |
 | pentatonic | Pentatonic | pentatonic | CAGED pentatonic, fills |
-| blues_scale | Blues scale | blues scale, minor blues, major blues | warmup (styles) |
+| blues_scale | Blues scale | blues scale, blues, minor blues, major blues | warmup (styles: "Play G blues") |
+| blue_note | Blue note | blue note, blue notes | blues scale definition |
 | mode | Mode | mode, modes | style transplant, theory |
 | ionian | Ionian | ionian | owner addition |
 | dorian | Dorian | dorian | warmup (styles) |
@@ -82,7 +106,9 @@ descriptions, and the scale names the styles feed into the warmup ("Play G mixol
 | shell | Shell voicing | shell, shells, shell voicing | seventh-chord shells |
 | voicing | Voicing | voicing, voicings | shells |
 | sus | Sus chord | sus, sus2, sus4, suspended | sus hammer-ons, lower sets |
-| add | Add chord | add9, add chord | sus/add theory |
+| add | Add chord | add9, add11, add chord | sus/add theory |
+| extension | Extension | extension, extensions | extensions theory |
+| dominant_seventh | Dominant 7th chord | dominant 7th, dominant seventh | blues, secondary dominants |
 | open_chord | Open chord / open string | open chord, open string, open strings | pull-offs, notes on 6 and 5 |
 | barre | Barre | barre, barre chord | double-stops from barre shapes |
 | caged | CAGED | caged, e-shape, a-shape | CAGED recipes |
@@ -106,6 +132,9 @@ descriptions, and the scale names the styles feed into the warmup ("Play G mixol
 | harmonic_rhythm | Harmonic rhythm | harmonic rhythm | verse/chorus, style transplant |
 | modulation | Modulation (key change) | modulation, key change, key changes | key changes |
 | pivot_chord | Pivot chord | pivot chord, pivot-chord | key changes |
+| twelve_bar | 12-bar blues | 12-bar blues, 12-bar, twelve-bar blues, twelve-bar | blues styles (owner addition) |
+| quick_change | Quick change | quick change, quick-change | 12-bar variants (owner addition) |
+| turnaround | Turnaround | turnaround, turnarounds | blues, fills (owner addition) |
 
 ## 6. Rhythm
 | id | term | match words | seen in |
@@ -148,14 +177,12 @@ descriptions, and the scale names the styles feed into the warmup ("Play G mixol
 | verse | Verse | verse, verses | songwriting |
 | chorus | Chorus | chorus, choruses | songwriting |
 | pre_chorus | Pre-chorus | pre-chorus | pre-chorus tension |
-| bridge_section | Bridge (song section) | bridge, bridges | bridges designed backwards |
 | phrase | Phrase | phrase, phrases | G-run, fills, create |
 | register | Register | register | verse/chorus contrast |
 | prosody | Prosody | prosody | object writing and prosody |
 
-## Probably skip (everyday words, or already explained in the step itself)
-- strum, pick, fret, string, neck, open (as an adjective), shape, position, pattern, loop, take: everyday guitar words. If they're cut, a total beginner still has to work out "fret" and "string" without help.
-- "bridge" is ambiguous: the guitar's bridge (palm muting) vs the song section. The matcher can't tell them apart, so the one "bridge" entry has to cover both meanings, or it gets dropped.
+## Not defined (explained in the step itself, or ambiguous)
+- open (as an adjective), pattern, loop, take: plain English in context.
 - "tone" is left out of whole step on purpose: the recipes use it to mean sound quality.
 - object writing, melody skeleton, stable/unstable line, truck-driver modulation: each recipe already defines these in its first step.
-- "blues" alone isn't matched: it's a style name as well as a scale. Only "blues scale", "minor blues" and "major blues" match.
+- The 12-bar blues entry covers its common shapes (standard, quick change, 8-bar) and the shuffle strum it's usually played with.
