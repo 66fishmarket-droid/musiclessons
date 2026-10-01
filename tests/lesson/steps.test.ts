@@ -1,3 +1,4 @@
+import { stepElements } from '../../src/lib/lesson.ts';
 import { describe, expect, it } from 'vitest';
 import { buildMusic } from '../../supabase/functions/_shared/engine/music.ts';
 import { planLesson, targetFor } from '../../supabase/functions/_shared/engine/planner.ts';
@@ -130,5 +131,18 @@ describe('buildSteps', () => {
         }
       }
     }
+  });
+});
+
+describe('per-step elements line up with the engine-written steps', () => {
+  it('gives every block of a real lesson a per-step list of the right length (review/reset excepted)', () => {
+    const { blocks } = buildSteps(PLAN, SKILL_MAP);
+    PLAN.blocks.forEach((b, i) => {
+      if (b.kind === 'review' || b.kind === 'reset') return;
+      const skillId = b.kind === 'retest' ? PLAN.retest?.skill_id : PLAN.skill_id;
+      const recipe = skillId ? RECIPES[skillId] : undefined;
+      const n = blocks[i].instructions.length;
+      expect(stepElements(recipe, b.kind, 0, n, PLAN.create_task_id), `${b.kind} (${n} steps)`).not.toBeNull();
+    });
   });
 });

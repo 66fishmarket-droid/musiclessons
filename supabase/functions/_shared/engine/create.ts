@@ -1,4 +1,7 @@
-export interface CreateTask { id: string; prompt: string; steps: string[]; songwriting?: string[] }
+import type { StepElement } from './recipes.ts';
+
+/** `show`: per step, what Player shows besides the text (the prompt card is always on); the recorder only on RECORD. */
+export interface CreateTask { id: string; prompt: string; steps: string[]; show: StepElement[][]; songwriting?: string[] }
 
 const RECORD = 'Record it with the app\'s recorder and listen back once.';
 
@@ -12,6 +15,7 @@ export const CREATE_TASKS: CreateTask[] = [
       'Find it first: pick {degrees:1,3,5} one note at a time on the top strings until you like the order. The fretboard shows them as 1, 3 and 5.',
       'Now play {chords} with the day\'s rhythm and sing (or hum) the tune over it, one bar per chord.', RECORD,
     ],
+    show: [[], ['scale'], ['chords'], ['chords', 'recorder']],
   },
   {
     id: 'question_answer', songwriting: ['songwriting.l2.melody_skeleton', 'songwriting.l2.section_contrast'],
@@ -21,6 +25,7 @@ export const CREATE_TASKS: CreateTask[] = [
       'Over the first two bars, sing a short phrase that ends on {degrees:5}. It sounds unfinished, like a question.',
       'Over the last two bars, sing a phrase that ends on {degrees:1}. It sounds like home, the answer.', RECORD,
     ],
+    show: [['chords'], ['chords', 'scale'], ['chords', 'scale'], ['chords', 'recorder']],
   },
   {
     id: 'rhyming_couplet', songwriting: ['songwriting.l1.object_writing'],
@@ -30,6 +35,7 @@ export const CREATE_TASKS: CreateTask[] = [
       'Play {chords}, one bar per chord, and say the lines in time with the strum.',
       'Now sing them: the first line on {degrees:1}, the second on {degrees:5}.', RECORD,
     ],
+    show: [[], ['chords'], ['chords', 'scale'], ['chords', 'recorder']],
   },
   {
     id: 'new_feel', songwriting: ['songwriting.l5.style_transplant'],
@@ -39,6 +45,7 @@ export const CREATE_TASKS: CreateTask[] = [
       'Change exactly one thing: move the bass note to a different beat, or leave one strum out.',
       'Hum or sing any line over the new feel and notice what changed in the mood.', RECORD,
     ],
+    show: [['chords'], ['chords'], ['chords'], ['chords', 'recorder']],
   },
   {
     id: 'one_note_verse', songwriting: ['songwriting.l3.prechorus_tension'],
@@ -48,6 +55,7 @@ export const CREATE_TASKS: CreateTask[] = [
       'Sing or speak any line of words, keeping every syllable on {degrees:1}.',
       'Listen to how the same note feels different over each chord.', RECORD,
     ],
+    show: [['chords'], ['chords', 'scale'], ['chords'], ['chords', 'recorder']],
   },
 ];
 

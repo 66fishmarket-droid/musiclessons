@@ -50,7 +50,7 @@ export function neckMap(kind: MapKind, key: string, minor = false): NeckMap {
     case 'intervals': {
       const dots: NeckDot[] = [];
       const links: [NeckDot, NeckDot][] = [];
-      const steps: [string, number][] = [['3', 4], ['5', 7], ['b7', 10], ['8', 12]];
+      const steps: [string, number][] = [...(minor ? [['b3', 3] as [string, number]] : []), ['3', 4], ['5', 7], ['b7', 10], ['8', 12]];
       for (const s0 of [0, 1]) {
         const r = fretOf(s0, pc, 1);
         const root: NeckDot = { string: s0, fret: r, label: 'R', note: tonic, root: true };
@@ -65,7 +65,7 @@ export function neckMap(kind: MapKind, key: string, minor = false): NeckMap {
         }
       }
       return { ...span(dots), dots, links,
-        caption: `R is ${tonic}. From a root on string 6 or 5: the 3rd is one string up, one fret back; the 5th is one string up, two frets up; the b7 is two strings up, same fret; 8 is the octave.` };
+        caption: `R is ${tonic}. From a root on string 6 or 5: the 3rd is one string up, one fret back; the 5th is one string up, two frets up; the b7 is two strings up, same fret; 8 is the octave.${minor ? ' In a minor key the b3 sits one fret below the 3rd.' : ''}` };
     }
     case 'grid': {
       // Fixed shape so it moves unchanged between keys: 1 on string 6, then 4, 5 and 6 on string 5 at +0, +2 and +4 frets.

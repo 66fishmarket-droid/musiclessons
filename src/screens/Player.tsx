@@ -101,7 +101,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
   const [drone, setDrone] = useState(false);
   useDrone(drone ? tonic : null);
   const [step, setStep] = useState(0);
-  const els = stepElements(recipe, block.kind, step, steps.length);
+  const els = stepElements(recipe, block.kind, step, steps.length, plan.create_task_id);
   const on = (e: StepElement) => elementVisible(els, e);
   const [sheet, setSheet] = useState<string | null>(null);
   const [about, setAbout] = useState(false);
@@ -157,12 +157,12 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
       </section>
       {text.listen_for && <p className="muted"><b>Listen for:</b> {text.listen_for}</p>}
 
-      {block.kind === 'warmup' && <ScaleBoard scale={plan.music.scale} />}
+      {block.kind === 'warmup' && on('scale') && <ScaleBoard scale={plan.music.scale} />}
       {block.kind === 'create' && <section className="card"><p><ChordText text={content.create_prompt} onChord={setSheet} /></p></section>}
       {showChords && on('chords') && <ChordPanel chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} onShapes={setSheet} />}
-      {block.kind === 'create' && <ScaleBoard scale={plan.music.scale} />}
-      {block.kind === 'create' && <Recorder onTake={() => {}} />}
-      {block.kind === 'record' && <Recorder onTake={onTake} />}
+      {block.kind === 'create' && on('scale') && <ScaleBoard scale={plan.music.scale} />}
+      {block.kind === 'create' && on('recorder') && <Recorder onTake={() => {}} />}
+      {block.kind === 'record' && on('recorder') && <Recorder onTake={onTake} />}
       {card === 'scale' && on('card') && <ScaleBoard scale={plan.music.scale} highlight={recipe?.degrees} />}
       {card === 'triads' && on('card') && <TriadBoard triads={plan.music.triads} />}
       {card === 'neck_map' && recipe?.map && on('card') && (
@@ -175,7 +175,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
       )}
       {pattern && on('card') && chords.length > 0 && <PickingPattern key={pattern.id} pattern={pattern} chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} bpm={metro.bpm} />}
       {(card === 'note_caller' ? on('card') : !!els?.includes('note_caller')) && <NoteCaller metro={metro} />}
-      {hasMetro && elementVisible(els, 'metronome', metro.playing) && (
+      {hasMetro && elementVisible(els, 'metronome', metro.playing || drone) && (
         <Metronome metro={metro} target={target} ladder={target !== null ? tempoLadder(first, target) : null}
           drone={drone} onDrone={() => setDrone(!drone)} tonic={tonic} />
       )}

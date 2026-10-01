@@ -2,8 +2,11 @@ import type { MapKind } from './neck.ts';
 import type { Skill } from './types.ts';
 
 export type Card = 'pattern' | 'rhythm' | 'note_caller' | 'scale' | 'triads' | 'chords' | 'neck_map' | 'none';
-/** What a step shows besides its text: the recipe's card, the chord panel, the tempo card, or the note-calling drill. */
-export type StepElement = 'card' | 'chords' | 'metronome' | 'note_caller';
+/**
+ * What a step shows besides its text: the recipe's card, the chord panel, the tempo card, the note-calling drill, the
+ * day's scale board (warm-up/create) or the recorder.
+ */
+export type StepElement = 'card' | 'chords' | 'metronome' | 'note_caller' | 'scale' | 'recorder';
 
 export interface SkillRecipe {
   card: Card; patterns?: string[]; grid?: string; gridName?: string; degrees?: number[];
@@ -25,6 +28,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'A pinch is the thumb and a finger plucking at the same instant. Play {pattern_name}: {pattern_counts}.',
       THROUGH, LADDER,
     ],
+    show: [['card', 'chords'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'Both notes of each pinch landing as one sound, and every string at the same volume.',
   },
   'fingerstyle.l1.giuliani_arpeggios': {
@@ -33,6 +37,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Fret {chord1}. Thumb on string {root_string} (the root); index, middle and ring on the top three strings.',
       'Play {pattern_name}: {pattern_counts}.', THROUGH, LADDER,
     ],
+    show: [['card', 'chords'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'Even volume across the fingers, and the bass note ringing under the treble.',
   },
   'fingerstyle.l2.thumb_single_bass': {
@@ -42,6 +47,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Rest the edge of your picking hand lightly on the strings by the bridge so the bass thuds a little.',
       'Count out loud while it runs: {pattern_counts}. The thumb must not drift.', THROUGH, LADDER,
     ],
+    show: [['card', 'chords'], ['card', 'chords'], ['card', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'Identical spacing and volume on every beat.',
   },
   'fingerstyle.l2.alternating_thumb': {
@@ -50,6 +56,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Fret {chord1}. The thumb alternates: the root on string {root_string}, then the alternate bass string the card shows.',
       'Play {pattern_name}: {pattern_counts}. Fingers stay off for now.', THROUGH, LADDER,
     ],
+    show: [['card', 'chords'], ['card', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'A steady boom-boom bass with no gap when the thumb changes string.',
   },
   'fingerstyle.l3.travis_basic': {
@@ -59,6 +66,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Then switch the card to Travis and add the fingers between the thumb notes, keeping the thumb exactly as it was.',
       THROUGH, LADDER,
     ],
+    show: [['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'The thumb never waiting for the fingers; the treble notes falling between the bass notes.',
   },
   'fingerstyle.l3.travis_changes': {
@@ -68,6 +76,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Before you start the loop, look at where the root and alternate bass sit on each chord of {chords}.',
       'Play through {chords}, one chord per bar. Change the fretting hand a beat early if you need to; the thumb keeps time.', LADDER,
     ],
+    show: [['card', 'chords', 'metronome'], ['card', 'chords'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'An unbroken bass line across every chord change.',
   },
   'fingerstyle.l4.accompaniment_patterns': {
@@ -77,6 +86,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Switch the card to each of the other patterns and play the same chords with it.',
       'Keep the thumb on the root of each chord whatever the fingers do.', LADDER,
     ],
+    show: [['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'Each pattern keeping its own feel at the same tempo.',
   },
   'fingerstyle.l4.sing_over_pattern': {
@@ -86,6 +96,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Hum one steady note over it for a full pass.', 'Now speak any line of words in rhythm over it.',
       'Now sing the line. If the hands stumble, go back to humming.',
     ],
+    show: [['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'The picking staying identical when the voice comes in.',
   },
   'fingerstyle.l5.melody_over_thumb': {
@@ -95,6 +106,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'With a free finger, pick {degrees:1,3,5} one at a time on the top strings, on the beat, while the thumb carries on.',
       'Then move those notes between the beats. Stay on {chord1} until the bass never stops.', LADDER,
     ],
+    show: [['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'The bass carrying on untouched under every melody note.',
   },
   'fingerstyle.l5.arrange_own_song': {
@@ -104,6 +116,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'For each chord, find the root the thumb will play. Practise the changes with {chords} first.',
       'Play the whole song with the pattern, then record a full take with the app\'s recorder.',
     ],
+    show: [['card'], ['card', 'chords'], ['card', 'chords', 'metronome']],
     listenFor: 'The guitar supporting the voice, never competing with it.',
   },
   // Rhythm: a grid in style-grid tokens (B bass, P fingers, D/U strum, d/u muted ghost, x mute, - rest), 16 slots = one 4/4 bar in 16ths, 12 = 12/8 feel.
@@ -114,6 +127,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Strum {chord1}: {rhythm_counts}. Start with only the downs landing hard; keep the ups light and even.',
       'Then through {chords}, one chord per bar.', LADDER,
     ],
+    show: [[], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'Down and up strokes perfectly even in spacing, with the hand never pausing between them.',
   },
   'rhythm.l1.accents_palm_mute': {
@@ -123,6 +137,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Strum on {chord1}: {rhythm_counts}. Lift the palm for the bright arrows; keep it down for the faded (muted) ones.',
       'Then through {chords}, one chord per bar.', LADDER,
     ],
+    show: [[], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'Loud open strums and soft thuds, with the time never wavering.',
   },
   'rhythm.l2.backbeat_chuck': {
@@ -132,6 +147,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Strum {chord1}: {rhythm_counts}. The × marks are chucks, not strums — mute with the fretting hand exactly on beats 2 and 4.',
       'Then through {chords}, one chord per bar.', LADDER,
     ],
+    show: [[], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'A sharp, short thud on 2 and 4, as crisp as a snare hit.',
   },
   'rhythm.l2.ghost_strums': {
@@ -141,6 +157,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Strum {chord1}: {rhythm_counts}. The faded arrows are ghosts; press only slightly harder on the notated hits.',
       'Then through {chords}, one chord per bar.', LADDER,
     ],
+    show: [[], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'The hand never stopping, with only the named hits ringing out above the quiet ghosts.',
   },
   'rhythm.l3.anticipations': {
@@ -150,6 +167,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Strum {chord1}: {rhythm_counts}. That last hit is the anticipation — move the fretting hand there, just before the downbeat.',
       'Then through {chords}, changing early on the anticipation every time, one chord per bar.', LADDER,
     ],
+    show: [[], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'The new chord already ringing a fraction before beat 1 lands, not after it.',
   },
   'rhythm.l3.shuffle_68': {
@@ -159,6 +177,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Play {chord1}: {rhythm_counts}. The bass note opens each triplet; the strum fills its last third.',
       'Then through {chords}, one chord per bar.', LADDER,
     ],
+    show: [[], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'An even long-short swing on every beat that never straightens out into flat time.',
   },
   'rhythm.l4.dynamics_arrangement': {
@@ -169,6 +188,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Play through {chords} once quiet, once loud, so the two passes sit far apart.',
       'Rate yourself 1–5 on how big the jump between quiet and loud really was.',
     ],
+    show: [['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], []],
     listenFor: 'A real jump in volume and attack between the two passes, not a small nudge.',
   },
   'rhythm.l4.stops_breaks': {
@@ -179,6 +199,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Strike {chord1} again on the next beat 1 to re-enter exactly in time, then cut it dead again.',
       'Aim for {target_reps} clean passes in a row.',
     ],
+    show: [['chords'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'Total silence after the hit, and the re-entry landing exactly on beat 1.',
   },
   'rhythm.l5.be_the_band': {
@@ -188,6 +209,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Play {chord1}: {rhythm_counts}. Thumb alone on beats 1 and 3; the down-up strum answers on 2 and 4.',
       'Then through {chords}, one chord per bar, keeping the thumb on the root of each new chord.', LADDER,
     ],
+    show: [[], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'A steady bass pulse on 1 and 3 under a crisp strum on 2 and 4, like two players.',
   },
   'rhythm.l5.offbeat_stabs': {
@@ -197,6 +219,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Play {chord1}: {rhythm_counts}. Every × lands on an "and" — never on the beat itself.',
       'Then through {chords}, one chord per bar, stabbing on every "and" and staying silent on the beats.', LADDER,
     ],
+    show: [['chords'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
     listenFor: 'A crisp, short "chk" landing only between the beats, with true silence on the beats themselves.',
   },
   // Ear & voice: scale card, degrees highlighted on the fretboard; drone from the metronome card; no mic, so every step ends in self-rating.
@@ -208,6 +231,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Play {degrees:1} again to check: did you land on it, above it, or below it?',
       'Rate yourself 1–5 on how close your pitch matching was today.',
     ],
+    show: [['metronome'], ['card', 'metronome'], ['card'], []],
     listenFor: 'Your sung note settling into the drone until you cannot hear two separate pitches.',
   },
   'ear_voice.l1.sing_135': {
@@ -217,6 +241,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Sing up 1-3-5, that is {degrees:1,3,5}, then back down. Play each note first if you lose it.',
       'Now sing 5-4-3-2-1: {degrees:5,4,3,2,1}.', 'Rate yourself 1–5 on how close each note felt.',
     ],
+    show: [['card', 'metronome'], ['card', 'metronome'], ['card', 'metronome'], []],
     listenFor: 'Each sung note blending with the drone instead of wobbling against it.',
   },
   'ear_voice.l2.sing_all_degrees': {
@@ -227,6 +252,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Go in a random order instead of straight up the scale, resolving home every time.',
       'Rate yourself 1–5 on how quickly each degree found its way home.',
     ],
+    show: [['card', 'metronome'], ['card', 'metronome'], ['card', 'metronome'], []],
     listenFor: 'Every degree settling cleanly onto the drone\'s note when it resolves.',
   },
   'ear_voice.l2.sing_roots': {
@@ -237,6 +263,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Now sing them in a random order, naming which one it is ("one", "four", "five" or "six") as you sing it.',
       'Rate yourself 1–5 on how fast you named each root.',
     ],
+    show: [['card'], ['card', 'metronome'], ['card', 'metronome'], []],
     listenFor: 'Each sung root landing exactly on the drone\'s pitch before you name it.',
   },
   'ear_voice.l3.sing_chord_tones': {
@@ -247,6 +274,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Strum the {key} chord again and sing root-3rd-5th straight through without stopping to check each note first.',
       'Rate yourself 1–5 on how clean each of the three notes was.',
     ],
+    show: [['card', 'metronome'], ['card', 'metronome'], ['card', 'metronome'], []],
     listenFor: 'Three clearly separate pitches inside the chord, landing low to high without sliding.',
   },
   'ear_voice.l3.harmony_thirds_sixths': {
@@ -257,6 +285,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Play {degrees:1} again as the melody note. Sing a 3rd above it, then a 6th above it, back to back, without checking each on the guitar first.',
       'Rate yourself 1–5 on how in-tune each harmony note felt against the melody note.',
     ],
+    show: [['card'], ['card'], ['card'], []],
     listenFor: 'The harmony note sitting clearly above the melody note, never unison or below it.',
   },
   'ear_voice.l4.colour_notes': {
@@ -267,6 +296,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Pick any two colour notes and sing them back to back, without replaying them on the guitar first.',
       'Rate yourself 1–5 on how confidently you found each colour note by ear.',
     ],
+    show: [['card', 'metronome'], ['card', 'metronome'], ['metronome'], []],
     listenFor: 'Each colour note sitting clearly darker or brighter than its nearby scale degree, not identical to it.',
   },
   'ear_voice.l4.borrowed_chords_by_ear': {
@@ -277,6 +307,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Play {chords} again. On one bar, swap the chord for iv, bVI or bVII in your head and sing the changed note before you hear it played.',
       'Rate yourself 1–5 on how clearly the borrowed chord stood out.',
     ],
+    show: [['card'], ['card', 'metronome'], ['card', 'metronome'], []],
     listenFor: 'The borrowed chord sounding darker or further from home than the diatonic chords around it.',
   },
   'ear_voice.l5.harmony_while_strumming': {
@@ -287,6 +318,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Strum {chords} again, singing that harmony line the whole way through. If the hands falter, hum it instead of singing words.',
       'Rate yourself 1–5 on how steady the strumming stayed while you sang.',
     ],
+    show: [['card'], ['card'], ['card'], []],
     listenFor: 'The strum pattern completely unaffected by the voice coming in.',
   },
   'ear_voice.l5.transcribe_progression': {
@@ -297,6 +329,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Write down the numeral for that degree, then repeat for every new chord until the progression loops.',
       'Rate yourself 1–5 on how many chords you placed correctly.',
     ],
+    show: [['card'], ['card'], ['card'], []],
     listenFor: 'Each root landing cleanly on one scale degree, not hovering between two.',
   },
   // Fretboard: note_caller for the two note-finding skills; triads for the shapes the triads card actually draws
@@ -340,7 +373,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
     card: 'neck_map', map: 'intervals',
     steps: [
       'Find {degrees:1} on string 6: that is the root (R). Every other dot on the card is measured from it.',
-      'The 3rd (a major 3rd) is one string up and one fret back; the 5th is one string up and two frets up. Play R, 3, 5 and say "root, third, fifth".',
+      'The 3rd (a major 3rd) is one string up and one fret back; the 5th is one string up and two frets up. Play R, 3, 5 and say "root, third, fifth". In a minor key, use the b3, one fret lower.',
       'The b7 is two strings up at the same fret, and the octave (8) is two strings up, two frets up. Play R, 3, 5, b7, 8.',
       'Now start from {degrees:1} on string 5: the shapes are identical, because strings 5, 4 and 3 are also 5 frets apart.',
       'Aim for {target_reps} clean passes in a row, naming each note\'s number as you play it.',
@@ -389,6 +422,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Move to the next inversion only once the last one rings clean and in tune.',
       LADDER,
     ],
+    show: [['card'], ['card'], ['card'], ['card', 'metronome']],
     listenFor: 'All three notes of each shape ringing together, with no muted or buzzing string.',
   },
   'fretboard.l3.triads_432': {
@@ -399,6 +433,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Compare the sound to the 3-2-1 set: the same three notes, sitting one string lower overall.',
       LADDER,
     ],
+    show: [['card'], ['card'], ['card'], ['card', 'metronome']],
     listenFor: 'Every note in each shape ringing evenly, including the middle string most players mute by accident.',
   },
   'fretboard.l3.minor_triads': {
@@ -409,6 +444,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Say "minor" out loud each time you land on a new shape, to keep the darker sound in your ear.',
       LADDER,
     ],
+    show: [['card'], ['card'], ['card'], ['card', 'metronome']],
     listenFor: 'The minor 3rd sounding noticeably darker than a major triad, with the shape still ringing clean.',
   },
   'fretboard.l4.voice_leading_inversions': {
@@ -419,6 +455,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Never jump back to an open or low shape mid-progression — the smallest hand move wins.',
       LADDER,
     ],
+    show: [['card'], ['card'], ['card'], ['card', 'metronome']],
     listenFor: 'Each chord change covering the smallest possible distance up or down the neck.',
   },
   'fretboard.l4.triads_lower_sets': {
@@ -429,6 +466,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Build {chord1}\'s triad on strings 5-4-3 first, then move the same shape down to strings 6-5-4.',
       LADDER,
     ],
+    show: [['card'], ['card'], ['card'], ['card', 'metronome']],
     listenFor: 'All three notes on the lower strings ringing as clearly as the higher sets you already know.',
   },
   'fretboard.l4.one_string_scale': {
@@ -450,6 +488,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Do the same with a 6th shape, {degrees:1,6}, moving it degree by degree through {scale}.',
       LADDER,
     ],
+    show: [['card'], ['card'], ['card'], ['card', 'metronome']],
     listenFor: 'Both notes of each pair landing together, evenly balanced in volume.',
   },
   'fretboard.l5.seventh_shells': {
@@ -460,6 +499,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Say "root, third, seventh" as you play each note of the shell.',
       'Aim for {target_reps} clean passes in a row.',
     ],
+    show: [['card'], ['card'], ['card'], ['card']],
     listenFor: 'Three clear, separate notes with no muffled or buzzing string between them.',
   },
   // Fills: chord panel only, no tab card yet (spec §8) — strings, frets and shapes stay in words, relative
@@ -473,6 +513,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Go through {chords}, one hammer-on and lift-off per bar.',
       LADDER,
     ],
+    show: [[], ['chords'], ['chords', 'metronome'], ['chords', 'metronome']],
     listenFor: 'The hammered note ringing as loud as a picked one, then the plain chord landing clean when the finger lifts.',
   },
   'fills.l1.open_chord_pulloffs': {
@@ -482,6 +523,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'On {chord1}, pull off one fretted note to its open string on beat 4, then land back on the chord on beat 1.',
       'Go through {chords}, one pull-off at the end of each bar.', LADDER,
     ],
+    show: [[], ['chords'], ['chords', 'metronome'], ['chords', 'metronome']],
     listenFor: 'The pulled-off note as loud as a picked one, and beat 1 landing on time.',
   },
   'fills.l2.bass_walks': {
@@ -492,6 +534,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Land exactly on the new root the instant the chord changes, then let it ring.',
       LADDER,
     ],
+    show: [[], ['chords'], ['chords', 'metronome'], ['chords', 'metronome']],
     listenFor: 'The walk arriving right on the new root with no gap when the chord changes.',
   },
   'fills.l2.g_run': {
@@ -502,6 +545,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Use it to close a phrase through {chords}, about once every four bars.',
       LADDER,
     ],
+    show: [[], ['chords'], ['chords', 'metronome'], ['chords', 'metronome']],
     listenFor: 'The run landing squarely on the root as the new phrase begins, the closing hammer or pull-off as loud as the rest.',
   },
   'fills.l3.double_stops_static_top': {
@@ -512,6 +556,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Repeat through {chords}: the top note stays put, only the lower note moves.',
       LADDER,
     ],
+    show: [[], ['chords'], ['chords', 'metronome'], ['chords', 'metronome']],
     listenFor: 'The top note staying rock steady while the lower note snaps cleanly into its new pitch.',
   },
   'fills.l3.double_stops_barre': {
@@ -522,6 +567,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Go through {chords}, sliding the double-stop up and back once on each chord.',
       LADDER,
     ],
+    show: [['chords'], ['chords'], ['chords', 'metronome'], ['chords', 'metronome']],
     listenFor: 'Both notes staying locked together through the slide, with no buzz or muted string.',
   },
   'fills.l4.sliding_thirds': {
@@ -532,6 +578,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Walk that sliding 3rd through {chords}, following each chord\'s own notes.',
       LADDER,
     ],
+    show: [[], ['chords'], ['chords', 'metronome'], ['chords', 'metronome']],
     listenFor: 'Both notes of each 3rd arriving together after the slide, neither one lagging behind.',
   },
   'fills.l4.sliding_sixths': {
@@ -542,6 +589,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Move the same sliding 6th to strings 4 and 2, then walk it through {chords}.',
       LADDER,
     ],
+    show: [[], ['chords'], ['chords', 'metronome'], ['chords', 'metronome']],
     listenFor: 'Both notes of the 6th ringing evenly through the slide, even with a string skipped between them.',
   },
   'fills.l5.pentatonic_fills_caged': {
@@ -552,6 +600,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Drop straight back into the rhythm on beat 1. Try it once per phrase through {chords}.',
       LADDER,
     ],
+    show: [['chords'], ['chords', 'metronome'], ['chords', 'metronome'], ['chords', 'metronome']],
     listenFor: 'The fill staying inside two beats and landing back on the groove exactly on beat 1.',
   },
   'fills.l5.fill_in_context': {
@@ -562,6 +611,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Repeat for another four bars, choosing a different fill each time.',
       'Aim for {target_reps} clean passes in a row.',
     ],
+    show: [['chords', 'metronome'], ['chords', 'metronome'], ['chords', 'metronome'], ['chords', 'metronome']],
     listenFor: 'Exactly one fill every four bars, with the groove never missing a beat around it.',
   },
   // Songwriting: chords or none; always end with the recorder or a written line.
@@ -572,6 +622,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Now start the same loop from the second chord, then from the third. Each start gives the same chords a different mood.',
       'Hum over your favourite start and note which one felt most like a chorus, the song\'s most repeated section.', 'Rate yourself 1–5 on how smooth the loop felt.',
     ],
+    show: [['chords', 'metronome'], ['chords', 'metronome'], ['chords'], []],
     listenFor: 'The loop landing back on its first chord without a hiccup.',
   },
   'songwriting.l1.object_writing': {
@@ -582,6 +633,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Write one more line that flips your best line: stable if it was unstable, or the reverse.',
       'Rate yourself 1–5 on how much of it was senses, not opinions.',
     ],
+    show: [[], [], [], []],
     listenFor: 'Concrete, sensory words rather than vague feelings or judgments.',
   },
   'songwriting.l2.section_contrast': {
@@ -592,6 +644,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Hum a line over each version, singing the chorus higher in your range than the verse: that\'s a third lever, register.',
       'Rate yourself 1–5 on how different the two sections felt.',
     ],
+    show: [['chords'], ['chords'], ['chords'], []],
     listenFor: 'A clearly different starting point, speed of change and register between the two.',
   },
   'songwriting.l2.melody_skeleton': {
@@ -603,6 +656,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Now decorate: add one short extra note before or after each skeleton note, then sing the decorated version.',
       'Rate yourself 1–5 on how clearly the skeleton still shows through the decoration.',
     ],
+    show: [['chords'], ['chords'], ['chords'], ['chords'], []],
     listenFor: 'The held skeleton note still landing on the beat once the decoration is added around it.',
   },
   'songwriting.l3.prechorus_tension': {
@@ -614,6 +668,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Hum a rising line over it, ending unresolved on {degrees:5} itself.',
       'Rate yourself 1–5 on how strongly it pulled you toward the next section.',
     ],
+    show: [[], ['chords'], ['chords'], ['chords'], []],
     listenFor: 'The last chord staying unresolved instead of settling home, so you want the next section to arrive.',
   },
   'songwriting.l3.borrowed_colour': {
@@ -624,6 +679,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Try it again, this time playing a minor chord built on {degrees:4} in place of one bar of {chords} — that borrowed chord is called iv.',
       'Rate yourself 1–5 on how clearly each borrowed chord changed the mood before it resolved back to {chord1}.',
     ],
+    show: [[], ['chords'], ['chords'], []],
     listenFor: 'A sudden, deliberate darkening of colour that still resolves cleanly back to the home chord.',
   },
   'songwriting.l4.bridge_backwards': {
@@ -635,6 +691,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Play the bridge straight into {chords} and listen for the chorus landing like a relief.',
       'Rate yourself 1–5 on how clearly the bridge set up that landing.',
     ],
+    show: [[], ['chords'], ['chords'], ['chords'], []],
     listenFor: 'The bridge ending on tension, then the chorus arriving like a resolved answer.',
   },
   'songwriting.l4.secondary_dominants': {
@@ -646,6 +703,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Play {chords} once more, treating {degrees:6} as home — that\'s the relative minor — then shift back to {degrees:1} as home, the relative major.',
       'Rate yourself 1–5 on how clearly each move pulled toward its target.',
     ],
+    show: [[], ['chords'], ['chords'], ['chords'], []],
     listenFor: 'Extra pull into the target chord, sharper than the plain diatonic move would give.',
   },
   'songwriting.l5.modulation': {
@@ -657,6 +715,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Say in one sentence why this moment in your song would earn a key change — if you can\'t, skip it.',
       'Rate yourself 1–5 on how smooth (pivot) or how earned (truck-driver) the shift felt.',
     ],
+    show: [[], ['chords'], ['chords'], [], []],
     listenFor: 'A shift that feels inevitable, not bolted on — earned by the lyric, not just louder.',
   },
   'songwriting.l5.style_transplant': {
@@ -668,6 +727,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
       'Hum your melody over the new version and notice which lever changed the mood the most.',
       'Rate yourself 1–5 on how recognisable the song still was after the change.',
     ],
+    show: [[], ['chords', 'metronome'], ['chords'], ['chords'], []],
     listenFor: 'The same song, one clearly different lever at a time, still recognisable underneath.',
   },
 };

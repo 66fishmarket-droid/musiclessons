@@ -1,3 +1,4 @@
+import { CREATE_TASKS } from '../../supabase/functions/_shared/engine/create.ts';
 import { termsIn, type GlossaryEntry } from '../../supabase/functions/_shared/engine/glossary.ts';
 import { MINOR_FAMILY_SCALE } from '../../supabase/functions/_shared/engine/render.ts';
 import { recipeFor, type Card, type SkillRecipe, type StepElement } from '../../supabase/functions/_shared/engine/recipes.ts';
@@ -66,13 +67,24 @@ export const isMinorScale = (name: string): boolean => MINOR_FAMILY_SCALE.test(n
 export const elementVisible = (els: StepElement[] | null, e: StepElement, active = false): boolean =>
   els === null || els.includes(e) || active;
 
+// Per-step elements for the fixed blocks, matching the step text in lesson/steps.ts.
+const FIXED_SHOW: Partial<Record<BlockKind, StepElement[][]>> = {
+  warmup: [[], ['scale', 'metronome'], ['scale', 'metronome']],
+  apply: [['card', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
+  record: [['recorder'], ['recorder'], ['recorder']],
+};
+
 /**
- * What the current step shows besides its text, or null for the whole block's elements. Only new_skill blocks gate per
- * step: retest prepends a line (indexes shift) and stored lessons may predate the recipe's current steps.
+ * What the current step shows besides its text, or null for the whole block's elements (review and reset blocks, or a
+ * stored lesson whose step count no longer matches). Retest prepends a "Cold retest" line, so its steps shift by one.
  */
-export function stepElements(recipe: SkillRecipe | undefined, kind: BlockKind, step: number, stepCount: number): StepElement[] | null {
-  if (kind !== 'new_skill' || !recipe?.show || recipe.show.length !== stepCount) return null;
-  return recipe.show[step] ?? null;
+export function stepElements(recipe: SkillRecipe | undefined, kind: BlockKind, step: number, stepCount: number, createTaskId?: string | null): StepElement[] | null {
+  const show = kind === 'new_skill' ? recipe?.show
+    : kind === 'retest' ? recipe?.show && [recipe.show[0], ...recipe.show.slice(0, stepCount - 1)]
+    : kind === 'create' ? CREATE_TASKS.find(t => t.id === createTaskId)?.show
+    : FIXED_SHOW[kind];
+  if (!show || show.length !== stepCount) return null;
+  return show[step] ?? null;
 }
 
 /** One block's text, reading both engine-written lessons and ones stored before them (tips/explanation). */

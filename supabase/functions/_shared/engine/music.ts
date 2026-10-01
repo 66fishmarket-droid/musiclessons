@@ -33,6 +33,15 @@ export function noteAt(string: number, fret: number, tuning: readonly string[] =
   return Note.pitchClass(Note.transpose(tuning[string], Interval.fromSemitones(fret)));
 }
 
+/** A note's distance from the home note as a learner reads it: '1', 'b3', '5', '#4', 'b7'. */
+export function degreeLabel(tonic: string, note: string): string {
+  const iv = Interval.get(Interval.distance(Note.pitchClass(tonic), Note.pitchClass(note)));
+  const n = ((iv.num ?? 1) - 1) % 7 + 1;
+  const perfect = [1, 4, 5].includes(n);
+  const acc = iv.q === 'm' ? 'b' : iv.q === 'd' ? (perfect ? 'b' : 'bb') : iv.q === 'A' ? '#' : iv.q === 'AA' ? '##' : '';
+  return `${acc}${n}`;
+}
+
 /** Every fret 0..maxFret on every string whose note is in the scale, with its interval degree
  * (from tonal, e.g. '2M' → 2, '5d' and '5P' both → 5) — not its array index, which is wrong for
  * any scale that isn't a plain 7-note major/minor (pentatonics, blues, modes all skip or repeat degrees). */

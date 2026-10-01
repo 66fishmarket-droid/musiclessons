@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Chord, Note } from 'tonal';
 import {
-  buildMusic, chordVoicings, noteAt, scaleBox, scalePositions, triadInversions,
+  buildMusic, chordVoicings, degreeLabel, noteAt, scaleBox, scalePositions, triadInversions,
 } from '../../supabase/functions/_shared/engine/music.ts';
 import type { StyleProfile } from '../../supabase/functions/_shared/engine/styles.ts';
 
@@ -108,5 +108,14 @@ describe('scaleBox', () => {
   it('uses open position when the root is an open string', () => {
     expect(scaleBox(scalePositions('E', 'minor'))).toMatchObject({ from: 0, to: 3 });
     expect(scaleBox(scalePositions('A', 'major'))).toMatchObject({ from: 0, to: 3 });
+  });
+});
+
+describe('degreeLabel', () => {
+  it('labels notes by their distance from the home note, with flats and sharps', () => {
+    expect(['A', 'C', 'D', 'E', 'G'].map(n => degreeLabel('A', n))).toEqual(['1', 'b3', '4', '5', 'b7']);
+    expect(['E', 'G', 'A', 'Bb', 'B', 'D'].map(n => degreeLabel('E', n))).toEqual(['1', 'b3', '4', 'b5', '5', 'b7']);
+    expect(['G', 'A', 'B', 'C', 'D', 'E', 'F#'].map(n => degreeLabel('G', n))).toEqual(['1', '2', '3', '4', '5', '6', '7']);
+    expect(degreeLabel('C', 'F#')).toBe('#4');
   });
 });

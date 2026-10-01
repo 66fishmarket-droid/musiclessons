@@ -113,7 +113,15 @@ describe('fretboard shortcuts recipes', () => {
   const SHORTCUTS = ['fretboard.l1.notes_e_a', 'fretboard.l1.b_string_rule', 'fretboard.l1.octave_shapes',
     'fretboard.l2.interval_shapes', 'fretboard.l2.caged_linked', 'fretboard.l2.pentatonic_per_shape',
     'fretboard.l2.progression_grid', 'fretboard.l4.one_string_scale'];
-  const ELEMENTS = ['card', 'chords', 'metronome', 'note_caller'];
+  const ELEMENTS = ['card', 'chords', 'metronome', 'note_caller', 'scale', 'recorder'];
+  it('gives every recipe and every create task a per-step show list matching its steps', () => {
+    for (const [id, r] of Object.entries(RECIPES)) expect(r.show?.length, id).toBe(r.steps.length);
+    for (const t of CREATE_TASKS) {
+      expect(t.show.length, t.id).toBe(t.steps.length);
+      expect(t.show.at(-1), t.id).toContain('recorder');
+      t.show.slice(0, -1).forEach(els => expect(els, t.id).not.toContain('recorder'));
+    }
+  });
   it('gives every shortcut skill a per-step show list matching its steps', () => {
     for (const id of SHORTCUTS) {
       const r = RECIPES[id];

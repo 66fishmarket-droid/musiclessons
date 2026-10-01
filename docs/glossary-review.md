@@ -553,7 +553,7 @@
 - **Notes on strings 6 and 5** (fretboard.l1.notes_e_a): Strings and string numbers, Fretboard / neck, Fret, Note, Bar, Beat
 - **The B-string rule** (fretboard.l1.b_string_rule): Strings and string numbers, Fret, Note, In tune, Fretboard / neck, Open chord / open string, 4th, Major 3rd, Chord, Shape
 - **Octave shapes** (fretboard.l1.octave_shapes): Octave, Note, Fret, Chord diagram / chord box, Fretboard / neck, Shape, Strings and string numbers, Beat
-- **Interval shapes** (fretboard.l2.interval_shapes): Strings and string numbers, Root, Chord diagram / chord box, 3rd, Major 3rd, Fret, 5th, 7th, Octave, Shape, Note
+- **Interval shapes** (fretboard.l2.interval_shapes): Strings and string numbers, Root, Chord diagram / chord box, 3rd, Major 3rd, Fret, 5th, Minor, Key, 7th, Octave, Shape, Note
 - **CAGED shapes linked** (fretboard.l2.caged_linked): CAGED, Chord, Shape, Fretboard / neck, Root, Strum, Strings and string numbers
 - **Pentatonic per CAGED shape** (fretboard.l2.pentatonic_per_shape): Pentatonic, Note, Scale, Position, CAGED, Shape, Root, Tempo (bpm), In tune
 - **The progression grid** (fretboard.l2.progression_grid): Chord, Key, Home note (tonic), Chord diagram / chord box, Root, Note, Strings and string numbers, Fret, Barre, Major, Minor, Bar, Tempo (bpm), Beat
