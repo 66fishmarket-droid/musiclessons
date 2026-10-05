@@ -8,7 +8,7 @@ export interface Song { title: string; artist: string; why: string; capo: number
 /** `tips`/`explanation` exist only on lessons stored before the engine wrote the steps. */
 export interface BlockContent { kind: BlockKind; instructions: string[]; target_text: string; listen_for: string; more: string; tips?: string; explanation?: string; rhythms?: (ReviewRhythm | null)[] }
 /** A style rhythm review step's pattern, for the app's card. */
-export interface ReviewRhythm { name: string; grid: string[]; swing?: Swing | null }
+export interface ReviewRhythm { name: string; grid: string[]; swing?: Swing | null; push?: number | null }
 export interface LessonContent {
   title: string; why_it_matters: string; theory_card: string; songs: Song[]; create_prompt: string;
   blocks: BlockContent[];

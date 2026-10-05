@@ -3184,7 +3184,8 @@
           14
         ],
         "verified": true,
-        "note": "slot 14 chord is the NEXT bar's chord, tied over"
+        "note": "slot 14 chord is the NEXT bar's chord, tied over",
+        "push": 14
       },
       {
         "id": "rock_classic.stab_and_space",
@@ -4793,7 +4794,8 @@
           14
         ],
         "verified": true,
-        "note": "chord on 14 belongs to next bar"
+        "note": "chord on 14 belongs to next bar",
+        "push": 14
       },
       {
         "id": "pop_punk.muted_to_open_alternation",

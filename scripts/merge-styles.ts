@@ -62,7 +62,7 @@ export function mergeProfiles(drafts: unknown[]): { profiles: StyleProfile[]; is
       const bad = [...new Set(grid.filter(t => !TOKEN.test(t)))];
       if (bad.length) issues.push(`${pid}: bad tokens ${bad.join('')}`);
       const verified = p.confidence ? p.confidence === 'sourced' : !INFERRED_PATTERNS.has(`${id}|${p.name}`);
-      return { id: pid, name: String(p.name), grid, accents: Array.isArray(p.accents) ? p.accents : [], verified, note: p.note ?? p.grid_note ?? null };
+      return { id: pid, name: String(p.name), grid, accents: Array.isArray(p.accents) ? p.accents : [], verified, note: p.note ?? p.grid_note ?? null, ...(typeof p.push === 'number' ? { push: p.push } : {}) };
     });
     const progressions: ProgressionDef[] = (d.progressions ?? []).map((p: any) => {
       const original = strings(p.roman).flatMap(r => r.trim().split(/\s+/));

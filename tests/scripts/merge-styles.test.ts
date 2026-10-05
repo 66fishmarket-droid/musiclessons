@@ -50,6 +50,10 @@ describe('mergeProfiles', () => {
     ] })]);
     expect(metal.rhythm_patterns.map(p => p.grid.join(''))).toEqual(['M-M-M-M-M-M-M-M-', 'DmMmMmDmMmMmMmMm', 'D-D-D-D-D-D-D-D-']);
   });
+  it('keeps a push slot (next bar chord early)', () => {
+    const { profiles: [p] } = mergeProfiles([draft({ rhythm_patterns: [{ name: 'Push', grid16: 'D-D-D-D-D-D-D-DU', push: 14 }] })]);
+    expect(p.rhythm_patterns[0].push).toBe(14);
+  });
   it('accepts picked single-note tokens', () => {
     const { issues: ok } = mergeProfiles([draft({ rhythm_patterns: [{ name: 'Jangle', grid16: 'lcnhncnhlcnhncnh' }] })]);
     expect(ok).toEqual([]);

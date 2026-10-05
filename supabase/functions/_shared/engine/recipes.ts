@@ -9,7 +9,7 @@ export type Card = 'pattern' | 'rhythm' | 'note_caller' | 'scale' | 'triads' | '
 export type StepElement = 'card' | 'chords' | 'metronome' | 'note_caller' | 'scale' | 'recorder';
 
 export interface SkillRecipe {
-  card: Card; patterns?: string[]; grid?: string; gridName?: string; degrees?: number[];
+  card: Card; patterns?: string[]; grid?: string; gridName?: string; gridPush?: number; degrees?: number[];
   steps: string[]; listenFor: string;
   majorKeyOnly?: boolean; // planner.ts keeps this skill's day off a minor-family style scale; its steps assume a major key.
   map?: MapKind; // the neck map a 'neck_map' card draws (engine/neck.ts)
@@ -161,7 +161,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
     listenFor: 'The hand never stopping, with only the named hits ringing out above the quiet ghosts.',
   },
   'rhythm.l3.anticipations': {
-    card: 'rhythm', grid: 'D---D-U-D-U-D-D-', gridName: 'Anticipated change before beat 1',
+    card: 'rhythm', grid: 'D---D-U-D-U-D-D-', gridName: 'Anticipated change before beat 1', gridPush: 14,
     steps: [
       'An anticipated chord arrives an eighth early, on the "&" of beat 4, instead of landing right on beat 1.',
       'Strum {chord1}: {rhythm_counts}. That last hit is the anticipation — move the fretting hand there, just before the downbeat.',

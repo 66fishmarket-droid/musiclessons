@@ -1,3 +1,4 @@
+import { RECIPES } from '../../supabase/functions/_shared/engine/recipes.ts';
 import { describe, expect, it } from 'vitest';
 import { TUNINGS, noteAt } from '../../supabase/functions/_shared/engine/music.ts';
 import { PATTERNS, swingOffset, nextBarChord, patternCounts, resolvePattern, rhythmCounts, rhythmPattern, voiceRoles } from '../../supabase/functions/_shared/engine/patterns.ts';
@@ -145,6 +146,19 @@ describe('picked single notes (audit group 2)', () => {
   it('names the string on each count', () => {
     expect(rhythmCounts(rhythmPattern('x', 'l-------n---h---'.split(''))))
       .toBe('1 pick the root · 3 pick the second-highest string · 4 pick the highest string');
+  });
+});
+
+describe('pushes into the next bar (audit group 5)', () => {
+  it('marks slots from the push onwards as the next chord, and says so in the counts', () => {
+    const p = rhythmPattern('Push', 'D-D-D-D-D-D-D-DU'.split(''), null, 14);
+    expect(p.push).toBe(14);
+    expect(rhythmCounts(p)).toMatch(/4& strum down \(next bar's chord, early\) · 4a strum up \(next bar's chord, early\)$/);
+  });
+  it('carries the push from the style data into the day and the anticipation skill', () => {
+    const rock = STYLE_CATALOG.profiles.flatMap(x => x.rhythm_patterns).find(r => r.id === 'rock_classic.push_into_the_next_bar')!;
+    expect(rock.push).toBe(14);
+    expect(RECIPES['rhythm.l3.anticipations'].gridPush).toBe(14);
   });
 });
 

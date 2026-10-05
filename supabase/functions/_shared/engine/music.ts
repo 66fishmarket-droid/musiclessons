@@ -15,7 +15,7 @@ export interface MusicContent {
   scale: { tonic: string; name: string; notes: string[]; positions: FretNote[] };
   progression: { roman: string[]; chords: string[] };
   voicings: Record<string, Voicing[]>;
-  rhythm: { name: string; grid: string[]; swing?: Swing | null } | null;
+  rhythm: { name: string; grid: string[]; swing?: Swing | null; push?: number | null } | null;
   triads: TriadShape[];
 }
 export interface MusicInput { key: string; track: string; style: StyleProfile | null; element: StyleElement | null }
@@ -153,7 +153,7 @@ export function buildMusic({ key, track, style, element }: MusicInput): MusicCon
     scale: { tonic: key, name: scaleName, notes: Scale.get(`${key} ${scaleName}`).notes, positions: scalePositions(key, scaleName) },
     progression: { roman: roman.map(normalizeRoman), chords },
     voicings,
-    rhythm: pattern ? { name: pattern.name, grid: pattern.grid, swing: swingOf(style) } : null,
+    rhythm: pattern ? { name: pattern.name, grid: pattern.grid, swing: swingOf(style), push: pattern.push ?? null } : null,
     // Always built (a triad skill's retest can land on a non-fretboard day), not gated by track.
     triads: [...triadInversions(chords[0], [3, 4, 5]), ...triadInversions(chords[0], [2, 3, 4])],
   };

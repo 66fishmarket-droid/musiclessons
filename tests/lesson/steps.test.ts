@@ -77,7 +77,7 @@ describe('buildSteps', () => {
 
     expect(review.instructions[0]).toContain(skill.name);
     expect(review.instructions[1]).toBe(`${pattern.name}: ${expectedCounts}. Play it through ${plan.music.progression.chords.map(c => `{${c}}`).join(' ')}, one chord per bar.`);
-    expect(review.rhythms).toEqual([null, { name: pattern.name, grid: pattern.grid, swing: swingOf(rhythmProfile) }, null]);
+    expect(review.rhythms).toEqual([null, { name: pattern.name, grid: pattern.grid, swing: swingOf(rhythmProfile), push: pattern.push ?? null }, null]);
     for (const c of chords) expect(review.instructions[2]).toContain(`{${c}}`);
   });
   it('review renders only the first recipe step, so a bpm-ladder skill with a null target doesn\'t throw', () => {

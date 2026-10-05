@@ -59,7 +59,7 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
     if (!skill) return { steps: [`Practise ${skillId}.`], listen: '' };
     const r = recipeFor(skill);
     const patternId = r.card === 'pattern' ? (today ? plan.pattern_id ?? r.patterns?.[0] : r.patterns?.[0]) ?? null : null;
-    const ctx = slotContext(plan, { target: b.items[0]?.target ?? null, patternId, grid: r.grid ?? null, gridName: r.gridName ?? null });
+    const ctx = slotContext(plan, { target: b.items[0]?.target ?? null, patternId, grid: r.grid ?? null, gridName: r.gridName ?? null, push: r.gridPush ?? null });
     return { steps: renderSteps(r.steps.slice(0, limit), ctx), listen: r.listenFor };
   };
 
@@ -81,7 +81,7 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
     if (element.kind === 'rhythm') {
       const pattern = profile?.rhythm_patterns.find(p => p.id === element.id);
       if (!pattern) return safe;
-      const ctx = slotContext(plan, { grid: pattern.grid.join(''), gridName: pattern.name, swing: swingOf(profile) });
+      const ctx = slotContext(plan, { grid: pattern.grid.join(''), gridName: pattern.name, swing: swingOf(profile), push: pattern.push ?? null });
       return renderSteps(['{rhythm_name}: {rhythm_counts}. Play it through {chords}, one chord per bar.'], ctx)[0];
     }
     const prog = profile?.progressions.find(p => p.id === element.id);
@@ -96,7 +96,7 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
     const id = ref.slice('style:'.length);
     const profile = STYLE_CATALOG.profiles.find(x => x.rhythm_patterns.some(r => r.id === id));
     const p = profile?.rhythm_patterns.find(x => x.id === id);
-    return p ? { name: p.name, grid: p.grid, swing: swingOf(profile) } : null;
+    return p ? { name: p.name, grid: p.grid, swing: swingOf(profile), push: p.push ?? null } : null;
   };
 
   const build = (b: PlanBlock): EngineBlock => {

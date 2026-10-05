@@ -48,19 +48,26 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
     if (!playing) { setPos(-1); return; }
     let k = 0;
     let bar = -1;
+    let sounding = 0; // the chord heard now: the bar's, or the next bar's after a push
     let barSteps = steps;
     const play = () => {
       const i = k % pattern.steps.length;
       if (i % barLen === 0) {
         bar = nextBarChord(bar, live.current.idx, chords.length);
+        sounding = bar;
         barSteps = live.current.stepsFor(bar);
         if (bar !== live.current.idx) live.current.onIdx(bar);
+      }
+      if (pattern.push !== undefined && i % barLen === pattern.push && chords.length > 1) {
+        sounding = (bar + 1) % chords.length; // anticipation: the next chord arrives early; nextBarChord keeps it for the new bar
+        barSteps = live.current.stepsFor(sounding);
+        live.current.onIdx(sounding);
       }
       setPos(i);
       const t = audio().currentTime + swingOffset(pattern, i) * 60 / bpm; // swung offbeats sound late
       for (const n of barSteps[i]) pluck(t, Note.freq(n.note) ?? 220);
       const st = strokes?.[i];
-      if (st) strum(t, st, live.current.voicings[chords[bar]]?.[0]);
+      if (st) strum(t, st, live.current.voicings[chords[sounding]]?.[0]);
       k++;
     };
     play();

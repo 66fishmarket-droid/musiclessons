@@ -18,6 +18,8 @@ export interface PickPattern {
   strokes?: (Stroke | null)[];
   /** Swung style rhythms on a 16th grid: how late the offbeats fall (see swingOffset). */
   swing?: Swing;
+  /** Slot in each bar from which the next bar's chord sounds early (an anticipation). */
+  push?: number;
 }
 /** A style's swing: long-to-short ratio of each offbeat pair, on 8ths (blues, jazz) or 16ths (funk, neo-soul). */
 export interface Swing { ratio: number; sixteenths: boolean }
@@ -100,7 +102,7 @@ const PICKED: Record<string, PickPattern['steps'][number]> = {
  * 3/4, else a 12/8 feel: 4 beats of triplets) or 32 (two bars of 16ths). B thumb bass, P fingers, BP pinch, N single note,
  * 5/6 the boogie riff's root + 5th / root + 6th, l/c/n/h one string picked with the pick (root, third-, second-highest, highest).
  */
-export function rhythmPattern(name: string, grid: string[], swing?: Swing | null): PickPattern {
+export function rhythmPattern(name: string, grid: string[], swing?: Swing | null, push?: number | null): PickPattern {
   const [beatsPerBar, stepsPerBeat, bars] =
     grid.length === 12 ? (name.includes('3/4') ? [3, 4, 1] : [4, 3, 1])
     : grid.length === 32 ? [4, 4, 2]
@@ -111,6 +113,7 @@ export function rhythmPattern(name: string, grid: string[], swing?: Swing | null
     strokes: grid.map(t => (t in PICKED ? null : t as Stroke)),
     // 12-slot grids are already written in triplets; below 1.2 the lilt is too small to hear.
     ...(swing && swing.ratio >= 1.2 && stepsPerBeat === 4 ? { swing } : {}),
+    ...(push != null ? { push } : {}),
   };
 }
 
@@ -150,7 +153,8 @@ export function rhythmCounts(p: PickPattern): string {
     if (!t) return;
     const bar = Math.floor(k / barLen), inBar = k % barLen;
     const count = `${Math.floor(inBar / p.stepsPerBeat) + 1}${COUNT_SUB[p.stepsPerBeat][inBar % p.stepsPerBeat]}`;
-    out.push(`${bar > lastBar ? `bar ${bar + 1}: ` : ''}${count} ${DOING[t]}`);
+    const early = p.push !== undefined && inBar >= p.push ? " (next bar's chord, early)" : '';
+    out.push(`${bar > lastBar ? `bar ${bar + 1}: ` : ''}${count} ${DOING[t]}${early}`);
     lastBar = bar;
   });
   const counts = out.join(' · ');
