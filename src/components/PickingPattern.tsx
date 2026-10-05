@@ -5,7 +5,7 @@ import { nextBarChord, resolvePattern, swingOffset, type PickPattern, type Strok
 import { audio, blip, pluck } from '../audio/clock.ts';
 
 const STRING_NAMES = ['E', 'A', 'D', 'G', 'B', 'e'];
-const FINGER_CLASS = { p: 'pk-p', i: 'pk-i', m: 'pk-m', a: 'pk-a' } as const;
+const FINGER_CLASS = { p: 'pk-p', i: 'pk-i', m: 'pk-m', a: 'pk-a', pick: 'pk-i' } as const;
 const SUB: Record<number, string[]> = { 1: [''], 2: ['', '&'], 3: ['', 'tri', 'let'], 4: ['', 'e', '&', 'a'] };
 const ARROW: Record<Stroke, string> = { D: '↓', U: '↑', d: '↓', u: '↑', M: '↓', m: '↑', x: '×' };
 const STROKE_WORD: Record<Stroke, string> = { D: 'strum down', U: 'strum up', d: 'muted down', u: 'muted up', M: 'palm-muted down', m: 'palm-muted up', x: 'mute' };
@@ -68,7 +68,8 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
     return () => window.clearInterval(timer);
   }, [playing, stepMs, pattern, chords, bpm]); // steps come from live.current, so a chord change mid-play does not restart the bar
 
-  const riff = steps.some(st => st.some(n => n.fret !== undefined));
+  const riff = steps.some(st => st.some(n => n.role.startsWith('riff_')));
+  const picked = steps.some(st => st.some(n => n.finger === 'pick'));
   // Left column: the chord shape's frets, or for a riff the root + 5th it starts from.
   const leftFret = (s: number) => {
     if (riff) { const n = steps.flat().find(x => x.string === s && x.role !== 'riff_6'); return n ? n.fret : '×'; }
@@ -112,7 +113,9 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
         </svg>
       </div>
       <p className="muted" style={{ fontSize: 13 }}>
-        {riff
+        {picked
+          ? 'Numbers are frets on the chord shape. Hold the shape and pick one string at a time, alternating down and up.'
+          : riff
           ? `Numbers are frets. Each column is two notes picked down together: the root (${Chord.get(chord).tonic}) plus its 5th, then the root plus its 6th two frets further up. Swing it: long, short.`
           : strokes
           ? (strokes.some(st => st === 'M' || st === 'm') ? 'PM = palm-muted: rest the edge of your picking hand on the strings right by the bridge so they thud instead of ring; lift it for the arrows without PM. ' : '') + '↓ strum down · ↑ strum up · faded arrows are muted "ghost" strums · × mutes or slaps the strings · p is your thumb on the bass note (the root of the chord).'

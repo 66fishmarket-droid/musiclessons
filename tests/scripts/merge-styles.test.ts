@@ -50,6 +50,10 @@ describe('mergeProfiles', () => {
     ] })]);
     expect(metal.rhythm_patterns.map(p => p.grid.join(''))).toEqual(['M-M-M-M-M-M-M-M-', 'DmMmMmDmMmMmMmMm', 'D-D-D-D-D-D-D-D-']);
   });
+  it('accepts picked single-note tokens', () => {
+    const { issues: ok } = mergeProfiles([draft({ rhythm_patterns: [{ name: 'Jangle', grid16: 'lcnhncnhlcnhncnh' }] })]);
+    expect(ok).toEqual([]);
+  });
   it('applies numeral fixes', () => {
     const { profiles: [wa] } = mergeProfiles([draft({ id: 'west_african', progressions: [{ name: '4 temps', roman: ['I', 'VII', 'IV', 'V'], bars: 4 }] })]);
     expect(wa.progressions[0].roman).toEqual(['I', 'bVII', 'IV', 'V']);

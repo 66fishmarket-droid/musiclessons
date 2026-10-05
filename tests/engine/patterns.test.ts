@@ -123,10 +123,28 @@ describe('boogie riff (5/6 tokens)', () => {
 
 describe('style data says what is played (audit 2026-10-05)', () => {
   const all = STYLE_CATALOG.profiles.flatMap(prof => prof.rhythm_patterns);
+  it('has no strums in patterns its research calls picked single notes or an arpeggio', () => {
+    for (const r of all.filter(r => /single notes|arpeggio|alternate-picked across/i.test(`${r.name} ${r.note ?? ''}`) && /rock|neo_soul/.test(r.id))) {
+      expect(r.grid.filter(t => 'DUdMm'.includes(t) && t !== '-'), r.id).toEqual([]);
+    }
+  });
   it('marks palm mutes in every strummed pattern called palm-muted or a chug', () => {
     for (const r of all.filter(r => /palm|chug/i.test(r.name) && !r.grid.some(t => t === '5' || t === '6'))) {
       expect(r.grid.some(t => t === 'M' || t === 'm'), r.id).toBe(true);
     }
+  });
+});
+
+describe('picked single notes (audit group 2)', () => {
+  const jangle = rhythmPattern('Jangle', 'lcnhncnhlcnhncnh'.split(''));
+  it('picks one string at a time with the pick, root first, showing the shape fret', () => {
+    expect(jangle.steps[0]).toEqual([{ finger: 'pick', role: 'bass' }]);
+    expect(jangle.strokes![0]).toBeNull();
+    expect(resolvePattern(jangle, G, 'G').slice(0, 4).map(s => [s[0].string, s[0].fret])).toEqual([[0, 3], [3, 0], [4, 0], [5, 3]]);
+  });
+  it('names the string on each count', () => {
+    expect(rhythmCounts(rhythmPattern('x', 'l-------n---h---'.split(''))))
+      .toBe('1 pick the root · 3 pick the second-highest string · 4 pick the highest string');
   });
 });
 
