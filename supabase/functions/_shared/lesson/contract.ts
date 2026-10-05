@@ -5,7 +5,7 @@ import type { BlockKind, LessonPlan, Skill } from '../engine/types.ts';
 
 export interface Song { title: string; artist: string; why: string; capo: number }
 /** `tips`/`explanation` exist only on lessons stored before the engine wrote the steps. */
-export interface BlockContent { kind: BlockKind; instructions: string[]; target_text: string; listen_for: string; more: string; tips?: string; explanation?: string }
+export interface BlockContent { kind: BlockKind; instructions: string[]; target_text: string; listen_for: string; more: string; tips?: string; explanation?: string; rhythms?: ({ name: string; grid: string[] } | null)[] }
 export interface LessonContent {
   title: string; why_it_matters: string; theory_card: string; songs: Song[]; create_prompt: string;
   blocks: BlockContent[];

@@ -733,6 +733,14 @@ export const RECIPES: Record<string, SkillRecipe> = {
 };
 
 /** The skill's recipe, or a generic one from its description. The generic branch protects skills added to the curriculum later. */
+/** The first step that shows the card (else anything beyond the metronome): review pairs it with step 0 so a recap always says what to play. */
+export function playStep(r: SkillRecipe): number {
+  const card = r.show?.findIndex(els => els.includes('card')) ?? -1;
+  return Math.max(0, card >= 0 ? card : r.show?.findIndex(els => els.some(e => e !== 'metronome')) ?? 0);
+}
+/** Cards whose review step ends "then once through {chords}", so the chord panel shows with them. */
+export const PLAYS_THROUGH: Card[] = ['rhythm', 'pattern', 'chords'];
+
 export function recipeFor(skill: Skill): SkillRecipe {
   return RECIPES[skill.id] ?? {
     card: 'none',
