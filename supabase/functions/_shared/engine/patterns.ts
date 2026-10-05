@@ -5,8 +5,8 @@ export type Finger = 'p' | 'i' | 'm' | 'a';
 /** bass = lowest root string; alt = alternate bass; t1/t2/t3 = highest, second- and third-highest sounding strings.
  * riff_* = the boogie riff's root, 5th and 6th on the two lowest strings, placed from the chord name, not the shape. */
 export type Role = 'bass' | 'alt' | 't1' | 't2' | 't3' | 'riff_root' | 'riff_5' | 'riff_6';
-/** Strum strokes from style rhythm grids: D/U down/up, d/u muted ghost strokes, x mute, choke or slap. */
-export type Stroke = 'D' | 'U' | 'd' | 'u' | 'x';
+/** Strum strokes from style rhythm grids: D/U down/up, d/u muted ghost strokes, M/m palm-muted down/up, x mute, choke or slap. */
+export type Stroke = 'D' | 'U' | 'd' | 'u' | 'M' | 'm' | 'x';
 export interface PickPattern {
   id: string; name: string; beatsPerBar: 3 | 4; stepsPerBeat: 1 | 2 | 3 | 4;
   /** Bars the steps span (default 1); the chord changes at each bar line. */
@@ -109,6 +109,7 @@ export function rhythmPattern(name: string, grid: string[]): PickPattern {
 const DOING: Record<string, string> = {
   B: 'thumb plays the bass note', P: 'fingers pluck the top strings', BP: 'thumb and fingers pluck together', N: 'play a single note',
   D: 'strum down', U: 'strum up', d: 'muted strum down', u: 'muted strum up', x: 'mute (slap or choke)',
+  M: 'palm-muted strum down', m: 'palm-muted strum up',
   5: 'root + 5th', 6: 'root + 6th',
 };
 /** Said before a riff's counts, so "root-5/root-6" is never left undefined. */

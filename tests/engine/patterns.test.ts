@@ -91,7 +91,7 @@ describe('rhythmPattern', () => {
       expect(p.steps).toHaveLength(r.grid.length);
       expect(p.beatsPerBar * p.stepsPerBeat * (p.bars ?? 1)).toBe(r.grid.length);
       r.grid.forEach((t, k) => {
-        expect(['D', 'U', 'd', 'u', 'x', null], `${r.name} slot ${k} "${t}"`).toContain(p.strokes![k]);
+        expect(['D', 'U', 'd', 'u', 'x', 'M', 'm', null], `${r.name} slot ${k} "${t}"`).toContain(p.strokes![k]);
         expect(p.steps[k].length > 0 || p.strokes![k] !== null || t === '-', `${r.name} slot ${k} "${t}"`).toBe(true);
       });
     }
@@ -121,6 +121,15 @@ describe('boogie riff (5/6 tokens)', () => {
   });
 });
 
+describe('style data says what is played (audit 2026-10-05)', () => {
+  const all = STYLE_CATALOG.profiles.flatMap(prof => prof.rhythm_patterns);
+  it('marks palm mutes in every strummed pattern called palm-muted or a chug', () => {
+    for (const r of all.filter(r => /palm|chug/i.test(r.name) && !r.grid.some(t => t === '5' || t === '6'))) {
+      expect(r.grid.some(t => t === 'M' || t === 'm'), r.id).toBe(true);
+    }
+  });
+});
+
 describe('rhythmCounts', () => {
   it('spells out what the picking hand does on each count', () => {
     expect(rhythmCounts(rhythmPattern('Boom-chick', 'B---D---B---D---'.split(''))))
@@ -131,6 +140,9 @@ describe('rhythmCounts', () => {
       .toBe('1 strum down · 1& strum down · 1a strum up · 2 mute (slap or choke) · 2& strum down · 2a strum up');
     expect(rhythmCounts(rhythmPattern('Shuffle (12/8, 12 slots)', 'B-DB-D------'.split(''))))
       .toBe('1 thumb plays the bass note · 1-let strum down · 2 thumb plays the bass note · 2-let strum down');
+  });
+  it('names palm-muted strokes', () => {
+    expect(rhythmCounts(rhythmPattern('x', 'D-m-M-----------'.split('')))).toBe('1 strum down · 1& palm-muted strum up · 2 palm-muted strum down');
   });
   it('marks the second bar of a two-bar rhythm', () => {
     expect(rhythmCounts(rhythmPattern('Guajeo', 'P'.concat('-'.repeat(15), 'P', '-'.repeat(15)).split('')))).toBe('1 fingers pluck the top strings · bar 2: 1 fingers pluck the top strings');

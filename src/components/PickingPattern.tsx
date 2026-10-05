@@ -7,12 +7,13 @@ import { audio, blip, pluck } from '../audio/clock.ts';
 const STRING_NAMES = ['E', 'A', 'D', 'G', 'B', 'e'];
 const FINGER_CLASS = { p: 'pk-p', i: 'pk-i', m: 'pk-m', a: 'pk-a' } as const;
 const SUB: Record<number, string[]> = { 1: [''], 2: ['', '&'], 3: ['', 'tri', 'let'], 4: ['', 'e', '&', 'a'] };
-const ARROW: Record<Stroke, string> = { D: '↓', U: '↑', d: '↓', u: '↑', x: '×' };
-const STROKE_WORD: Record<Stroke, string> = { D: 'strum down', U: 'strum up', d: 'muted down', u: 'muted up', x: 'mute' };
+const ARROW: Record<Stroke, string> = { D: '↓', U: '↑', d: '↓', u: '↑', M: '↓', m: '↑', x: '×' };
+const STROKE_WORD: Record<Stroke, string> = { D: 'strum down', U: 'strum up', d: 'muted down', u: 'muted up', M: 'palm-muted down', m: 'palm-muted up', x: 'mute' };
 
 /** A strum on this shape: down sweeps every sounding string low to high, up the top three high to low; ghosts and mutes click. */
 function strum(t: number, stroke: Stroke, v: Voicing | undefined): void {
   if (stroke === 'x' || stroke === 'd' || stroke === 'u' || !v) { blip(t, stroke === 'x' ? 120 : 180, 0.035, stroke === 'x' ? 0.25 : 0.12); return; }
+  if (stroke === 'M' || stroke === 'm') { blip(t, 98, 0.08, 0.35); return; } // palm mute: a short low thud, not a ringing chord
   const notes = v.frets.flatMap((f, s) => (f < 0 ? [] : [Note.freq(Note.transpose(TUNING[s], Interval.fromSemitones(f)))]));
   const order = stroke === 'D' ? notes : notes.slice(-3).reverse();
   order.forEach((f, k) => pluck(t + k * 0.012, f ?? 220));
@@ -98,7 +99,10 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
             </g>
           )))}
           {strokes?.map((st, col) => st && (
-            <text key={`s${col}`} x={X(col)} y={Y(2.5) + 2} className={`pk-stroke${st === 'd' || st === 'u' ? ' pk-ghost' : ''}${pos === col ? ' pk-on' : ''}`}>{ARROW[st]}</text>
+            <g key={`s${col}`}>
+              <text x={X(col)} y={Y(2.5) + 2} className={`pk-stroke${st === 'd' || st === 'u' ? ' pk-ghost' : ''}${pos === col ? ' pk-on' : ''}`}>{ARROW[st]}</text>
+              {(st === 'M' || st === 'm') && <text x={X(col)} y={Y(0) + 14} className="pk-pm">PM</text>}
+            </g>
           ))}
           {steps.map((_, col) => (
             <text key={col} x={X(col)} y={162} className="pk-count">
@@ -111,7 +115,7 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
         {riff
           ? `Numbers are frets. Each column is two notes picked down together: the root (${Chord.get(chord).tonic}) plus its 5th, then the root plus its 6th two frets further up. Swing it: long, short.`
           : strokes
-          ? '↓ strum down · ↑ strum up · faded arrows are muted "ghost" strums · × mutes or slaps the strings · p is your thumb on the bass note (the root of the chord).'
+          ? (strokes.some(st => st === 'M' || st === 'm') ? 'PM = palm-muted: rest the edge of your picking hand on the strings right by the bridge so they thud instead of ring; lift it for the arrows without PM. ' : '') + '↓ strum down · ↑ strum up · faded arrows are muted "ghost" strums · × mutes or slaps the strings · p is your thumb on the bass note (the root of the chord).'
           : 'p thumb · i index · m middle · a ring. The thumb takes the root and the alternate bass; the fingers take the top chord tones.'}
         {chords.length > 1 ? ' One bar per chord, through the progression.' : ''}
       </p>

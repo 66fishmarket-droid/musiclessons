@@ -31,12 +31,17 @@ export const INFERRED_PROGRESSIONS = new Set(['son_salsa|im bIII ivm V']);
 /** Numeral corrections (style|original numerals → fixed). */
 export const PROGRESSION_FIXES: Record<string, string[]> = { 'west_african|I VII IV V': ['I', 'bVII', 'IV', 'V'] };
 const TOKEN_MAP: Record<string, string> = { T: 'B', F: 'P' };
-const TOKEN = /^(D|U|d|u|B|P|BP|N|x|5|6|-)$/;
+const TOKEN = /^(D|U|d|u|M|m|B|P|BP|N|x|5|6|-)$/;
 const GRID_LENGTHS = [12, 16, 24, 32];
 
 /** snake_case id fragment from a display name. */
 export const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 40);
 const strings = (v: unknown): string[] => (Array.isArray(v) ? v.map(String) : []);
+
+/** Palm-muted pattern: strums become M/m (palm-muted down/up) in place, except the slots listed as ringing open. */
+function palmMute(grid: string[], open: number[]): void {
+  grid.forEach((t, k) => { if (!open.includes(k)) grid[k] = t === 'D' ? 'M' : t === 'U' ? 'm' : t; });
+}
 
 /** Normalises raw drafts into StyleProfiles and lists every validation problem found. */
 export function mergeProfiles(drafts: unknown[]): { profiles: StyleProfile[]; issues: string[] } {
@@ -52,6 +57,7 @@ export function mergeProfiles(drafts: unknown[]): { profiles: StyleProfile[]; is
       const raw = String(p.grid16 ?? p.grid ?? '');
       const grid = (/\s/.test(raw.trim()) ? raw.trim().split(/\s+/) : raw.split('')).map(t => TOKEN_MAP[t] ?? t);
       const pid = `${id}.${slug(p.name)}`;
+      if (p.palm_mute) palmMute(grid, Array.isArray(p.accents) && /open|un-muted/i.test(`${p.name} ${p.note ?? ''}`) ? p.accents : []);
       if (!GRID_LENGTHS.includes(grid.length)) issues.push(`${pid}: grid length ${grid.length}`);
       const bad = [...new Set(grid.filter(t => !TOKEN.test(t)))];
       if (bad.length) issues.push(`${pid}: bad tokens ${bad.join('')}`);

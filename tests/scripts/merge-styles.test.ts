@@ -42,6 +42,14 @@ describe('mergeProfiles', () => {
     ] })]);
     expect(reggae.rhythm_patterns.map(p => [p.grid.length, p.verified])).toEqual([[16, true], [16, false]]);
   });
+  it('turns a palm-muted pattern strums into M/m, keeping open only the accents its name or note says ring open', () => {
+    const { profiles: [metal] } = mergeProfiles([draft({ id: 'metal', rhythm_patterns: [
+      { name: 'Downpicked 8th chug', grid16: 'D-D-D-D-D-D-D-D-', accents: [0], palm_mute: true },
+      { name: '16th chug with open hits', grid16: 'DUDUDUDUDUDUDUDU', accents: [0, 6], palm_mute: true, note: 'accented slots = un-muted power chord' },
+      { name: 'Eighth-note drive', grid16: 'D-D-D-D-D-D-D-D-', accents: [4], palm_mute: false },
+    ] })]);
+    expect(metal.rhythm_patterns.map(p => p.grid.join(''))).toEqual(['M-M-M-M-M-M-M-M-', 'DmMmMmDmMmMmMmMm', 'D-D-D-D-D-D-D-D-']);
+  });
   it('applies numeral fixes', () => {
     const { profiles: [wa] } = mergeProfiles([draft({ id: 'west_african', progressions: [{ name: '4 temps', roman: ['I', 'VII', 'IV', 'V'], bars: 4 }] })]);
     expect(wa.progressions[0].roman).toEqual(['I', 'bVII', 'IV', 'V']);

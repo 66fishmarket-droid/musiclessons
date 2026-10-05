@@ -131,10 +131,10 @@ export const RECIPES: Record<string, SkillRecipe> = {
     listenFor: 'Down and up strokes perfectly even in spacing, with the hand never pausing between them.',
   },
   'rhythm.l1.accents_palm_mute': {
-    card: 'rhythm', grid: 'D-U-d-u-D-U-d-u-', gridName: 'Accents with palm mutes',
+    card: 'rhythm', grid: 'D-U-M-m-D-U-M-m-', gridName: 'Accents with palm mutes',
     steps: [
       'Palm muting: rest the edge of your picking hand on the strings right by the bridge, so they thud instead of ring.',
-      'Strum on {chord1}: {rhythm_counts}. Lift the palm for the bright arrows; keep it down for the faded (muted) ones.',
+      'Strum on {chord1}: {rhythm_counts}. Lift the palm for the plain arrows; keep it down for the ones marked PM.',
       'Then through {chords}, one chord per bar.', LADDER,
     ],
     show: [[], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
