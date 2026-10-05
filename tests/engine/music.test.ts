@@ -1,3 +1,4 @@
+import { STYLE_CATALOG } from '../../supabase/functions/_shared/engine/styles.ts';
 import { describe, expect, it } from 'vitest';
 import { Chord, Note } from 'tonal';
 import {
@@ -92,6 +93,15 @@ describe('buildMusic', () => {
     expect(m.scale.name).toBe('major');
     expect(m.rhythm).toBeNull();
     expect(m.triads.length).toBeGreaterThan(3);
+  });
+});
+
+describe('buildMusic swing', () => {
+  it('carries the style swing with its rhythm: 8ths for jazz, 16ths for neo-soul, none for folk', () => {
+    const of = (id: string) => buildMusic({ key: 'C', track: 'rhythm', style: STYLE_CATALOG.profiles.find(p => p.id === id)!, element: null } as never).rhythm?.swing ?? null;
+    expect(of('jazz_swing')).toEqual({ ratio: 2, sixteenths: false });
+    expect(of('neo_soul')).toEqual({ ratio: 1.4, sixteenths: true });
+    expect(of('folk')).toBeNull();
   });
 });
 

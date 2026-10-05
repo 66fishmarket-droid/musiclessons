@@ -3,7 +3,7 @@ import { termsIn, type GlossaryEntry } from '../../supabase/functions/_shared/en
 import { MINOR_FAMILY_SCALE } from '../../supabase/functions/_shared/engine/render.ts';
 import { PLAYS_THROUGH, playStep, recipeFor, type Card, type SkillRecipe, type StepElement } from '../../supabase/functions/_shared/engine/recipes.ts';
 import type { BlockKind, LessonPlan, Skill } from '../../supabase/functions/_shared/engine/types.ts';
-import type { BlockContent, LessonContent } from '../../supabase/functions/_shared/lesson/contract.ts';
+import type { BlockContent, LessonContent, ReviewRhythm } from '../../supabase/functions/_shared/lesson/contract.ts';
 
 /** The lessons row generate-lesson returns (the columns the app reads). */
 export interface TodayLesson {
@@ -90,7 +90,7 @@ export function stepElements(recipe: SkillRecipe | undefined, kind: BlockKind, s
 /** What one review step shows: a skill item gets its own card and step elements (as when it was new), a style rhythm
  * its pattern with the chords, anything else the metronome. Lessons stored before rhythms existed fall to the last case. */
 export function reviewView(plan: LessonPlan, content: LessonContent, i: number, step: number, skills: Map<string, Skill>):
-  { skillId?: string; card: Card; recipe?: SkillRecipe; rhythm: { name: string; grid: string[] } | null; els: StepElement[] } {
+  { skillId?: string; card: Card; recipe?: SkillRecipe; rhythm: ReviewRhythm | null; els: StepElement[] } {
   const ref = plan.blocks[i]?.items[step]?.ref ?? '';
   const skill = ref.startsWith('skill:') ? skills.get(ref.slice('skill:'.length)) : undefined;
   if (skill) {

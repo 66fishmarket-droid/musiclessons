@@ -1,6 +1,6 @@
 import { reviewView, stepElements } from '../../src/lib/lesson.ts';
 import { describe, expect, it } from 'vitest';
-import { buildMusic } from '../../supabase/functions/_shared/engine/music.ts';
+import { buildMusic, swingOf } from '../../supabase/functions/_shared/engine/music.ts';
 import { planLesson, targetFor } from '../../supabase/functions/_shared/engine/planner.ts';
 import { rhythmCounts, rhythmPattern } from '../../supabase/functions/_shared/engine/patterns.ts';
 import { RECIPES } from '../../supabase/functions/_shared/engine/recipes.ts';
@@ -77,7 +77,7 @@ describe('buildSteps', () => {
 
     expect(review.instructions[0]).toContain(skill.name);
     expect(review.instructions[1]).toBe(`${pattern.name}: ${expectedCounts}. Play it through ${plan.music.progression.chords.map(c => `{${c}}`).join(' ')}, one chord per bar.`);
-    expect(review.rhythms).toEqual([null, { name: pattern.name, grid: pattern.grid }, null]);
+    expect(review.rhythms).toEqual([null, { name: pattern.name, grid: pattern.grid, swing: swingOf(rhythmProfile) }, null]);
     for (const c of chords) expect(review.instructions[2]).toContain(`{${c}}`);
   });
   it('review renders only the first recipe step, so a bpm-ladder skill with a null target doesn\'t throw', () => {

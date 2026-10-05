@@ -2,10 +2,12 @@ import { CREATE_TASKS } from '../engine/create.ts';
 import { APPLY_DEFAULT_GRID } from '../engine/patterns.ts';
 import { PLAYS_THROUGH, playStep, recipeFor } from '../engine/recipes.ts';
 import { renderSteps, slotContext } from '../engine/render.ts';
+import { swingOf } from '../engine/music.ts';
 import { romanToChords } from '../engine/roman.ts';
 import { STYLE_CATALOG } from '../engine/styles.ts';
 import { THEORY_REVIEWS } from '../engine/theory.ts';
 import type { BlockKind, LessonPlan, PlanBlock, Skill } from '../engine/types.ts';
+import type { ReviewRhythm } from './contract.ts';
 import type { Target } from '../engine/types.ts';
 
 /** A plan target as plain words (moved here from fallback.ts, which re-exports it). */
@@ -19,7 +21,7 @@ export function targetText(t: Target | null): string {
 export interface EngineBlock {
   kind: BlockKind; instructions: string[]; target_text: string; listen_for: string;
   /** Review only, one per step: a style rhythm item's grid so the app can draw its card (the catalogue stays server-side); null otherwise. */
-  rhythms?: ({ name: string; grid: string[] } | null)[];
+  rhythms?: (ReviewRhythm | null)[];
 }
 
 /** Every word the learner reads from the engine's steps (instructions plus each block's listen_for) — the
@@ -79,7 +81,7 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
     if (element.kind === 'rhythm') {
       const pattern = profile?.rhythm_patterns.find(p => p.id === element.id);
       if (!pattern) return safe;
-      const ctx = slotContext(plan, { grid: pattern.grid.join(''), gridName: pattern.name });
+      const ctx = slotContext(plan, { grid: pattern.grid.join(''), gridName: pattern.name, swing: swingOf(profile) });
       return renderSteps(['{rhythm_name}: {rhythm_counts}. Play it through {chords}, one chord per bar.'], ctx)[0];
     }
     const prog = profile?.progressions.find(p => p.id === element.id);
@@ -89,11 +91,12 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
   };
 
   /** A style rhythm review item's pattern, for the app's card; null for anything else. */
-  const reviewRhythm = (ref: string): { name: string; grid: string[] } | null => {
+  const reviewRhythm = (ref: string): ReviewRhythm | null => {
     if (!ref.startsWith('style:')) return null;
     const id = ref.slice('style:'.length);
-    const p = STYLE_CATALOG.profiles.flatMap(x => x.rhythm_patterns).find(x => x.id === id);
-    return p ? { name: p.name, grid: p.grid } : null;
+    const profile = STYLE_CATALOG.profiles.find(x => x.rhythm_patterns.some(r => r.id === id));
+    const p = profile?.rhythm_patterns.find(x => x.id === id);
+    return p ? { name: p.name, grid: p.grid, swing: swingOf(profile) } : null;
   };
 
   const build = (b: PlanBlock): EngineBlock => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { TUNINGS, noteAt } from '../../supabase/functions/_shared/engine/music.ts';
-import { PATTERNS, nextBarChord, patternCounts, resolvePattern, rhythmCounts, rhythmPattern, voiceRoles } from '../../supabase/functions/_shared/engine/patterns.ts';
+import { PATTERNS, swingOffset, nextBarChord, patternCounts, resolvePattern, rhythmCounts, rhythmPattern, voiceRoles } from '../../supabase/functions/_shared/engine/patterns.ts';
 import { STYLE_CATALOG } from '../../supabase/functions/_shared/engine/styles.ts';
 
 const G = { frets: [3, 2, 0, 0, 0, 3], fingers: [2, 1, 0, 0, 0, 3], barres: [] };
@@ -127,6 +127,27 @@ describe('style data says what is played (audit 2026-10-05)', () => {
     for (const r of all.filter(r => /palm|chug/i.test(r.name) && !r.grid.some(t => t === '5' || t === '6'))) {
       expect(r.grid.some(t => t === 'M' || t === 'm'), r.id).toBe(true);
     }
+  });
+});
+
+describe('swing (audit group 3)', () => {
+  it('delays each "&" by the swing ratio on 8th swing, leaving beats and 16th straight grids alone', () => {
+    const p = rhythmPattern('Charleston', 'D-D-D-D-D-D-D-D-'.split(''), { ratio: 2, sixteenths: false });
+    expect(swingOffset(p, 0)).toBe(0);
+    expect(swingOffset(p, 2)).toBeCloseTo(2 / 3 - 0.5); // a beat fraction: the "&" moves to the last triplet
+    expect(swingOffset(rhythmPattern('x', 'D-D-D-D-D-D-D-D-'.split('')), 2)).toBe(0);
+  });
+  it('delays the "e" and "a" on 16th swing', () => {
+    const p = rhythmPattern('Ghost', 'DUDUDUDUDUDUDUDU'.split(''), { ratio: 1.4, sixteenths: true });
+    expect(swingOffset(p, 2)).toBe(0);
+    expect(swingOffset(p, 1)).toBeCloseTo((1.4 / 2.4 - 0.5) / 2);
+  });
+  it('ignores a ratio too small to hear and 12-slot grids already in triplets', () => {
+    expect(rhythmPattern('x', 'D-D-D-D-D-D-D-D-'.split(''), { ratio: 1, sixteenths: false }).swing).toBeUndefined();
+    expect(rhythmPattern('Shuffle', 'B-DB-DB-DB-D'.split(''), { ratio: 2, sixteenths: false }).swing).toBeUndefined();
+  });
+  it('says it is swung before the counts', () => {
+    expect(rhythmCounts(rhythmPattern('x', 'D-D-------------'.split(''), { ratio: 2, sixteenths: false }))).toMatch(/^Swung: .*"&".* late\. 1 strum down · 1& strum down$/);
   });
 });
 

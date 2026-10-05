@@ -15,7 +15,11 @@ export interface PickPattern {
   steps: { finger: Finger; role: Role }[][];
   /** Style rhythms only: the strum stroke on each step, null where the step is picked or silent. */
   strokes?: (Stroke | null)[];
+  /** Swung style rhythms on a 16th grid: how late the offbeats fall (see swingOffset). */
+  swing?: Swing;
 }
+/** A style's swing: long-to-short ratio of each offbeat pair, on 8ths (blues, jazz) or 16ths (funk, neo-soul). */
+export interface Swing { ratio: number; sixteenths: boolean }
 /** fret is set only for riff notes, which don't sit on the chord shape. */
 export interface PickNote { finger: Finger; role: Role; string: number; note: string; interval: string; fret?: number }
 
@@ -94,7 +98,7 @@ const PICKED: Record<string, PickPattern['steps'][number]> = {
  * 3/4, else a 12/8 feel: 4 beats of triplets) or 32 (two bars of 16ths). B thumb bass, P fingers, BP pinch, N single note,
  * 5/6 the boogie riff's root + 5th / root + 6th.
  */
-export function rhythmPattern(name: string, grid: string[]): PickPattern {
+export function rhythmPattern(name: string, grid: string[], swing?: Swing | null): PickPattern {
   const [beatsPerBar, stepsPerBeat, bars] =
     grid.length === 12 ? (name.includes('3/4') ? [3, 4, 1] : [4, 3, 1])
     : grid.length === 32 ? [4, 4, 2]
@@ -103,7 +107,17 @@ export function rhythmPattern(name: string, grid: string[]): PickPattern {
     id: `rhythm:${name}`, name, beatsPerBar: beatsPerBar as 3 | 4, stepsPerBeat: stepsPerBeat as 3 | 4, bars,
     steps: grid.map(t => PICKED[t] ?? []),
     strokes: grid.map(t => (t in PICKED ? null : t as Stroke)),
+    // 12-slot grids are already written in triplets; below 1.2 the lilt is too small to hear.
+    ...(swing && swing.ratio >= 1.2 && stepsPerBeat === 4 ? { swing } : {}),
   };
+}
+
+/** How late step k sounds, as a fraction of a beat: the swung offbeat of each pair moves from halfway to ratio/(1+ratio). */
+export function swingOffset(p: PickPattern, k: number): number {
+  if (!p.swing) return 0;
+  const shift = p.swing.ratio / (1 + p.swing.ratio) - 0.5;
+  const inBeat = k % p.stepsPerBeat;
+  return p.swing.sixteenths ? (inBeat % 2 === 1 ? shift / 2 : 0) : inBeat === 2 ? shift : 0;
 }
 
 const DOING: Record<string, string> = {
@@ -135,7 +149,10 @@ export function rhythmCounts(p: PickPattern): string {
     lastBar = bar;
   });
   const counts = out.join(' · ');
-  return p.steps.some((_, k) => riff(k)) ? `${RIFF_HOW} ${counts}` : counts;
+  const swung = p.swing ? (p.swing.sixteenths
+    ? 'Swung: in each pair of 16ths the first is longer, so every "e" and "a" lands a little late. '
+    : 'Swung: in each pair of 8ths the first is longer, so every "&" lands late. ') : '';
+  return `${p.steps.some((_, k) => riff(k)) ? `${RIFF_HOW} ` : ''}${swung}${counts}`;
 }
 
 const FINGER_WORD = { p: 'thumb', i: 'index', m: 'middle', a: 'ring' } as const;

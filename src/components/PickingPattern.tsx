@@ -1,7 +1,7 @@
 import { Chord, Interval, Note } from 'tonal';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { TUNING, type Voicing } from '../../supabase/functions/_shared/engine/music.ts';
-import { nextBarChord, resolvePattern, type PickPattern, type Stroke } from '../../supabase/functions/_shared/engine/patterns.ts';
+import { nextBarChord, resolvePattern, swingOffset, type PickPattern, type Stroke } from '../../supabase/functions/_shared/engine/patterns.ts';
 import { audio, blip, pluck } from '../audio/clock.ts';
 
 const STRING_NAMES = ['E', 'A', 'D', 'G', 'B', 'e'];
@@ -57,7 +57,7 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
         if (bar !== live.current.idx) live.current.onIdx(bar);
       }
       setPos(i);
-      const t = audio().currentTime;
+      const t = audio().currentTime + swingOffset(pattern, i) * 60 / bpm; // swung offbeats sound late
       for (const n of barSteps[i]) pluck(t, Note.freq(n.note) ?? 220);
       const st = strokes?.[i];
       if (st) strum(t, st, live.current.voicings[chords[bar]]?.[0]);
@@ -66,7 +66,7 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
     play();
     const timer = window.setInterval(play, stepMs);
     return () => window.clearInterval(timer);
-  }, [playing, stepMs, pattern, chords]); // steps come from live.current, so a chord change mid-play does not restart the bar
+  }, [playing, stepMs, pattern, chords, bpm]); // steps come from live.current, so a chord change mid-play does not restart the bar
 
   const riff = steps.some(st => st.some(n => n.fret !== undefined));
   // Left column: the chord shape's frets, or for a riff the root + 5th it starts from.
@@ -117,6 +117,7 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
           : strokes
           ? (strokes.some(st => st === 'M' || st === 'm') ? 'PM = palm-muted: rest the edge of your picking hand on the strings right by the bridge so they thud instead of ring; lift it for the arrows without PM. ' : '') + '↓ strum down · ↑ strum up · faded arrows are muted "ghost" strums · × mutes or slaps the strings · p is your thumb on the bass note (the root of the chord).'
           : 'p thumb · i index · m middle · a ring. The thumb takes the root and the alternate bass; the fingers take the top chord tones.'}
+        {pattern.swing ? ` Swung: play each pair of ${pattern.swing.sixteenths ? '16ths' : '8ths'} long-short; the card plays it that way.` : ''}
         {chords.length > 1 ? ' One bar per chord, through the progression.' : ''}
       </p>
       <button type="button" className="btn-play" aria-pressed={playing} onClick={() => setPlaying(!playing)}>

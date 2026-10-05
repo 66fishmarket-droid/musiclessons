@@ -95,9 +95,9 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
   const pattern = useMemo(() => {
     if (card === 'pattern') return skillPatterns[pi] ?? skillPatterns[0];
     if (card !== 'rhythm') return undefined;
-    if (rv?.rhythm) return rhythmPattern(rv.rhythm.name, rv.rhythm.grid);
+    if (rv?.rhythm) return rhythmPattern(rv.rhythm.name, rv.rhythm.grid, rv.rhythm.swing);
     if (block.kind !== 'apply' && recipe?.grid) return rhythmPattern(recipe.gridName ?? "Today's rhythm", recipe.grid.split(''));
-    return rhythm ? rhythmPattern(rhythm.name, rhythm.grid) : rhythmPattern('Steady down-strums', APPLY_DEFAULT_GRID.split(''));
+    return rhythm ? rhythmPattern(rhythm.name, rhythm.grid, rhythm.swing) : rhythmPattern('Steady down-strums', APPLY_DEFAULT_GRID.split(''));
   }, [card, skillPatterns, pi, block.kind, recipe, rhythm, rv]);
   const showChords = block.kind === 'apply' || block.kind === 'create' || card === 'pattern' || card === 'rhythm' || card === 'chords';
 

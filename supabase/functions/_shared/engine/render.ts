@@ -1,5 +1,5 @@
 import { Interval, Scale } from 'tonal';
-import { PATTERNS, patternCounts, rhythmCounts, rhythmPattern, voiceRoles, type PickPattern } from './patterns.ts';
+import { PATTERNS, patternCounts, rhythmCounts, rhythmPattern, voiceRoles, type PickPattern, type Swing } from './patterns.ts';
 import type { LessonPlan, Target } from './types.ts';
 
 /** Scale names whose {degrees:N} fallback (see resolveDegree) should use the key's natural minor, not major —
@@ -35,13 +35,13 @@ export function listNotes(notes: string[]): string {
 }
 
 /** Everything a step template may mention, from the same plan data the cards draw. */
-export function slotContext(plan: LessonPlan, opts: { target?: Target | null; patternId?: string | null; grid?: string | null; gridName?: string | null }): SlotCtx {
+export function slotContext(plan: LessonPlan, opts: { target?: Target | null; patternId?: string | null; grid?: string | null; gridName?: string | null; swing?: Swing | null }): SlotCtx {
   const { music } = plan;
   const chord1 = music.progression.chords[0];
   const v = chord1 ? music.voicings[chord1]?.[0] : undefined;
   const rhythm = opts.grid
-    ? rhythmPattern(opts.gridName ?? 'Today\'s rhythm', opts.grid.split(''))
-    : music.rhythm ? rhythmPattern(music.rhythm.name, music.rhythm.grid) : null;
+    ? rhythmPattern(opts.gridName ?? 'Today\'s rhythm', opts.grid.split(''), opts.swing)
+    : music.rhythm ? rhythmPattern(music.rhythm.name, music.rhythm.grid, music.rhythm.swing) : null;
   return {
     key: plan.key, scale: music.scale.name, chords: music.progression.chords, scaleNotes: music.scale.notes,
     target: opts.target ?? null, pattern: opts.patternId ? PATTERNS[opts.patternId] ?? null : null, rhythm,
