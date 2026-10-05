@@ -61,12 +61,13 @@ export function scalePositions(tonic: string, scaleName: string, maxFret = 12): 
   return out;
 }
 
-/** One playable position: four frets from one below the lowest root on the E or A string (open position when that root is open). */
+/** One playable position: four frets starting one below the lowest root on the E or A string, or on it, whichever
+ * holds more scale notes (major shapes reach back a fret; minor pentatonic starts on the root and needs the b3 above it). */
 export function scaleBox(positions: FretNote[]): { from: number; to: number; notes: FretNote[] } {
   const root = Math.min(...positions.filter(p => p.degree === 1 && p.string <= 1).map(p => p.fret));
-  const from = Math.max(0, root - 1);
-  const to = from + 3;
-  return { from, to, notes: positions.filter(p => p.fret >= from && p.fret <= to) };
+  const box = (from: number) => ({ from, to: from + 3, notes: positions.filter(p => p.fret >= from && p.fret <= from + 3) });
+  const below = box(Math.max(0, root - 1)), on = box(root);
+  return on.notes.length > below.notes.length ? on : below;
 }
 
 type DbPosition ={ frets: number[]; fingers: number[]; baseFret: number; barres: number[] };

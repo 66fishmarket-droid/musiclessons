@@ -109,6 +109,13 @@ describe('scaleBox', () => {
     expect(scaleBox(scalePositions('E', 'minor'))).toMatchObject({ from: 0, to: 3 });
     expect(scaleBox(scalePositions('A', 'major'))).toMatchObject({ from: 0, to: 3 });
   });
+  it('starts minor pentatonic on the root so the b3 above it on both E strings is in the box', () => {
+    const ab = scaleBox(scalePositions('Ab', 'minor pentatonic'));
+    expect([ab.from, ab.to]).toEqual([4, 7]);
+    expect(ab.notes).toHaveLength(12); // two notes on every string
+    expect(ab.notes).toContainEqual({ string: 0, fret: 7, note: 'Cb', degree: 3 });
+    expect(ab.notes).toContainEqual({ string: 5, fret: 7, note: 'Cb', degree: 3 });
+  });
 });
 
 describe('degreeLabel', () => {
