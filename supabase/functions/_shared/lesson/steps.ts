@@ -28,12 +28,20 @@ export function stepsText(steps: { blocks: EngineBlock[] }): string {
   return steps.blocks.flatMap(b => [...b.instructions, b.listen_for]).join(' ');
 }
 export { APPLY_DEFAULT_GRID }; // moved to engine/patterns.ts so src/screens/Player.tsx doesn't pull steps.ts (and STYLE_CATALOG) into the client bundle
-const RESETS = [
-  'Put the guitar down for 30 seconds and shake out both hands.',
-  'Put the guitar down. Close your eyes and picture the shape you just played.',
-  'Put the guitar down for 30 seconds and breathe out slowly twice.',
-  'Put the guitar down and hum the last thing you played.',
-];
+/** Resets after a playing block may call back to what was played; after a writing block they only move the body. */
+const RESETS = {
+  played: [
+    'Put the guitar down for 30 seconds and shake out both hands.',
+    'Put the guitar down. Close your eyes and picture the shape you just played.',
+    'Put the guitar down for 30 seconds and breathe out slowly twice.',
+    'Put the guitar down and hum the last thing you played.',
+  ],
+  wrote: [
+    'Put the pen down, stand up and shake out both hands for 30 seconds.',
+    'Stand up, stretch both arms overhead and breathe out slowly twice.',
+    'Look away from the page at something far off for 30 seconds, then pick the guitar up.',
+  ],
+};
 
 /** Every instruction the learner reads, from the plan: recipes, block templates and the Create library (spec §5). */
 export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { blocks: EngineBlock[]; create_prompt: string } {
@@ -129,7 +137,11 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
         'Listen back once, all the way through.',
         'Rate it 1–5 and note one thing to fix tomorrow.',
       ]);
-      case 'reset': return make([RESETS[day % RESETS.length]]);
+      case 'reset': {
+        const r = skillOf(plan.skill_id) && recipeFor(skillOf(plan.skill_id)!);
+        const pool = r && (r.card !== 'none' || r.show?.some(els => els.length)) ? RESETS.played : RESETS.wrote;
+        return make([pool[day % pool.length]]);
+      }
     }
   };
   return { blocks: plan.blocks.map(build), create_prompt: renderSteps([task.prompt], base)[0] };

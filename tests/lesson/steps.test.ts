@@ -184,3 +184,16 @@ describe('review steps show their tools (owner hit text-only review 2026-10-05)'
   });
 });
 
+describe('reset wording follows the block before it (owner hit "hum the last thing you played" after writing, 2026-10-05)', () => {
+  const resetAfter = (skillId: string) => [...Array(8).keys()].map(d => {
+    const plan = { ...PLAN, skill_id: skillId, date: `2026-10-0${d + 1}`, blocks: [{ kind: 'reset' as const, minutes: 0.5, items: [] }] };
+    return buildSteps(plan, SKILL_MAP).blocks[0].instructions[0];
+  });
+  it('never mentions playing after a writing skill', () => {
+    for (const line of resetAfter('songwriting.l1.object_writing')) expect(line).not.toMatch(/play/i);
+  });
+  it('can call back to what was played after a playing skill', () => {
+    expect(resetAfter('rhythm.l1.locked_8ths').some(l => /you just played|last thing you played/.test(l))).toBe(true);
+  });
+});
+
