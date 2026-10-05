@@ -24,7 +24,7 @@ export const INFERRED_PATTERNS = new Set([
   'celtic|Reel syncopated up-accent', 'celtic|Waltz rolling strum (3/4, 12 slots)', 'jazz_swing|Offbeat stabs',
   'gypsy_jazz|Valse musette (3/4, 12 slots)', 'neo_soul|Backbeat stab', 'neo_soul|Kick-follow staccato',
   'neo_soul|Ghost-scratch 16ths', 'pop|Syncopated 16th push', 'pop_rock|Wonderwall-style 16th strum',
-  'rock_indie_alt|Chord + muted scratch',
+  'rock_indie_alt|Chord + muted scratch', 'soul|12/8 gospel ballad (swing to triplets)',
 ]);
 /** Progressions recalled rather than sourced (style|original numerals). */
 export const INFERRED_PROGRESSIONS = new Set(['son_salsa|im bIII ivm V']);

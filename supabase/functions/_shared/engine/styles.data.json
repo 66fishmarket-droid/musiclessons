@@ -1979,25 +1979,21 @@
         "name": "12/8 gospel ballad (swing to triplets)",
         "grid": [
           "D",
-          "-",
           "D",
-          "-",
           "D",
-          "-",
           "D",
-          "-",
           "D",
-          "-",
           "D",
-          "-",
           "D",
-          "-",
           "D",
-          "-"
+          "D",
+          "D",
+          "D",
+          "D"
         ],
         "accents": [],
-        "verified": true,
-        "note": null
+        "verified": false,
+        "note": "Down-strums on every triplet 8th, 12/8 (inferred; was straight 8ths in 16 slots)."
       },
       {
         "id": "soul.16th_soul_comp",
@@ -2641,7 +2637,7 @@
         "id": "gypsy_jazz.valse_musette_3_4_12_slots",
         "name": "Valse musette (3/4, 12 slots)",
         "grid": [
-          "D",
+          "B",
           "-",
           "-",
           "-",
@@ -2650,17 +2646,13 @@
           "-",
           "-",
           "D",
-          "-",
-          "-",
-          "-",
-          "-",
           "-",
           "-",
           "-"
         ],
         "accents": [],
         "verified": false,
-        "note": null
+        "note": "Bass note on 1, short chords on 2 and 3 (DjangoBooks forum, tier 5). Was 16 slots, which played a waltz in 4/4."
       }
     ],
     "progressions": [
