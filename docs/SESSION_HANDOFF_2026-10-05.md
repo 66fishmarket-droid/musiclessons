@@ -18,7 +18,7 @@ Tests: 530 pass, including 175 catalogue-wide review cases (every practice skill
 ## Deployed 2026-10-05
 PR #12 merged (`21fcaeb`), `generate-lesson` redeployed, Netlify live. Today's lesson row was deleted (status planned, no logs) so the owner gets a fresh one.
 
-## Audit fixes on dev (after the deploy, not yet merged)
+## Audit fixes — deployed 2026-10-05 (PR #13, `9be8067`; generate-lesson redeployed)
 `docs/rhythm-audit-2026-10-05.md` has the full list and status. In short: palm mute `M`/`m`; valse musette 3/4 and gospel ballad 12/8; swing carried and played; picked notes `l`/`c`/`n`/`h`; next-bar push. Also `ec3aa58` restored LF line endings that my Windows Python edits had flipped. 545 tests pass.
 These need the same deploy as before: merge to main and redeploy `generate-lesson` (the rhythm now carries swing and push in the plan).
 
