@@ -580,6 +580,13 @@ export const GLOSSARY: GlossaryEntry[] = [
     sources: ["vault:Research/glossary/barre.md", "JustinGuitar, \"CAGED System\" module (tier 4) — https://www.justinguitar.com/modules/caged-system", "JustinGuitar, \"The CAGED System G Shape\" (tier 4) — https://www.justinguitar.com/guitar-lessons/the-caged-system-g-shape-tb-036"],
   },
   {
+    id: "power_chord", term: "Power chord",
+    match: ["power chord", "power chords"],
+    plain: "Just two notes, the root and its 5th, on neighbouring low strings: first finger on the root, third finger two frets higher on the next string up. Written with a 5, as in A5. It has no 3rd, so it is neither major nor minor.",
+    why: "The 5th is the most consonant interval after the octave, so the pair sounds solid and stays clear even with heavy distortion, where a full chord turns muddy.",
+    sources: ["vault:Research/glossary/power_chord.md", "Open Music Theory, Intervals — https://viva.pressbooks.pub/openmusictheory/chapter/intervals/", "ArtistWorks (Keith Wyatt), Boogie Shuffle Blues Guitar — https://blog.artistworks.com/boogie-shuffle-blues-guitar-5-proven-skills-to-master-the-groove/"],
+  },
+  {
     id: "caged", term: "CAGED",
     match: ["caged", "e-shape", "a-shape", "c-shape", "g-shape", "d-shape"],
     plain: "A system linking the five open chord shapes C, A, G, E and D. Each can be moved up the neck as a barre shape, so any chord can be played in five places, one shape joining the next.",
@@ -830,6 +837,13 @@ export const GLOSSARY: GlossaryEntry[] = [
     plain: "Resting the edge of your picking hand lightly on the strings right next to the bridge while you play, so they give a short, chunky thud instead of ringing.",
     why: "Muting cuts the ringing so each strum becomes short, which lets accents and rests stand out clearly against the beat.",
     sources: ["vault:Research/glossary/palm_mute.md", "JustinGuitar, \"Palm Muting\", Module 12 (tier 4) — https://community.justinguitar.com/t/palm-muting/2597", "JustinGuitar, \"Muting Strings Deliberately\" (tier 4) — https://www.justinguitar.com/guitar-lessons/muting-strings-deliberately-b2-804"],
+  },
+  {
+    id: "boogie", term: "Boogie (5–6 riff)",
+    match: ["boogie", "boogies", "root-5/root-6"],
+    plain: "A rolling two-note riff on the low strings: a power chord (root + 5th), then the little finger reaches two frets further to make root + 6th, back and forth on every beat with a shuffle feel. Guitarists took it from the left hand of boogie-woogie piano.",
+    why: "The root never moves, so the low end stays anchored, while the 5th-to-6th rocking adds motion; swung, it drives a 12-bar blues like a train.",
+    sources: ["vault:Research/glossary/boogie.md", "ArtistWorks (Keith Wyatt), Boogie Shuffle Blues Guitar — https://blog.artistworks.com/boogie-shuffle-blues-guitar-5-proven-skills-to-master-the-groove/"],
   },
   {
     id: "chuck", term: "Chuck",

@@ -1,4 +1,4 @@
-import { Interval, Note } from 'tonal';
+import { Chord, Interval, Note } from 'tonal';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { TUNING, type Voicing } from '../../supabase/functions/_shared/engine/music.ts';
 import { nextBarChord, resolvePattern, type PickPattern, type Stroke } from '../../supabase/functions/_shared/engine/patterns.ts';
@@ -67,10 +67,17 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
     return () => window.clearInterval(timer);
   }, [playing, stepMs, pattern, chords]); // steps come from live.current, so a chord change mid-play does not restart the bar
 
+  const riff = steps.some(st => st.some(n => n.fret !== undefined));
+  // Left column: the chord shape's frets, or for a riff the root + 5th it starts from.
+  const leftFret = (s: number) => {
+    if (riff) { const n = steps.flat().find(x => x.string === s && x.role !== 'riff_6'); return n ? n.fret : '×'; }
+    return !voicing || voicing.frets[s] < 0 ? '×' : voicing.frets[s];
+  };
   const W = 44 + steps.length * COL;
   const X = (col: number) => 44 + col * COL + COL / 2;
   const Y = (string: number) => 16 + (5 - string) * 24; // tab view: high e on top
-  const label = steps.map((s, k) => (strokes?.[k] ? STROKE_WORD[strokes[k]!] : s.map(n => `${n.finger} on ${STRING_NAMES[n.string]} (${n.interval})`).join(' + ') || 'rest')).join(', ');
+  const label = steps.map((s, k) => (strokes?.[k] ? STROKE_WORD[strokes[k]!]
+    : s.map(n => (n.fret !== undefined ? `${STRING_NAMES[n.string]} fret ${n.fret} (${n.interval})` : `${n.finger} on ${STRING_NAMES[n.string]} (${n.interval})`)).join(' + ') || 'rest')).join(', ');
   return (
     <section className="card" aria-label={`${pattern.name} ${strokes ? 'rhythm' : 'picking pattern'} on ${chord}`}>
       <div className="row"><b>{pattern.name}</b><small className="muted"><span className="c-text">{chord}</span>{chords.length > 1 ? ` (${idx + 1} of ${chords.length})` : ''} · {bpm} bpm</small></div>
@@ -80,14 +87,14 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
           {[0, 1, 2, 3, 4, 5].map(s => (
             <g key={s}>
               <text x={8} y={Y(s)} className="pk-name">{STRING_NAMES[s]}</text>
-              <text x={26} y={Y(s)} className="pk-fret">{!voicing || voicing.frets[s] < 0 ? '×' : voicing.frets[s]}</text>
+              <text x={26} y={Y(s)} className="pk-fret">{leftFret(s)}</text>
               <line x1={40} x2={W - 4} y1={Y(s)} y2={Y(s)} className="pk-string" />
             </g>
           ))}
           {steps.map((step, col) => step.map(n => (
             <g key={`${col}-${n.string}`} className={pos === col ? 'pk-on' : ''}>
               <circle cx={X(col)} cy={Y(n.string)} r={R} className={`pk-dot ${FINGER_CLASS[n.finger]}`} />
-              <text x={X(col)} y={Y(n.string) + 1} className="pk-finger">{n.finger}</text>
+              <text x={X(col)} y={Y(n.string) + 1} className="pk-finger">{n.fret ?? n.finger}</text>
             </g>
           )))}
           {strokes?.map((st, col) => st && (
@@ -101,7 +108,9 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
         </svg>
       </div>
       <p className="muted" style={{ fontSize: 13 }}>
-        {strokes
+        {riff
+          ? `Numbers are frets. Each column is two notes picked down together: the root (${Chord.get(chord).tonic}) plus its 5th, then the root plus its 6th two frets further up. Swing it: long, short.`
+          : strokes
           ? '↓ strum down · ↑ strum up · faded arrows are muted "ghost" strums · × mutes or slaps the strings · p is your thumb on the bass note (the root of the chord).'
           : 'p thumb · i index · m middle · a ring. The thumb takes the root and the alternate bass; the fingers take the top chord tones.'}
         {chords.length > 1 ? ' One bar per chord, through the progression.' : ''}

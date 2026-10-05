@@ -31,7 +31,7 @@ export const INFERRED_PROGRESSIONS = new Set(['son_salsa|im bIII ivm V']);
 /** Numeral corrections (style|original numerals → fixed). */
 export const PROGRESSION_FIXES: Record<string, string[]> = { 'west_african|I VII IV V': ['I', 'bVII', 'IV', 'V'] };
 const TOKEN_MAP: Record<string, string> = { T: 'B', F: 'P' };
-const TOKEN = /^(D|U|d|u|B|P|BP|N|x|-)$/;
+const TOKEN = /^(D|U|d|u|B|P|BP|N|x|5|6|-)$/;
 const GRID_LENGTHS = [12, 16, 24, 32];
 
 /** snake_case id fragment from a display name. */
