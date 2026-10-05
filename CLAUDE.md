@@ -42,6 +42,18 @@ explanation. A gap in practice is a signal to bring the refreshers back, not jus
 - Scale formulas: major W-W-H-W-W-W-H; natural minor W-H-W-W-H-W-W; how keys and diatonic chords fall out of them.
 - Rhythm: pulse, subdivision, bars, and how strumming and picking patterns map onto them.
 
+**Say exactly what, where and when.** Every instruction must be playable without guessing: "the note G" (never a bare
+"on G", which reads like a chord or key), which string/fret where it helps, and which bars each part goes over. Never
+leave a bare topic name as an instruction ("Review: Circle of fifths"): give one sentence of what it is plus something
+to play. (Owner hit both on 2026-10-01.)
+
+**Show what you say.** A step that tells the learner to play something puts that thing on screen: the card, the chords,
+the scale. This holds on every path (new skill, retest, review, apply, create), not just the main block. Review reuses the
+item's own recipe card via `reviewView` (`src/lib/lesson.ts`); the guard in `tests/lesson/steps.test.ts` runs the whole
+catalogue through it. Style data must describe what is actually played: a riff is notes on strings (grid tokens `5`/`6`),
+not a strum grid. A term in a pattern's name (e.g. "root-5/root-6") gets defined in the step text. (Owner hit text-only
+review steps and an unexplained boogie on 2026-10-05.)
+
 **Glossary upkeep:** a new music term in engine-written text (recipes, create tasks, step text) needs an entry in
 `supabase/functions/_shared/engine/glossary.ts` in the same commit, placed after the terms its definition uses.
 Check with `node scripts/render-glossary.ts`.

@@ -17,7 +17,7 @@ import { VoicingSheet } from '../components/VoicingSheet.tsx';
 import { clock } from '../lib/dates.ts';
 import { keyAction } from '../lib/keys.ts';
 import { tempoLadder } from '../lib/ladder.ts';
-import { BLOCK_META, blockCard, blockTerms, blockText, bpmTarget, refLabel, startBpm, elementVisible, isMinorScale, stepElements, tonicOf, type TodayLesson } from '../lib/lesson.ts';
+import { BLOCK_META, blockCard, blockTerms, blockText, bpmTarget, refLabel, reviewView, startBpm, elementVisible, isMinorScale, stepElements, tonicOf, type TodayLesson } from '../lib/lesson.ts';
 import { neckMap } from '../../supabase/functions/_shared/engine/neck.ts';
 import { APPLY_DEFAULT_GRID, PATTERNS, rhythmPattern } from '../../supabase/functions/_shared/engine/patterns.ts';
 import type { StepElement } from '../../supabase/functions/_shared/engine/recipes.ts';
@@ -75,9 +75,12 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
   const slots = slotsFor(plan, i);
   const steps = text.instructions;
   const tonic = tonicOf(plan.key);
-  const skillId = block.kind === 'retest' ? plan.retest?.skill_id : ['new_skill', 'apply'].includes(block.kind) ? plan.skill_id : undefined;
-  const cardSkill = block.kind === 'retest' ? plan.retest?.skill_id : block.kind === 'new_skill' ? plan.skill_id : undefined;
-  const { card, recipe } = blockCard(block.kind, cardSkill ? SKILLS_BY_ID.get(cardSkill) : undefined);
+  const [step, setStep] = useState(0);
+  // Review: each step is one item with its own card, chords and skill sheet, as when it was new.
+  const rv = useMemo(() => (block.kind === 'review' ? reviewView(plan, content, i, step, SKILLS_BY_ID) : null), [block.kind, plan, content, i, step]);
+  const skillId = rv ? rv.skillId : block.kind === 'retest' ? plan.retest?.skill_id : ['new_skill', 'apply'].includes(block.kind) ? plan.skill_id : undefined;
+  const cardSkill = rv ? rv.skillId : block.kind === 'retest' ? plan.retest?.skill_id : block.kind === 'new_skill' ? plan.skill_id : undefined;
+  const { card, recipe } = rv ?? blockCard(block.kind, cardSkill ? SKILLS_BY_ID.get(cardSkill) : undefined);
   const chords = plan.music.progression.chords;
   const [chordIdx, setChordIdx] = useState(0);
   const chord = chords[chordIdx];
@@ -90,18 +93,18 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
     return idx >= 0 ? idx : 0;
   });
   const pattern = useMemo(() => {
-    if (card === 'pattern') return skillPatterns[pi];
+    if (card === 'pattern') return skillPatterns[pi] ?? skillPatterns[0];
     if (card !== 'rhythm') return undefined;
+    if (rv?.rhythm) return rhythmPattern(rv.rhythm.name, rv.rhythm.grid);
     if (block.kind !== 'apply' && recipe?.grid) return rhythmPattern(recipe.gridName ?? "Today's rhythm", recipe.grid.split(''));
     return rhythm ? rhythmPattern(rhythm.name, rhythm.grid) : rhythmPattern('Steady down-strums', APPLY_DEFAULT_GRID.split(''));
-  }, [card, skillPatterns, pi, block.kind, recipe, rhythm]);
+  }, [card, skillPatterns, pi, block.kind, recipe, rhythm, rv]);
   const showChords = block.kind === 'apply' || block.kind === 'create' || card === 'pattern' || card === 'rhythm' || card === 'chords';
 
   const metro = useMetronome(first);
   const [drone, setDrone] = useState(false);
   useDrone(drone ? tonic : null);
-  const [step, setStep] = useState(0);
-  const els = stepElements(recipe, block.kind, step, steps.length, plan.create_task_id);
+  const els = rv ? rv.els : stepElements(recipe, block.kind, step, steps.length, plan.create_task_id);
   const on = (e: StepElement) => elementVisible(els, e);
   const [sheet, setSheet] = useState<string | null>(null);
   const [about, setAbout] = useState(false);

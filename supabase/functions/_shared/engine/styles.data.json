@@ -1418,26 +1418,22 @@
         "id": "blues.shuffle_boogie_root_5_root_6",
         "name": "Shuffle boogie (root-5/root-6)",
         "grid": [
-          "D",
+          "5",
           "-",
-          "D",
+          "6",
+          "5",
           "-",
-          "D",
+          "6",
+          "5",
           "-",
-          "D",
+          "6",
+          "5",
           "-",
-          "D",
-          "-",
-          "D",
-          "-",
-          "D",
-          "-",
-          "D",
-          "-"
+          "6"
         ],
         "accents": [],
         "verified": true,
-        "note": null
+        "note": "Two-note riff on the two lowest strings of each chord: root + 5th on the beat, root + 6th on the swung \"&\" (Keith Wyatt, ArtistWorks; Robert Johnson's Sweet Home Chicago)"
       },
       {
         "id": "blues.backbeat_chop",
@@ -3474,31 +3470,27 @@
         "id": "rock_hard.shuffle_boogie_swung",
         "name": "Shuffle boogie (swung)",
         "grid": [
-          "D",
+          "5",
           "-",
+          "6",
+          "5",
           "-",
-          "D",
-          "D",
+          "6",
+          "5",
           "-",
+          "6",
+          "5",
           "-",
-          "D",
-          "D",
-          "-",
-          "-",
-          "D",
-          "D",
-          "-",
-          "-",
-          "D"
+          "6"
         ],
         "accents": [
           0,
-          4,
-          8,
-          12
+          3,
+          6,
+          9
         ],
         "verified": true,
-        "note": "12/8 feel approximated; render with swing"
+        "note": "Same 5-6 boogie riff as blues, palm-muted, in a 12/8 (triplet) grid"
       }
     ],
     "progressions": [

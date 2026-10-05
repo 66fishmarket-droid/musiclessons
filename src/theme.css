@@ -99,8 +99,8 @@ details.card summary { cursor: pointer; font-weight: 600; min-height: 44px; disp
 .toggle { display: flex; gap: 4px; padding: 3px; background: var(--surface-2); border-radius: 10px; }
 .toggle button { flex: 1; min-height: 44px; border-radius: 8px; font-size: 13px; font-weight: 600; }
 .toggle button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
-.prog { display: flex; gap: 6px; }
-.prog button { flex: 1; height: 52px; border-radius: 12px; border: 2px solid var(--line); font: 800 22px 'Bricolage Grotesque', sans-serif; }
+.prog { display: flex; gap: 6px; overflow-x: auto; }
+.prog button { flex: 1 0 52px; height: 52px; border-radius: 12px; border: 2px solid var(--line); font: 800 22px 'Bricolage Grotesque', sans-serif; }
 .prog button[aria-pressed="true"] { background: var(--c); border-color: var(--c); color: var(--bg); }
 
 .cd-nut { fill: var(--text); }

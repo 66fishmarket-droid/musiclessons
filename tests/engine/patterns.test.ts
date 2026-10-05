@@ -98,6 +98,29 @@ describe('rhythmPattern', () => {
   });
 });
 
+describe('boogie riff (5/6 tokens)', () => {
+  const boogie = rhythmPattern('Shuffle boogie (root-5/root-6)', '5-65-65-65-6'.split(''));
+  it('reads the 12-slot riff as a 12/8 feel with two-note steps', () => {
+    expect(boogie).toMatchObject({ beatsPerBar: 4, stepsPerBeat: 3, bars: 1 });
+    expect(boogie.steps[0].map(s => s.role)).toEqual(['riff_root', 'riff_5']);
+    expect(boogie.steps[2].map(s => s.role)).toEqual(['riff_root', 'riff_6']);
+    expect(boogie.strokes![0]).toBeNull();
+  });
+  it('puts each chord on whichever low string gives the lower fret, ignoring the chord shape', () => {
+    const at = (chord: string, k: number) => resolvePattern(boogie, G, chord)[k].map(n => [n.string, n.fret, n.interval]);
+    expect(at('Ab7', 0)).toEqual([[0, 4, 'R'], [1, 6, '5']]); // Ab on string 6 fret 4, Eb on string 5 fret 6
+    expect(at('Ab7', 2)).toEqual([[0, 4, 'R'], [1, 8, '6']]);
+    expect(at('Db7', 0)).toEqual([[1, 4, 'R'], [2, 6, '5']]); // IV moves across a string, same fret
+    expect(at('Eb7', 2)).toEqual([[1, 6, 'R'], [2, 10, '6']]);
+    expect(at('A7', 0)).toEqual([[1, 0, 'R'], [2, 2, '5']]); // open A string
+  });
+  it('explains the riff before the counts', () => {
+    const words = rhythmCounts(boogie);
+    expect(words).toMatch(/^Root-5\/root-6 means/);
+    expect(words).toContain('1 root + 5th · 1-let root + 6th · 2 root + 5th');
+  });
+});
+
 describe('rhythmCounts', () => {
   it('spells out what the picking hand does on each count', () => {
     expect(rhythmCounts(rhythmPattern('Boom-chick', 'B---D---B---D---'.split(''))))

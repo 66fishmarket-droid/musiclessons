@@ -1,6 +1,6 @@
 # Glossary review
 
-134 terms, in the order definitions build up.
+136 terms, in the order definitions build up.
 
 1. **Strings and string numbers** — The guitar has six strings, numbered from the thinnest: string 1 is the thin, highest-sounding high E (nearest the floor as you hold it) and string 6 is the thick, low E. Diagrams draw them as vertical lines with string 6 on the left.
    *Why it works:* Thinner, tighter strings vibrate faster and so sound higher, which is why the numbering runs from thin and high to thick and low.
@@ -326,215 +326,223 @@
    *Why it works:* Each fret is a half step, so moving a barre shape up two frets raises the whole chord a whole step: one shape gives all twelve major chords.
    _match: barre, barres, barre chord, barre chords_
 
-82. **CAGED** — A system linking the five open chord shapes C, A, G, E and D. Each can be moved up the neck as a barre shape, so any chord can be played in five places, one shape joining the next.
+82. **Power chord** — Just two notes, the root and its 5th, on neighbouring low strings: first finger on the root, third finger two frets higher on the next string up. Written with a 5, as in A5. It has no 3rd, so it is neither major nor minor.
+   *Why it works:* The 5th is the most consonant interval after the octave, so the pair sounds solid and stays clear even with heavy distortion, where a full chord turns muddy.
+   _match: power chord, power chords_
+
+83. **CAGED** — A system linking the five open chord shapes C, A, G, E and D. Each can be moved up the neck as a barre shape, so any chord can be played in five places, one shape joining the next.
    *Why it works:* The fretboard repeats every twelve frets, an octave, so the five shapes join end to end and cover the whole neck for any root.
    _match: caged, e-shape, a-shape, c-shape, g-shape, d-shape_
 
-83. **Double-stop** — Two notes played together on two strings, usually neighbours (sometimes with one string skipped), picked or strummed. They are often taken from the chord being played, such as the top two strings of a barre shape.
+84. **Double-stop** — Two notes played together on two strings, usually neighbours (sometimes with one string skipped), picked or strummed. They are often taken from the chord being played, such as the top two strings of a barre shape.
    *Why it works:* Two notes make one interval, the core of every chord; 3rds and 6ths sound sweet and consonant, which is why players reach for them most.
    _match: double-stop, double-stops, double stop, double stops_
 
-84. **Slash chord** — A chord written with a slash, as in G/B: play G, but with B as the lowest note. The letter after the slash says which note goes on the lowest string you play.
+85. **Slash chord** — A chord written with a slash, as in G/B: play G, but with B as the lowest note. The letter after the slash says which note goes on the lowest string you play.
    *Why it works:* Changing the lowest note shifts the chord's weight without changing its name; G/B is simply G in first inversion, with the 3rd on the bottom.
    _match: slash chord, slash chords_
 
-85. **Progression** — A series of chords played in order, often looped, such as G, C, D, G. Most songs are built from a few progressions repeated.
+86. **Progression** — A series of chords played in order, often looped, such as G, C, D, G. Most songs are built from a few progressions repeated.
    *Why it works:* Chords that share notes or whose roots move by a 5th connect smoothly, and moving away from the home chord and back gives a sense of journey.
    _match: progression, progressions, chord progression, chord progressions_
 
-86. **Roman numerals (I, IV, V…)** — Roman numerals count chords from the home note: I is the chord built on note 1, IV on note 4, V on note 5. Upper case means major and lower case means minor, as in ii, iii and vi.
+87. **Roman numerals (I, IV, V…)** — Roman numerals count chords from the home note: I is the chord built on note 1, IV on note 4, V on note 5. Upper case means major and lower case means minor, as in ii, iii and vi.
    *Why it works:* Counting by scale degree shows a progression's shape in any key: I-IV-V is G-C-D in G and A-D-E in A, because the major scale's step pattern never changes.
    _match: numeral, numerals, roman numeral, roman numerals_
 
-87. **Harmony** — Notes sounding at the same time, and the way chords follow one another. Strumming chords under a sung tune is harmony.
+88. **Harmony** — Notes sounding at the same time, and the way chords follow one another. Strumming chords under a sung tune is harmony.
    *Why it works:* Notes whose frequencies line up in simple ratios, like an octave (2:1) or a 5th (3:2), share overtones and blend, which is why some combinations sound consonant.
    _match: harmony, harmonies_
 
-88. **Melody** — A tune: single notes one after another, the part you would sing or hum. On guitar it is usually picked one note at a time, often on the higher strings.
+89. **Melody** — A tune: single notes one after another, the part you would sing or hum. On guitar it is usually picked one note at a time, often on the higher strings.
    *Why it works:* A melody moves mostly by half and whole steps through the scale, and it feels settled when it lands on a note of the chord underneath.
    _match: melody, melodies, melodic_
 
-89. **Resolve / resolution** — Moving from a restless sound to a settled one, usually by landing on the home chord or home note. You hear it as the end of a musical sentence.
+90. **Resolve / resolution** — Moving from a restless sound to a settled one, usually by landing on the home chord or home note. You hear it as the end of a musical sentence.
    *Why it works:* Clashing intervals sound unstable, and the ear wants them to move by a half step or whole step to consonant ones; that move is resolution.
    _match: resolve, resolves, resolved, resolving, resolution, unresolved_
 
-90. **Tension** — The restless, unfinished feeling of a chord or note that wants to move on, such as a V chord just before the home chord. Building and releasing tension keeps music moving forward.
+91. **Tension** — The restless, unfinished feeling of a chord or note that wants to move on, such as a V chord just before the home chord. Building and releasing tension keeps music moving forward.
    *Why it works:* Dissonant intervals, like the clash between the 3rd and 7th of a dominant 7th chord, create tension; resolving them to consonant ones releases it.
    _match: tension_
 
-91. **Dominant (V)** — The chord built on the 5th note of the scale, labelled V: D in the key of G. It pulls strongly back to the home chord, I.
+92. **Dominant (V)** — The chord built on the 5th note of the scale, labelled V: D in the key of G. It pulls strongly back to the home chord, I.
    *Why it works:* V contains the note a half step below the home note (the 7th degree), which leans up into it; adding the flat 7th makes the pull even stronger.
    _match: dominant_
 
-92. **Secondary dominant** — A major or dominant 7th chord that acts as the V of a chord other than home. In G, A7 is the V of D (written V/V), so it pulls toward D rather than G.
+93. **Secondary dominant** — A major or dominant 7th chord that acts as the V of a chord other than home. In G, A7 is the V of D (written V/V), so it pulls toward D rather than G.
    *Why it works:* It copies the pull of a V chord by adding a note from outside the key (often a sharp), so the target chord briefly sounds like a new home note.
    _match: secondary dominant, secondary dominants, v of v_
 
-93. **Borrowed chord** — A chord taken from the parallel key, the minor key with the same home note (or the major, if you are in minor). In G major, C minor (iv) and F major (bVII) are borrowed from G minor.
+94. **Borrowed chord** — A chord taken from the parallel key, the minor key with the same home note (or the major, if you are in minor). In G major, C minor (iv) and F major (bVII) are borrowed from G minor.
    *Why it works:* Swapping a note of the major scale for its flat version, such as the 3rd, 6th or 7th, darkens the chord while the home note stays the same.
    _match: borrowed chord, borrowed chords, borrowing, borrow, borrows_
 
-94. **Colour note** — A note that gives a scale or chord its own flavour, usually one fret above or below a note of the major scale: b3, b6, b7 or #4. In G, b7 is F, one fret below F#.
+95. **Colour note** — A note that gives a scale or chord its own flavour, usually one fret above or below a note of the major scale: b3, b6, b7 or #4. In G, b7 is F, one fret below F#.
    *Why it works:* Each mode or borrowed chord differs from the major scale by one or two notes, and those half-step changes are what the ear hears as colour.
    _match: colour note, colour notes, color note, color notes_
 
-95. **Voice leading** — Moving each note of one chord to the nearest note of the next, so the change sounds smooth. On guitar it often means choosing inversions so your fingers barely move.
+96. **Voice leading** — Moving each note of one chord to the nearest note of the next, so the change sounds smooth. On guitar it often means choosing inversions so your fingers barely move.
    *Why it works:* Notes moving by a half step or whole step are easy for the ear to follow, so small moves join chords smoothly and shared notes can simply stay put.
    _match: voice leading, voice-leading_
 
-96. **Harmonic rhythm** — How often the chords change: every four counts, twice as often, or only now and then. It is separate from how fast you strum.
+97. **Harmonic rhythm** — How often the chords change: every four counts, twice as often, or only now and then. It is separate from how fast you strum.
    *Why it works:* Each chord change is a new event the ear tracks against the steady pulse, so faster changes raise energy and slower ones feel calmer.
    _match: harmonic rhythm_
 
-97. **Modulation (key change)** — Changing key partway through a song, so a new home note takes over. A common pop move shifts everything up one or two frets for the last section.
+98. **Modulation (key change)** — Changing key partway through a song, so a new home note takes over. A common pop move shifts everything up one or two frets for the last section.
    *Why it works:* A key is a scale built on a home note; moving to a new home changes which notes sound stable and which sound restless, so the music feels lifted.
    _match: modulation, modulate, modulates, key change, key changes_
 
-98. **Pivot chord** — A chord that belongs to both the old key and the new one, used as the hinge for a key change. The keys of G and D share G, D, Em and Bm.
+99. **Pivot chord** — A chord that belongs to both the old key and the new one, used as the hinge for a key change. The keys of G and D share G, D, Em and Bm.
    *Why it works:* Because the pivot fits both keys, the ear accepts it in the old key, then hears it pointing to the new home, so the change sounds smooth rather than sudden.
    _match: pivot chord, pivot chords, pivot-chord_
 
-99. **Beat** — The steady pulse you tap your foot to. Count it out loud as 1 2 3 4: each number is one beat, and every strum or picked note is timed against it.
+100. **Beat** — The steady pulse you tap your foot to. Count it out loud as 1 2 3 4: each number is one beat, and every strum or picked note is timed against it.
    *Why it works:* Pulse is the floor of all rhythm: every longer or shorter sound is measured in beats, the way pitch is measured in frets.
    _match: beat, beats_
 
-100. **Bar** — A group of beats, usually four, counted 1 2 3 4 and then back to 1. Also called a measure. "One chord per bar" means change chord each time you get back to 1.
+101. **Bar** — A group of beats, usually four, counted 1 2 3 4 and then back to 1. Also called a measure. "One chord per bar" means change chord each time you get back to 1.
    *Why it works:* Bars give the pulse a shape: beat 1 feels strongest, so chord changes and new ideas usually land there, and songs are built in 4-bar and 8-bar blocks.
    _match: bar, bars_
 
-101. **Tempo (bpm)** — Tempo is how fast the beats go, measured in bpm (beats per minute): 60 bpm is one beat each second. The app raises the tempo by 5 bpm after each clean pass and drops it back 5 after two misses.
+102. **Tempo (bpm)** — Tempo is how fast the beats go, measured in bpm (beats per minute): 60 bpm is one beat each second. The app raises the tempo by 5 bpm after each clean pass and drops it back 5 after two misses.
    *Why it works:* Tempo changes how fast the pulse ticks, not where things land in the bar, so a pattern learned slowly and cleanly stays correct as you speed it up.
    _match: bpm, tempo_
 
-102. **Downbeat** — Beat 1 of a bar: the first count, where you land each time you count 1 2 3 4 and start again. More loosely, any beat you count with a number rather than an "&".
+103. **Downbeat** — Beat 1 of a bar: the first count, where you land each time you count 1 2 3 4 and start again. More loosely, any beat you count with a number rather than an "&".
    *Why it works:* The downbeat is the strongest point of the bar, so landing a chord or root there sounds settled, and moving away from it creates pull.
    _match: downbeat, downbeats_
 
-103. **Subdivision (8ths, 16ths)** — Splitting each beat into smaller equal parts. Two per beat are 8ths, counted "1 & 2 & 3 & 4 &". Four per beat are 16ths, counted "1 e & a 2 e & a". Your strumming hand moves down on the numbers and up on the "&".
+104. **Subdivision (8ths, 16ths)** — Splitting each beat into smaller equal parts. Two per beat are 8ths, counted "1 & 2 & 3 & 4 &". Four per beat are 16ths, counted "1 e & a 2 e & a". Your strumming hand moves down on the numbers and up on the "&".
    *Why it works:* Subdivision is the ruler inside the beat: counting the small parts keeps every strum evenly spaced, and it is where all rhythm patterns are placed.
    _match: subdivision, subdivisions, 8ths, 16ths, 8th, 16th, eighth, eighths, sixteenth, sixteenths_
 
-104. **Offbeat / the "and"** — The points halfway between the beats: the "&" when you count "1 & 2 & 3 & 4 &". On guitar the offbeats usually fall on the up-strums.
+105. **Offbeat / the "and"** — The points halfway between the beats: the "&" when you count "1 & 2 & 3 & 4 &". On guitar the offbeats usually fall on the up-strums.
    *Why it works:* Sounds on the offbeat lean against the pulse instead of sitting on it, which creates lift and push; reggae and ska guitar live there.
    _match: offbeat, offbeats, off-beat_
 
-105. **Triplet** — Three equal parts squeezed into one beat instead of two, counted "1 trip-let 2 trip-let". It gives a rolling, three-step feel compared with plain 8ths.
+106. **Triplet** — Three equal parts squeezed into one beat instead of two, counted "1 trip-let 2 trip-let". It gives a rolling, three-step feel compared with plain 8ths.
    *Why it works:* A beat can divide into two or three; three-way division drives the long-short blues feel and 6/8 time, so learn to hear both kinds of subdivision.
    _match: triplet, triplets_
 
-106. **Shuffle / swing** — A feel where each pair of 8ths is played long-short instead of even, using the first and last parts of a triplet: "1-a-lah, 2-a-lah". Blues and jazz are usually played this way.
+107. **Shuffle / swing** — A feel where each pair of 8ths is played long-short instead of even, using the first and last parts of a triplet: "1-a-lah, 2-a-lah". Blues and jazz are usually played this way.
    *Why it works:* Swing keeps the beat and bar exactly the same but changes the subdivision from two even parts to a long-short triplet split, which is why it feels loping.
    _match: shuffle, shuffles, swing, swings, swung_
 
-107. **Syncopation** — Putting strong sounds where the listener does not expect them: on an offbeat, or just before a beat, instead of on the beat itself.
+108. **Syncopation** — Putting strong sounds where the listener does not expect them: on an offbeat, or just before a beat, instead of on the beat itself.
    *Why it works:* Our ears expect weight on the strong beats; syncopation breaks that pattern on purpose, creating a small surprise that makes rhythm feel alive.
    _match: syncopation, syncopated_
 
-108. **Anticipation** — Playing a chord change a little early, usually on the "&" of beat 4, so it arrives before beat 1 of the next bar instead of on it.
+109. **Anticipation** — Playing a chord change a little early, usually on the "&" of beat 4, so it arrives before beat 1 of the next bar instead of on it.
    *Why it works:* It is a common kind of syncopation: the change lands on an offbeat, so the downbeat it replaces feels pushed forward.
    _match: anticipation, anticipated, anticipations, anticipate_
 
-109. **Backbeat** — Stress on beats 2 and 4 of a four-beat bar, where the drummer usually hits the snare. On guitar it is often a muted, percussive strum or a harder strum on 2 and 4.
+110. **Backbeat** — Stress on beats 2 and 4 of a four-beat bar, where the drummer usually hits the snare. On guitar it is often a muted, percussive strum or a harder strum on 2 and 4.
    *Why it works:* Classical music tends to stress beats 1 and 3; stressing 2 and 4 is a built-in syncopation, and it is the engine of most rock, pop and soul.
    _match: backbeat, backbeats_
 
-110. **Accent** — Making one sound louder or sharper than the ones around it, such as a harder strum on certain counts, so it stands out.
+111. **Accent** — Making one sound louder or sharper than the ones around it, such as a harder strum on certain counts, so it stands out.
    *Why it works:* Accents decide which parts of the subdivision you hear as important; moving them is how a fixed strumming motion becomes a recognisable rhythm.
    _match: accent, accents, accented_
 
-111. **Groove** — The overall rhythmic feel of a part: the tempo, which beats are accented, and whether it is straight or swung, settling into a pattern that makes people want to move.
+112. **Groove** — The overall rhythmic feel of a part: the tempo, which beats are accented, and whether it is straight or swung, settling into a pattern that makes people want to move.
    *Why it works:* Groove is beat, subdivision and accent locked together and repeated, steady enough to predict and varied enough to be interesting.
    _match: groove, grooves_
 
-112. **Dynamics** — How loud or soft the music is, and how that changes over time. On guitar: how hard you strum or pick, and how many strings ring.
+113. **Dynamics** — How loud or soft the music is, and how that changes over time. On guitar: how hard you strum or pick, and how many strings ring.
    *Why it works:* Volume changes shape tension and release just as harmony does; a quiet section makes the loud one feel bigger.
    _match: dynamics, dynamic_
 
-113. **Stop-time** — The band plays one short, sharp hit, usually on beat 1, then goes silent for the rest of the bar (or longer) while the singer or soloist carries on, before everyone comes back in.
+114. **Stop-time** — The band plays one short, sharp hit, usually on beat 1, then goes silent for the rest of the bar (or longer) while the singer or soloist carries on, before everyone comes back in.
    *Why it works:* The pulse keeps going in everyone's head during the silence; stop-time shows how strong the beat is by taking the sound away from it.
    _match: stop-time, stop time_
 
-114. **12-bar blues** — The classic blues layout over 12 bars: four of I, two of IV, two of I, then V, IV, I, V. Usually played as dominant 7th chords with a long-short, swinging strum; variants move to IV in bar 2 or shorten it to 8 bars.
+115. **12-bar blues** — The classic blues layout over 12 bars: four of I, two of IV, two of I, then V, IV, I, V. Usually played as dominant 7th chords with a long-short, swinging strum; variants move to IV in bar 2 or shorten it to 8 bars.
    *Why it works:* I, IV and V are the home chord and its two closest neighbours, a 5th below and a 5th above, so the pattern feels like leaving home and returning.
    _match: 12-bar blues, 12-bar, twelve-bar blues, twelve-bar_
 
-115. **Quick change** — A 12-bar blues that moves to the IV chord in bar 2 and back to I in bar 3, instead of staying on I for the first four bars. In G: G7, C7, G7, G7.
+116. **Quick change** — A 12-bar blues that moves to the IV chord in bar 2 and back to I in bar 3, instead of staying on I for the first four bars. In G: G7, C7, G7, G7.
    *Why it works:* In G, the IV chord C7 contains B flat, the flat 3rd of G and a blue note, so the quick change brings that bluesy clash in early.
    _match: quick change, quick-change, quick to four_
 
-116. **Turnaround** — The last two bars of a 12-bar blues, which head back to V so the form can start again. On guitar it is often a short lick walking down the higher strings onto V7.
+117. **Turnaround** — The last two bars of a 12-bar blues, which head back to V so the form can start again. On guitar it is often a short lick walking down the higher strings onto V7.
    *Why it works:* Ending on V leaves the tension unresolved, so the ear expects the home chord next and the pattern rolls naturally into its next pass.
    _match: turnaround, turnarounds_
 
-117. **Palm muting** — Resting the edge of your picking hand lightly on the strings right next to the bridge while you play, so they give a short, chunky thud instead of ringing.
+118. **Palm muting** — Resting the edge of your picking hand lightly on the strings right next to the bridge while you play, so they give a short, chunky thud instead of ringing.
    *Why it works:* Muting cuts the ringing so each strum becomes short, which lets accents and rests stand out clearly against the beat.
    _match: palm muting, palm mute, palm-muted, palm muted, palm mutes_
 
-118. **Chuck** — A percussive strum where the fretting hand relaxes just enough to stop the strings ringing, so you hear a short "chk" instead of the chord. Shown as × in strumming patterns.
+119. **Boogie (5–6 riff)** — A rolling two-note riff on the low strings: a power chord (root + 5th), then the little finger reaches two frets further to make root + 6th, back and forth on every beat with a shuffle feel. Guitarists took it from the left hand of boogie-woogie piano.
+   *Why it works:* The root never moves, so the low end stays anchored, while the 5th-to-6th rocking adds motion; swung, it drives a 12-bar blues like a train.
+   _match: boogie, boogies, root-5/root-6_
+
+120. **Chuck** — A percussive strum where the fretting hand relaxes just enough to stop the strings ringing, so you hear a short "chk" instead of the chord. Shown as × in strumming patterns.
    *Why it works:* A chuck turns the guitar into a drum: placed on beats 2 and 4 it plays the backbeat, while the other strums carry the chord.
    _match: chuck, chucks_
 
-119. **Ghost strum** — A strum where your hand keeps moving down and up in time but barely touches the strings, or misses them, so it is nearly silent.
+121. **Ghost strum** — A strum where your hand keeps moving down and up in time but barely touches the strings, or misses them, so it is nearly silent.
    *Why it works:* Ghost strums keep the hand marking every subdivision, so the strums you do hear land exactly in time.
    _match: ghost strum, ghost strums, ghost, ghosts_
 
-120. **Hammer-on** — Pick a note, then bring another finger down hard onto a higher fret of the same string so a second note sounds without picking again.
+122. **Hammer-on** — Pick a note, then bring another finger down hard onto a higher fret of the same string so a second note sounds without picking again.
    *Why it works:* The string is already vibrating; shortening it with a new fret raises the pitch, which is how two notes come from one pick stroke.
    _match: hammer-on, hammer-ons, hammer on, hammered_
 
-121. **Pull-off** — The reverse of a hammer-on: with two fingers on the same string, pick the higher note, then flick the top finger off sideways so the lower note sounds without picking again.
+123. **Pull-off** — The reverse of a hammer-on: with two fingers on the same string, pick the higher note, then flick the top finger off sideways so the lower note sounds without picking again.
    *Why it works:* Removing a finger lengthens the vibrating string, so the pitch drops; the flick re-plucks the string to keep it sounding.
    _match: pull-off, pull-offs, pull off, pulled off_
 
-122. **Slide** — Play a note, then keep pressing while you move the same finger along the string to another fret, so the sound glides to the new note without picking again.
+124. **Slide** — Play a note, then keep pressing while you move the same finger along the string to another fret, so the sound glides to the new note without picking again.
    *Why it works:* Moving the finger changes the length of string that vibrates, so the pitch glides through every half step between the two frets.
    _match: slide, slides, sliding, slid_
 
-123. **p-i-m-a** — Letters for the picking-hand fingers, from their Spanish names: p = pulgar (thumb), i = indice (index), m = medio (middle), a = anular (ring). Usually the thumb plays the low strings and i, m, a one higher string each.
+125. **p-i-m-a** — Letters for the picking-hand fingers, from their Spanish names: p = pulgar (thumb), i = indice (index), m = medio (middle), a = anular (ring). Usually the thumb plays the low strings and i, m, a one higher string each.
    *Why it works:* Giving each finger its own string lets you play the notes of a chord separately and at the same time, like a small band in one hand.
    _match: p-i-m-a, pima, p-i-m_
 
-124. **Pinch** — Plucking a low string with the thumb and a higher string with a finger at the same moment, as if pinching the strings together.
+126. **Pinch** — Plucking a low string with the thumb and a higher string with a finger at the same moment, as if pinching the strings together.
    *Why it works:* A pinch sounds a low and a high note together, giving the root underneath and the melody on top in one motion.
    _match: pinch, pinches, pinched_
 
-125. **Arpeggio** — The notes of a chord played one after another instead of all at once, for example picking the strings of a chord shape one at a time.
+127. **Arpeggio** — The notes of a chord played one after another instead of all at once, for example picking the strings of a chord shape one at a time.
    *Why it works:* An arpeggio spells the chord out (root, 3rd, 5th) in time, so you hear each note and the harmony at once.
    _match: arpeggio, arpeggios, arpeggiated, arpeggiate_
 
-126. **Alternate bass / alternating thumb** — The thumb switches back and forth between two low strings on the beats, usually the root and another note of the chord, while the fingers pick higher strings in between.
+128. **Alternate bass / alternating thumb** — The thumb switches back and forth between two low strings on the beats, usually the root and another note of the chord, while the fingers pick higher strings in between.
    *Why it works:* Alternating root and 5th down low marks every beat, so a single guitar covers both the pulse and the harmony.
    _match: alternate bass, alternating bass, alternating thumb_
 
-127. **Travis picking** — A fingerstyle pattern named after Merle Travis: the thumb alternates between two low strings on every beat while the fingers pick higher strings on the "&" between them.
+129. **Travis picking** — A fingerstyle pattern named after Merle Travis: the thumb alternates between two low strings on every beat while the fingers pick higher strings on the "&" between them.
    *Why it works:* The steady thumb is the pulse and the fingers play the offbeats, so the pattern is a built-in syncopation.
    _match: travis, travis picking, travis-picking, travis pattern_
 
-128. **Bass and treble** — Bass means the low notes, on the thick strings (6, 5 and 4); treble means the high notes, on the thin strings (3, 2 and 1).
+130. **Bass and treble** — Bass means the low notes, on the thick strings (6, 5 and 4); treble means the high notes, on the thin strings (3, 2 and 1).
    *Why it works:* The lowest note decides how a chord sounds most strongly, so the bass usually plays the root while the treble carries the melody and colour.
    _match: bass, treble, bass note, bass notes_
 
-129. **Verse** — The part of a song that tells the story: the music repeats each time but the words change. Verses usually lead into the main section that repeats with the same words.
+131. **Verse** — The part of a song that tells the story: the music repeats each time but the words change. Verses usually lead into the main section that repeats with the same words.
    *Why it works:* Verses usually sit lower and calmer in energy so the next section can lift above them; the contrast is what makes the song feel like it goes somewhere.
    _match: verse, verses_
 
-130. **Chorus** — The part of a song that comes back with the same words each time, usually carrying the title and the most memorable melody. It is often the loudest, highest part.
+132. **Chorus** — The part of a song that comes back with the same words each time, usually carrying the title and the most memorable melody. It is often the loudest, highest part.
    *Why it works:* The chorus releases the tension built in the verse, often by landing on the home chord and raising the energy.
    _match: chorus, choruses_
 
-131. **Pre-chorus** — A short section between the verse and the chorus that builds anticipation, often with new chords, rising energy, and stopping just before the chorus arrives.
+133. **Pre-chorus** — A short section between the verse and the chorus that builds anticipation, often with new chords, rising energy, and stopping just before the chorus arrives.
    *Why it works:* The pre-chorus builds tension, often ending on the dominant or an unresolved chord, so the chorus feels like a release when it lands.
    _match: pre-chorus, pre-choruses, prechorus_
 
-132. **Phrase** — A short musical idea with a beginning, middle and end, like a sentence in speech, usually 2 or 4 bars long and often ending with a breath or pause.
+134. **Phrase** — A short musical idea with a beginning, middle and end, like a sentence in speech, usually 2 or 4 bars long and often ending with a breath or pause.
    *Why it works:* Phrases end on a goal, often a resolution to the home note or chord, which is why music feels like it is speaking in sentences.
    _match: phrase, phrases, phrasing_
 
-133. **Register** — How high or low a passage sits overall: the same melody can be played in a low, middle or high register, for example lower on the neck or an octave up.
+135. **Register** — How high or low a passage sits overall: the same melody can be played in a low, middle or high register, for example lower on the neck or an octave up.
    *Why it works:* Moving to a higher register raises energy and brightness without changing the notes, which is why choruses often sit higher than verses.
    _match: register, registers_
 
-134. **Prosody** — When the music fits what the words mean: the melody, rhythm, chords and phrasing all support the feeling of the lyric. Stressed syllables fall on strong beats.
+136. **Prosody** — When the music fits what the words mean: the melody, rhythm, chords and phrasing all support the feeling of the lyric. Stressed syllables fall on strong beats.
    *Why it works:* Strong beats, rising melody, and resolution all carry feeling on their own; prosody lines those feelings up with the meaning of the words.
    _match: prosody_
 

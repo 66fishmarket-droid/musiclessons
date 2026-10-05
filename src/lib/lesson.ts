@@ -1,7 +1,7 @@
 import { CREATE_TASKS } from '../../supabase/functions/_shared/engine/create.ts';
 import { termsIn, type GlossaryEntry } from '../../supabase/functions/_shared/engine/glossary.ts';
 import { MINOR_FAMILY_SCALE } from '../../supabase/functions/_shared/engine/render.ts';
-import { recipeFor, type Card, type SkillRecipe, type StepElement } from '../../supabase/functions/_shared/engine/recipes.ts';
+import { PLAYS_THROUGH, playStep, recipeFor, type Card, type SkillRecipe, type StepElement } from '../../supabase/functions/_shared/engine/recipes.ts';
 import type { BlockKind, LessonPlan, Skill } from '../../supabase/functions/_shared/engine/types.ts';
 import type { BlockContent, LessonContent } from '../../supabase/functions/_shared/lesson/contract.ts';
 
@@ -85,6 +85,22 @@ export function stepElements(recipe: SkillRecipe | undefined, kind: BlockKind, s
     : FIXED_SHOW[kind];
   if (!show || show.length !== stepCount) return null;
   return show[step] ?? null;
+}
+
+/** What one review step shows: a skill item gets its own card and step elements (as when it was new), a style rhythm
+ * its pattern with the chords, anything else the metronome. Lessons stored before rhythms existed fall to the last case. */
+export function reviewView(plan: LessonPlan, content: LessonContent, i: number, step: number, skills: Map<string, Skill>):
+  { skillId?: string; card: Card; recipe?: SkillRecipe; rhythm: { name: string; grid: string[] } | null; els: StepElement[] } {
+  const ref = plan.blocks[i]?.items[step]?.ref ?? '';
+  const skill = ref.startsWith('skill:') ? skills.get(ref.slice('skill:'.length)) : undefined;
+  if (skill) {
+    const recipe = recipeFor(skill);
+    const shown = recipe.show?.[playStep(recipe)] ?? (recipe.card === 'none' ? ['metronome'] : ['card', 'chords', 'metronome']);
+    const els = [...new Set<StepElement>([...shown, ...(PLAYS_THROUGH.includes(recipe.card) ? ['chords', 'metronome'] as const : [])])];
+    return { skillId: skill.id, card: recipe.card, recipe, rhythm: null, els };
+  }
+  const rhythm = content.blocks[i]?.rhythms?.[step] ?? null;
+  return rhythm ? { card: 'rhythm', rhythm, els: ['card', 'chords', 'metronome'] } : { card: 'none', rhythm: null, els: ['metronome'] };
 }
 
 /** One block's text, reading both engine-written lessons and ones stored before them (tips/explanation). */

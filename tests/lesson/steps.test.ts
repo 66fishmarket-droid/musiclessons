@@ -1,4 +1,4 @@
-import { stepElements } from '../../src/lib/lesson.ts';
+import { reviewView, stepElements } from '../../src/lib/lesson.ts';
 import { describe, expect, it } from 'vitest';
 import { buildMusic } from '../../supabase/functions/_shared/engine/music.ts';
 import { planLesson, targetFor } from '../../supabase/functions/_shared/engine/planner.ts';
@@ -76,7 +76,8 @@ describe('buildSteps', () => {
     const chords = romanToChords(plan.key, prog.roman);
 
     expect(review.instructions[0]).toContain(skill.name);
-    expect(review.instructions[1]).toBe(`${pattern.name}: ${expectedCounts}`);
+    expect(review.instructions[1]).toBe(`${pattern.name}: ${expectedCounts}. Play it through ${plan.music.progression.chords.map(c => `{${c}}`).join(' ')}, one chord per bar.`);
+    expect(review.rhythms).toEqual([null, { name: pattern.name, grid: pattern.grid }, null]);
     for (const c of chords) expect(review.instructions[2]).toContain(`{${c}}`);
   });
   it('review renders only the first recipe step, so a bpm-ladder skill with a null target doesn\'t throw', () => {
@@ -87,6 +88,13 @@ describe('buildSteps', () => {
     };
     const [review] = buildSteps(plan, SKILL_MAP).blocks;
     expect(review.instructions[0].startsWith(skill.name)).toBe(true);
+  });
+  it('gives a rhythm skill on review what it is, the counts to strum, and the chords (owner hit bare one-liners 2026-10-05)', () => {
+    const plan = { ...PLAN, blocks: [{ kind: 'review' as const, minutes: 5, items: [{ ref: 'skill:rhythm.l1.locked_8ths', target: null }] }] };
+    const [line] = buildSteps(plan, SKILL_MAP).blocks[0].instructions;
+    expect(line).toMatch(/^Locked 8ths and 16ths: Keep your pick hand swinging/);
+    expect(line).toContain(`Strum {${plan.music.progression.chords[0]}}: 1 strum down · 1e strum up`);
+    expect(line).toContain('Then once through');
   });
   it('gives a theory review item a concrete task in the key of the day, not a bare "Review: topic"', () => {
     const plan = {
@@ -156,3 +164,36 @@ describe('per-step elements line up with the engine-written steps', () => {
     });
   });
 });
+
+describe('review steps show their tools (owner hit text-only review 2026-10-05)', () => {
+  // Every practice skill and every style rhythm, one review item each: a step that names something to play must put
+  // that thing on screen, the same card the item had when it was new.
+  const items = [
+    ...SKILLS.filter(sk => RECIPES[sk.id]).map(sk => `skill:${sk.id}`),
+    ...STYLE_CATALOG.elements.filter(e => e.kind === 'rhythm').map(e => `style:${e.id}`),
+  ];
+  const plan = { ...PLAN, blocks: [{ kind: 'review' as const, minutes: 5, items: items.map(ref => ({ ref, target: null })) }] };
+  const [block] = buildSteps(plan, SKILL_MAP).blocks;
+  const content = { blocks: [{ ...block, more: '' }] } as unknown as Parameters<typeof reviewView>[1];
+  it('writes one step per item', () => expect(block.instructions).toHaveLength(items.length));
+  it.each(items.map((ref, k) => [ref, k] as const))('%s shows its card, and chords when it says to play through them', (ref, k) => {
+    const v = reviewView(plan, content, 0, k, SKILL_MAP);
+    if (v.card !== 'none') expect(v.els, block.instructions[k]).toContain(v.card === 'chords' ? 'chords' : 'card');
+    if (/\{[A-G]/.test(block.instructions[k]) && ['rhythm', 'pattern', 'chords'].includes(v.card)) expect(v.els).toContain('chords');
+    if (ref.startsWith('style:')) expect(v.card).toBe('rhythm');
+  });
+});
+
+describe('reset wording follows the block before it (owner hit "hum the last thing you played" after writing, 2026-10-05)', () => {
+  const resetAfter = (skillId: string) => [...Array(8).keys()].map(d => {
+    const plan = { ...PLAN, skill_id: skillId, date: `2026-10-0${d + 1}`, blocks: [{ kind: 'reset' as const, minutes: 0.5, items: [] }] };
+    return buildSteps(plan, SKILL_MAP).blocks[0].instructions[0];
+  });
+  it('never mentions playing after a writing skill', () => {
+    for (const line of resetAfter('songwriting.l1.object_writing')) expect(line).not.toMatch(/play/i);
+  });
+  it('can call back to what was played after a playing skill', () => {
+    expect(resetAfter('rhythm.l1.locked_8ths').some(l => /you just played|last thing you played/.test(l))).toBe(true);
+  });
+});
+

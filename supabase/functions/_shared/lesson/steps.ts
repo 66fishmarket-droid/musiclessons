@@ -1,6 +1,6 @@
 import { CREATE_TASKS } from '../engine/create.ts';
 import { APPLY_DEFAULT_GRID } from '../engine/patterns.ts';
-import { recipeFor } from '../engine/recipes.ts';
+import { PLAYS_THROUGH, playStep, recipeFor } from '../engine/recipes.ts';
 import { renderSteps, slotContext } from '../engine/render.ts';
 import { romanToChords } from '../engine/roman.ts';
 import { STYLE_CATALOG } from '../engine/styles.ts';
@@ -16,7 +16,11 @@ export function targetText(t: Target | null): string {
   return 'Rate yourself honestly, 1–5.';
 }
 
-export interface EngineBlock { kind: BlockKind; instructions: string[]; target_text: string; listen_for: string }
+export interface EngineBlock {
+  kind: BlockKind; instructions: string[]; target_text: string; listen_for: string;
+  /** Review only, one per step: a style rhythm item's grid so the app can draw its card (the catalogue stays server-side); null otherwise. */
+  rhythms?: ({ name: string; grid: string[] } | null)[];
+}
 
 /** Every word the learner reads from the engine's steps (instructions plus each block's listen_for) — the
  * allowance text for the no-unmet-skill-names check (contract.ts avoidNames) and the brief. */
@@ -24,12 +28,20 @@ export function stepsText(steps: { blocks: EngineBlock[] }): string {
   return steps.blocks.flatMap(b => [...b.instructions, b.listen_for]).join(' ');
 }
 export { APPLY_DEFAULT_GRID }; // moved to engine/patterns.ts so src/screens/Player.tsx doesn't pull steps.ts (and STYLE_CATALOG) into the client bundle
-const RESETS = [
-  'Put the guitar down for 30 seconds and shake out both hands.',
-  'Put the guitar down. Close your eyes and picture the shape you just played.',
-  'Put the guitar down for 30 seconds and breathe out slowly twice.',
-  'Put the guitar down and hum the last thing you played.',
-];
+/** Resets after a playing block may call back to what was played; after a writing block they only move the body. */
+const RESETS = {
+  played: [
+    'Put the guitar down for 30 seconds and shake out both hands.',
+    'Put the guitar down. Close your eyes and picture the shape you just played.',
+    'Put the guitar down for 30 seconds and breathe out slowly twice.',
+    'Put the guitar down and hum the last thing you played.',
+  ],
+  wrote: [
+    'Put the pen down, stand up and shake out both hands for 30 seconds.',
+    'Stand up, stretch both arms overhead and breathe out slowly twice.',
+    'Look away from the page at something far off for 30 seconds, then pick the guitar up.',
+  ],
+};
 
 /** Every instruction the learner reads, from the plan: recipes, block templates and the Create library (spec §5). */
 export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { blocks: EngineBlock[]; create_prompt: string } {
@@ -49,6 +61,15 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
     return { steps: renderSteps(r.steps.slice(0, limit), ctx), listen: r.listenFor };
   };
 
+  /** Skill review item: what it is plus the step that plays it (the recipe's first card step), then the chords once through. */
+  const reviewSkillLine = (ref: string, b: PlanBlock, item: PlanBlock['items'][number]): string => {
+    const r = recipeFor(skillOf(ref)!);
+    const play = playStep(r);
+    const steps = recipeSteps(ref, { ...b, items: [item] }, false, play + 1).steps;
+    const through = PLAYS_THROUGH.includes(r.card) ? renderSteps([' Then once through {chords}, one chord per bar.'], base)[0] : '';
+    return `${skillOf(ref)!.name}: ${play > 0 ? `${steps[0]} ${steps[play]}` : steps[0]}${through}`;
+  };
+
   /** Style review item: the rhythm's counts, or the progression's chords; a safe line if either lookup fails. */
   const reviewStyleLine = (ref: string): string => {
     const element = STYLE_CATALOG.elements.find(e => e.id === ref);
@@ -59,12 +80,20 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
       const pattern = profile?.rhythm_patterns.find(p => p.id === element.id);
       if (!pattern) return safe;
       const ctx = slotContext(plan, { grid: pattern.grid.join(''), gridName: pattern.name });
-      return renderSteps(['{rhythm_name}: {rhythm_counts}'], ctx)[0];
+      return renderSteps(['{rhythm_name}: {rhythm_counts}. Play it through {chords}, one chord per bar.'], ctx)[0];
     }
     const prog = profile?.progressions.find(p => p.id === element.id);
     if (!prog) return safe;
     const chords = romanToChords(plan.key, prog.roman);
     return `${element.name}: ${chords.map(c => `{${c}}`).join(' ')}, one bar each.`;
+  };
+
+  /** A style rhythm review item's pattern, for the app's card; null for anything else. */
+  const reviewRhythm = (ref: string): { name: string; grid: string[] } | null => {
+    if (!ref.startsWith('style:')) return null;
+    const id = ref.slice('style:'.length);
+    const p = STYLE_CATALOG.profiles.flatMap(x => x.rhythm_patterns).find(x => x.id === id);
+    return p ? { name: p.name, grid: p.grid } : null;
   };
 
   const build = (b: PlanBlock): EngineBlock => {
@@ -85,15 +114,15 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
         const r = recipeSteps(id, b, false);
         return make([`Cold retest: ${skillOf(id)?.name ?? id}. One attempt at the target, no practice run first.`, ...r.steps.slice(0, 2)], r.listen); // first two steps: set-up plus the pattern/rhythm line
       }
-      case 'review': return make(b.items.map(i => {
+      case 'review': return { ...make(b.items.map(i => {
         const [type, ref] = [i.ref.slice(0, i.ref.indexOf(':')), i.ref.slice(i.ref.indexOf(':') + 1)];
         if (type === 'style') return reviewStyleLine(ref);
-        if (type === 'skill' && skillOf(ref)) return `${skillOf(ref)!.name}: ${recipeSteps(ref, { ...b, items: [i] }, false, 1).steps[0]}`;
+        if (type === 'skill' && skillOf(ref)) return reviewSkillLine(ref, b, i);
         if (type === 'theory' && THEORY_REVIEWS[ref]) {
           return renderSteps([`${skillOf(ref)?.name ?? ref}: ${THEORY_REVIEWS[ref]}`], { ...base, scale: 'major' })[0];
         }
         return `Review: ${skillOf(ref)?.name ?? ref}.`;
-      }));
+      })), rhythms: b.items.map(i => reviewRhythm(i.ref)) };
       case 'apply': {
         const ctx = plan.music.rhythm ? base : slotContext(plan, { grid: APPLY_DEFAULT_GRID, gridName: 'Steady down-strums' });
         return make(renderSteps([
@@ -108,7 +137,11 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
         'Listen back once, all the way through.',
         'Rate it 1–5 and note one thing to fix tomorrow.',
       ]);
-      case 'reset': return make([RESETS[day % RESETS.length]]);
+      case 'reset': {
+        const r = skillOf(plan.skill_id) && recipeFor(skillOf(plan.skill_id)!);
+        const pool = r && (r.card !== 'none' || r.show?.some(els => els.length)) ? RESETS.played : RESETS.wrote;
+        return make([pool[day % pool.length]]);
+      }
     }
   };
   return { blocks: plan.blocks.map(build), create_prompt: renderSteps([task.prompt], base)[0] };
