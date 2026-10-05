@@ -15,13 +15,20 @@ Owner played "Object writing & shuffle boogie in Ab" and hit five problems. Four
 
 Tests: 530 pass, including 175 catalogue-wide review cases (every practice skill and style rhythm must show its card/chords on review).
 
-## Needs a deploy to reach the owner
+## Deployed 2026-10-05
+PR #12 merged (`21fcaeb`), `generate-lesson` redeployed, Netlify live. Today's lesson row was deleted (status planned, no logs) so the owner gets a fresh one.
+
+## Audit fixes on dev (after the deploy, not yet merged)
+`docs/rhythm-audit-2026-10-05.md` has the full list and status. In short: palm mute `M`/`m`; valse musette 3/4 and gospel ballad 12/8; swing carried and played; picked notes `l`/`c`/`n`/`h`; next-bar push. Also `ec3aa58` restored LF line endings that my Windows Python edits had flipped. 545 tests pass.
+These need the same deploy as before: merge to main and redeploy `generate-lesson` (the rhythm now carries swing and push in the plan).
+
+## Needs a deploy to reach the owner (done for the first batch, see above)
 - `generate-lesson` must be redeployed: review lines, the `rhythms` field and reset wording are written server-side.
 - Netlify (main) for the app: scale box, boogie card, review cards, chord strip.
 - Lessons already stored keep their old text. Today's (2026-10-05) lesson is unchanged.
 
 ## Open / later
-1. **Same class as the boogie bug:** style patterns whose `note` says something the strum grid can't show. Worst: `rock_indie_alt.jangle_arpeggio` and `quiet_verse_sparse_pick` (picked notes stored as strums), the metal chugs and `pop_punk.palm_muted_chug_verse` (palm mute not shown), `rock_classic.stab_and_space` (choke). An audit is about an hour, plus fixes per pattern.
+1. ~~Same class as the boogie bug~~ (fixed, see the audit doc). Was: style patterns whose `note` says something the strum grid can't show. Worst: `rock_indie_alt.jangle_arpeggio` and `quiet_verse_sparse_pick` (picked notes stored as strums), the metal chugs and `pop_punk.palm_muted_chug_verse` (palm mute not shown), `rock_classic.stab_and_space` (choke). An audit is about an hour, plus fixes per pattern.
 2. LLM-chosen songs don't fit the element (Hoochie Coochie Man for a shuffle boogie; capo 3 suggestions).
 3. Review of a style progression shows the chord chips only (its chords can differ from the day's, so no panel).
 4. Carried over: 54 function summaries; the Ask spec.

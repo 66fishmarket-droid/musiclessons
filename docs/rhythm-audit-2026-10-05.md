@@ -17,10 +17,20 @@ the current bar's chord).
 | 4 | **Wrong meter.** | `gypsy_jazz.valse_musette_3_4_12_slots` has 16 slots, so a 3/4 waltz plays as 4/4. `soul.12_8_gospel_ballad_swing_to_triplets` is straight 8ths in 16 slots, not 12/8 triplets | Re-grid to 12 slots from the sources | 20 min |
 | 5 | **"Next bar's chord" pushes** play the current chord on the push | `rock_classic.push_into_the_next_bar`, `pop_punk.push_anticipation` (`americana.anticipated_change` is similar) | Mark the slot (`>` prefix on the token) so the card plays the next chord there and the counts say "change early" | 45 min |
 
+## Status (all five fixed on dev, same day)
+| # | Commit | Notes |
+|---|---|---|
+| 1 | `8f17e09` | 12 patterns carry `M`/`m`; the guard also caught the country train beat |
+| 4 | `9b61a91` | Gospel ballad is now unverified, so it's out of the element rotation until it has a source |
+| 3 | `aff7966` | 5 styles; old stored plans play straight |
+| 2 | `70865c9` | Jangle, sparse pick, neo-soul arpeggio. The Sabbath riff stays as power-chord hits; its melody needs riff notes |
+| 5 | `2d6ce0d` | Rock push, pop-punk push and the anticipation skill. `americana.anticipated_change` has no source note, so it's left alone |
+
 ## Later (minor)
 - `x` reads "mute (slap or choke)" everywhere. The notes say which one (a fret-hand choke for `stab_and_space` and the Malcolm stab; a palm slap for `pop.acoustic_slap_backbeat` and the rumba). The step text should name the one meant. About 30 min.
 - The `accents` arrays are stored but never drawn or played.
 - `bluegrass.carter_scratch_b_melody_on_strings_6_4`: the melody on the bass strings is shown as a plain root thump.
+- Counts for 16th patterns read long (16 phrases). Could compress to "all palm-muted except 1, 2&, 4".
 - 34 patterns are unverified (`?`, the research agents' own transcriptions). Fine for now; they are flagged in the data.
 
 ## Patterns that check out
