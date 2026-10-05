@@ -47,6 +47,13 @@ explanation. A gap in practice is a signal to bring the refreshers back, not jus
 leave a bare topic name as an instruction ("Review: Circle of fifths"): give one sentence of what it is plus something
 to play. (Owner hit both on 2026-10-01.)
 
+**Show what you say.** A step that tells the learner to play something puts that thing on screen: the card, the chords,
+the scale. This holds on every path (new skill, retest, review, apply, create), not just the main block. Review reuses the
+item's own recipe card via `reviewView` (`src/lib/lesson.ts`); the guard in `tests/lesson/steps.test.ts` runs the whole
+catalogue through it. Style data must describe what is actually played: a riff is notes on strings (grid tokens `5`/`6`),
+not a strum grid. A term in a pattern's name (e.g. "root-5/root-6") gets defined in the step text. (Owner hit text-only
+review steps and an unexplained boogie on 2026-10-05.)
+
 **Glossary upkeep:** a new music term in engine-written text (recipes, create tasks, step text) needs an entry in
 `supabase/functions/_shared/engine/glossary.ts` in the same commit, placed after the terms its definition uses.
 Check with `node scripts/render-glossary.ts`.
