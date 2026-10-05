@@ -1,12 +1,13 @@
 import { Chord, Interval, Note } from 'tonal';
 import { TUNING, noteAt, type Voicing } from './music.ts';
 
-export type Finger = 'p' | 'i' | 'm' | 'a';
+/** Picking-hand fingers, or 'pick' for single notes picked with a plectrum (style grid tokens l/c/n/h). */
+export type Finger = 'p' | 'i' | 'm' | 'a' | 'pick';
 /** bass = lowest root string; alt = alternate bass; t1/t2/t3 = highest, second- and third-highest sounding strings.
  * riff_* = the boogie riff's root, 5th and 6th on the two lowest strings, placed from the chord name, not the shape. */
 export type Role = 'bass' | 'alt' | 't1' | 't2' | 't3' | 'riff_root' | 'riff_5' | 'riff_6';
-/** Strum strokes from style rhythm grids: D/U down/up, d/u muted ghost strokes, x mute, choke or slap. */
-export type Stroke = 'D' | 'U' | 'd' | 'u' | 'x';
+/** Strum strokes from style rhythm grids: D/U down/up, d/u muted ghost strokes, M/m palm-muted down/up, x mute, choke or slap. */
+export type Stroke = 'D' | 'U' | 'd' | 'u' | 'M' | 'm' | 'x';
 export interface PickPattern {
   id: string; name: string; beatsPerBar: 3 | 4; stepsPerBeat: 1 | 2 | 3 | 4;
   /** Bars the steps span (default 1); the chord changes at each bar line. */
@@ -15,8 +16,14 @@ export interface PickPattern {
   steps: { finger: Finger; role: Role }[][];
   /** Style rhythms only: the strum stroke on each step, null where the step is picked or silent. */
   strokes?: (Stroke | null)[];
+  /** Swung style rhythms on a 16th grid: how late the offbeats fall (see swingOffset). */
+  swing?: Swing;
+  /** Slot in each bar from which the next bar's chord sounds early (an anticipation). */
+  push?: number;
 }
-/** fret is set only for riff notes, which don't sit on the chord shape. */
+/** A style's swing: long-to-short ratio of each offbeat pair, on 8ths (blues, jazz) or 16ths (funk, neo-soul). */
+export interface Swing { ratio: number; sixteenths: boolean }
+/** fret is set for riff and pick notes, so the card can show it. */
 export interface PickNote { finger: Finger; role: Role; string: number; note: string; interval: string; fret?: number }
 
 /** The apply block's rhythm grid when the day has no style (steady down-strums, one per beat). */
@@ -74,7 +81,7 @@ export function resolvePattern(p: PickPattern, v: Voicing, chord: string, tuning
     const fret = r ? riff.fret + r[1] : Math.max(0, v.frets[string]);
     const note = Note.transpose(tuning[string], Interval.fromSemitones(fret));
     const interval = tonic ? DEGREE[(Note.chroma(note)! - Note.chroma(tonic)! + 12) % 12] : '';
-    return r ? { finger, role, string, note, interval, fret } : { finger, role, string, note, interval };
+    return r || finger === 'pick' ? { finger, role, string, note, interval, fret } : { finger, role, string, note, interval };
   }));
 }
 
@@ -87,14 +94,15 @@ const FINGERS = [I, M, A]; // P in a rhythm grid: the fingers pluck the top thre
 const PICKED: Record<string, PickPattern['steps'][number]> = {
   '-': [], B: [P], P: FINGERS, BP: [P, ...FINGERS], N: [n('i', 't1')],
   5: [n('p', 'riff_root'), n('p', 'riff_5')], 6: [n('p', 'riff_root'), n('p', 'riff_6')],
+  l: [n('pick', 'bass')], c: [n('pick', 't3')], n: [n('pick', 't2')], h: [n('pick', 't1')],
 };
 
 /**
  * A style rhythm grid as a playable pattern. Grids are 16 slots (4/4 in 16ths), 12 (3/4 in 16ths when the name says
  * 3/4, else a 12/8 feel: 4 beats of triplets) or 32 (two bars of 16ths). B thumb bass, P fingers, BP pinch, N single note,
- * 5/6 the boogie riff's root + 5th / root + 6th.
+ * 5/6 the boogie riff's root + 5th / root + 6th, l/c/n/h one string picked with the pick (root, third-, second-highest, highest).
  */
-export function rhythmPattern(name: string, grid: string[]): PickPattern {
+export function rhythmPattern(name: string, grid: string[], swing?: Swing | null, push?: number | null): PickPattern {
   const [beatsPerBar, stepsPerBeat, bars] =
     grid.length === 12 ? (name.includes('3/4') ? [3, 4, 1] : [4, 3, 1])
     : grid.length === 32 ? [4, 4, 2]
@@ -103,14 +111,28 @@ export function rhythmPattern(name: string, grid: string[]): PickPattern {
     id: `rhythm:${name}`, name, beatsPerBar: beatsPerBar as 3 | 4, stepsPerBeat: stepsPerBeat as 3 | 4, bars,
     steps: grid.map(t => PICKED[t] ?? []),
     strokes: grid.map(t => (t in PICKED ? null : t as Stroke)),
+    // 12-slot grids are already written in triplets; below 1.2 the lilt is too small to hear.
+    ...(swing && swing.ratio >= 1.2 && stepsPerBeat === 4 ? { swing } : {}),
+    ...(push != null ? { push } : {}),
   };
+}
+
+/** How late step k sounds, as a fraction of a beat: the swung offbeat of each pair moves from halfway to ratio/(1+ratio). */
+export function swingOffset(p: PickPattern, k: number): number {
+  if (!p.swing) return 0;
+  const shift = p.swing.ratio / (1 + p.swing.ratio) - 0.5;
+  const inBeat = k % p.stepsPerBeat;
+  return p.swing.sixteenths ? (inBeat % 2 === 1 ? shift / 2 : 0) : inBeat === 2 ? shift : 0;
 }
 
 const DOING: Record<string, string> = {
   B: 'thumb plays the bass note', P: 'fingers pluck the top strings', BP: 'thumb and fingers pluck together', N: 'play a single note',
   D: 'strum down', U: 'strum up', d: 'muted strum down', u: 'muted strum up', x: 'mute (slap or choke)',
+  M: 'palm-muted strum down', m: 'palm-muted strum up',
   5: 'root + 5th', 6: 'root + 6th',
+  l: 'pick the root', c: 'pick the third-highest string', n: 'pick the second-highest string', h: 'pick the highest string',
 };
+const PICK_TOKEN: Record<string, string> = { bass: 'l', t3: 'c', t2: 'n', t1: 'h' };
 /** Said before a riff's counts, so "root-5/root-6" is never left undefined. */
 const RIFF_HOW = 'Root-5/root-6 means two notes on neighbouring low strings, picked down together. For each chord, put your first finger '
   + "on its root (string 6 or 5, the fret the card shows) and your third finger two frets higher on the next string: that's the root + 5th, "
@@ -122,7 +144,8 @@ const COUNT_SUB: Record<number, string[]> = { 1: [''], 2: ['', '&'], 3: ['', '-t
 export function rhythmCounts(p: PickPattern): string {
   const barLen = p.beatsPerBar * p.stepsPerBeat;
   const riff = (k: number) => p.steps[k].find(s => s.role === 'riff_5' || s.role === 'riff_6')?.role.slice(-1);
-  const token = (k: number) => p.strokes?.[k] ?? riff(k) ?? (p.steps[k].length === 4 ? 'BP' : p.steps[k].length === 3 ? 'P' : p.steps[k][0]?.role === 'bass' ? 'B' : p.steps[k].length ? 'N' : null);
+  const picked = (k: number) => (p.steps[k].length === 1 && p.steps[k][0].finger === 'pick' ? PICK_TOKEN[p.steps[k][0].role] : undefined);
+  const token = (k: number) => p.strokes?.[k] ?? riff(k) ?? picked(k) ?? (p.steps[k].length === 4 ? 'BP' : p.steps[k].length === 3 ? 'P' : p.steps[k][0]?.role === 'bass' ? 'B' : p.steps[k].length ? 'N' : null);
   const out: string[] = [];
   let lastBar = 0;
   p.steps.forEach((_, k) => {
@@ -130,14 +153,18 @@ export function rhythmCounts(p: PickPattern): string {
     if (!t) return;
     const bar = Math.floor(k / barLen), inBar = k % barLen;
     const count = `${Math.floor(inBar / p.stepsPerBeat) + 1}${COUNT_SUB[p.stepsPerBeat][inBar % p.stepsPerBeat]}`;
-    out.push(`${bar > lastBar ? `bar ${bar + 1}: ` : ''}${count} ${DOING[t]}`);
+    const early = p.push !== undefined && inBar >= p.push ? " (next bar's chord, early)" : '';
+    out.push(`${bar > lastBar ? `bar ${bar + 1}: ` : ''}${count} ${DOING[t]}${early}`);
     lastBar = bar;
   });
   const counts = out.join(' · ');
-  return p.steps.some((_, k) => riff(k)) ? `${RIFF_HOW} ${counts}` : counts;
+  const swung = p.swing ? (p.swing.sixteenths
+    ? 'Swung: in each pair of 16ths the first is longer, so every "e" and "a" lands a little late. '
+    : 'Swung: in each pair of 8ths the first is longer, so every "&" lands late. ') : '';
+  return `${p.steps.some((_, k) => riff(k)) ? `${RIFF_HOW} ` : ''}${swung}${counts}`;
 }
 
-const FINGER_WORD = { p: 'thumb', i: 'index', m: 'middle', a: 'ring' } as const;
+const FINGER_WORD = { p: 'thumb', i: 'index', m: 'middle', a: 'ring', pick: 'pick' } as const;
 
 /** A picking pattern in words, count by count ("1 thumb + ring together · 2 index"), so steps match the animated card. */
 export function patternCounts(p: PickPattern): string {

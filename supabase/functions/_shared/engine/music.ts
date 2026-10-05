@@ -1,6 +1,7 @@
 import { Chord, Interval, Note, Scale } from 'tonal';
 import guitar from '@tombatossals/chords-db/lib/guitar.json' with { type: 'json' };
 import { normalizeRoman, romanToChords } from './roman.ts';
+import type { Swing } from './patterns.ts';
 import type { StyleElement, StyleProfile } from './styles.ts';
 
 /** Open strings low → high; index 0 is the low E string. */
@@ -14,7 +15,7 @@ export interface MusicContent {
   scale: { tonic: string; name: string; notes: string[]; positions: FretNote[] };
   progression: { roman: string[]; chords: string[] };
   voicings: Record<string, Voicing[]>;
-  rhythm: { name: string; grid: string[] } | null;
+  rhythm: { name: string; grid: string[]; swing?: Swing | null; push?: number | null } | null;
   triads: TriadShape[];
 }
 export interface MusicInput { key: string; track: string; style: StyleProfile | null; element: StyleElement | null }
@@ -130,6 +131,12 @@ export function triadInversions(name: string, strings: [number, number, number])
   return shapes.sort((x, y) => Math.min(...x.frets) - Math.min(...y.frets));
 }
 
+/** The style's swing for its rhythms, or null when it plays straight (16ths when its feel names them, else 8ths). */
+export function swingOf(p: StyleProfile | null | undefined): Swing | null {
+  const r = p?.feel.swing_ratio;
+  return r && r >= 1.2 ? { ratio: r, sixteenths: /16th/.test(p!.feel.subdivision) } : null;
+}
+
 /** Deterministic music for a lesson; these chords and scales are the only ones the LLM may reference. */
 export function buildMusic({ key, track, style, element }: MusicInput): MusicContent {
   const chosen = element?.kind === 'progression' ? style?.progressions.find(p => p.id === element.id) : undefined;
@@ -146,7 +153,7 @@ export function buildMusic({ key, track, style, element }: MusicInput): MusicCon
     scale: { tonic: key, name: scaleName, notes: Scale.get(`${key} ${scaleName}`).notes, positions: scalePositions(key, scaleName) },
     progression: { roman: roman.map(normalizeRoman), chords },
     voicings,
-    rhythm: pattern ? { name: pattern.name, grid: pattern.grid } : null,
+    rhythm: pattern ? { name: pattern.name, grid: pattern.grid, swing: swingOf(style), push: pattern.push ?? null } : null,
     // Always built (a triad skill's retest can land on a non-fretboard day), not gated by track.
     triads: [...triadInversions(chords[0], [3, 4, 5]), ...triadInversions(chords[0], [2, 3, 4])],
   };

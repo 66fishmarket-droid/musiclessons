@@ -1,6 +1,7 @@
 import data from './styles.data.json' with { type: 'json' };
 
-export interface RhythmPattern { id: string; name: string; grid: string[]; accents: number[]; verified: boolean; note: string | null }
+/** push: the slot from which the next bar's chord sounds early (an anticipation), if any. */
+export interface RhythmPattern { id: string; name: string; grid: string[]; accents: number[]; verified: boolean; note: string | null; push?: number }
 export interface ProgressionDef { id: string; name: string; roman: string[]; bars: number; verified: boolean }
 export interface StyleFeel {
   subdivision: string; meter: string; tempo_range: [number, number]; accents: string;

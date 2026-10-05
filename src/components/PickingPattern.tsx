@@ -1,18 +1,19 @@
 import { Chord, Interval, Note } from 'tonal';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { TUNING, type Voicing } from '../../supabase/functions/_shared/engine/music.ts';
-import { nextBarChord, resolvePattern, type PickPattern, type Stroke } from '../../supabase/functions/_shared/engine/patterns.ts';
+import { nextBarChord, resolvePattern, swingOffset, type PickPattern, type Stroke } from '../../supabase/functions/_shared/engine/patterns.ts';
 import { audio, blip, pluck } from '../audio/clock.ts';
 
 const STRING_NAMES = ['E', 'A', 'D', 'G', 'B', 'e'];
-const FINGER_CLASS = { p: 'pk-p', i: 'pk-i', m: 'pk-m', a: 'pk-a' } as const;
+const FINGER_CLASS = { p: 'pk-p', i: 'pk-i', m: 'pk-m', a: 'pk-a', pick: 'pk-i' } as const;
 const SUB: Record<number, string[]> = { 1: [''], 2: ['', '&'], 3: ['', 'tri', 'let'], 4: ['', 'e', '&', 'a'] };
-const ARROW: Record<Stroke, string> = { D: '↓', U: '↑', d: '↓', u: '↑', x: '×' };
-const STROKE_WORD: Record<Stroke, string> = { D: 'strum down', U: 'strum up', d: 'muted down', u: 'muted up', x: 'mute' };
+const ARROW: Record<Stroke, string> = { D: '↓', U: '↑', d: '↓', u: '↑', M: '↓', m: '↑', x: '×' };
+const STROKE_WORD: Record<Stroke, string> = { D: 'strum down', U: 'strum up', d: 'muted down', u: 'muted up', M: 'palm-muted down', m: 'palm-muted up', x: 'mute' };
 
 /** A strum on this shape: down sweeps every sounding string low to high, up the top three high to low; ghosts and mutes click. */
 function strum(t: number, stroke: Stroke, v: Voicing | undefined): void {
   if (stroke === 'x' || stroke === 'd' || stroke === 'u' || !v) { blip(t, stroke === 'x' ? 120 : 180, 0.035, stroke === 'x' ? 0.25 : 0.12); return; }
+  if (stroke === 'M' || stroke === 'm') { blip(t, 98, 0.08, 0.35); return; } // palm mute: a short low thud, not a ringing chord
   const notes = v.frets.flatMap((f, s) => (f < 0 ? [] : [Note.freq(Note.transpose(TUNING[s], Interval.fromSemitones(f)))]));
   const order = stroke === 'D' ? notes : notes.slice(-3).reverse();
   order.forEach((f, k) => pluck(t + k * 0.012, f ?? 220));
@@ -47,27 +48,35 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
     if (!playing) { setPos(-1); return; }
     let k = 0;
     let bar = -1;
+    let sounding = 0; // the chord heard now: the bar's, or the next bar's after a push
     let barSteps = steps;
     const play = () => {
       const i = k % pattern.steps.length;
       if (i % barLen === 0) {
         bar = nextBarChord(bar, live.current.idx, chords.length);
+        sounding = bar;
         barSteps = live.current.stepsFor(bar);
         if (bar !== live.current.idx) live.current.onIdx(bar);
       }
+      if (pattern.push !== undefined && i % barLen === pattern.push && chords.length > 1) {
+        sounding = (bar + 1) % chords.length; // anticipation: the next chord arrives early; nextBarChord keeps it for the new bar
+        barSteps = live.current.stepsFor(sounding);
+        live.current.onIdx(sounding);
+      }
       setPos(i);
-      const t = audio().currentTime;
+      const t = audio().currentTime + swingOffset(pattern, i) * 60 / bpm; // swung offbeats sound late
       for (const n of barSteps[i]) pluck(t, Note.freq(n.note) ?? 220);
       const st = strokes?.[i];
-      if (st) strum(t, st, live.current.voicings[chords[bar]]?.[0]);
+      if (st) strum(t, st, live.current.voicings[chords[sounding]]?.[0]);
       k++;
     };
     play();
     const timer = window.setInterval(play, stepMs);
     return () => window.clearInterval(timer);
-  }, [playing, stepMs, pattern, chords]); // steps come from live.current, so a chord change mid-play does not restart the bar
+  }, [playing, stepMs, pattern, chords, bpm]); // steps come from live.current, so a chord change mid-play does not restart the bar
 
-  const riff = steps.some(st => st.some(n => n.fret !== undefined));
+  const riff = steps.some(st => st.some(n => n.role.startsWith('riff_')));
+  const picked = steps.some(st => st.some(n => n.finger === 'pick'));
   // Left column: the chord shape's frets, or for a riff the root + 5th it starts from.
   const leftFret = (s: number) => {
     if (riff) { const n = steps.flat().find(x => x.string === s && x.role !== 'riff_6'); return n ? n.fret : '×'; }
@@ -98,7 +107,10 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
             </g>
           )))}
           {strokes?.map((st, col) => st && (
-            <text key={`s${col}`} x={X(col)} y={Y(2.5) + 2} className={`pk-stroke${st === 'd' || st === 'u' ? ' pk-ghost' : ''}${pos === col ? ' pk-on' : ''}`}>{ARROW[st]}</text>
+            <g key={`s${col}`}>
+              <text x={X(col)} y={Y(2.5) + 2} className={`pk-stroke${st === 'd' || st === 'u' ? ' pk-ghost' : ''}${pos === col ? ' pk-on' : ''}`}>{ARROW[st]}</text>
+              {(st === 'M' || st === 'm') && <text x={X(col)} y={Y(0) + 14} className="pk-pm">PM</text>}
+            </g>
           ))}
           {steps.map((_, col) => (
             <text key={col} x={X(col)} y={162} className="pk-count">
@@ -108,11 +120,14 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
         </svg>
       </div>
       <p className="muted" style={{ fontSize: 13 }}>
-        {riff
+        {picked
+          ? 'Numbers are frets on the chord shape. Hold the shape and pick one string at a time, alternating down and up.'
+          : riff
           ? `Numbers are frets. Each column is two notes picked down together: the root (${Chord.get(chord).tonic}) plus its 5th, then the root plus its 6th two frets further up. Swing it: long, short.`
           : strokes
-          ? '↓ strum down · ↑ strum up · faded arrows are muted "ghost" strums · × mutes or slaps the strings · p is your thumb on the bass note (the root of the chord).'
+          ? (strokes.some(st => st === 'M' || st === 'm') ? 'PM = palm-muted: rest the edge of your picking hand on the strings right by the bridge so they thud instead of ring; lift it for the arrows without PM. ' : '') + '↓ strum down · ↑ strum up · faded arrows are muted "ghost" strums · × mutes or slaps the strings · p is your thumb on the bass note (the root of the chord).'
           : 'p thumb · i index · m middle · a ring. The thumb takes the root and the alternate bass; the fingers take the top chord tones.'}
+        {pattern.swing ? ` Swung: play each pair of ${pattern.swing.sixteenths ? '16ths' : '8ths'} long-short; the card plays it that way.` : ''}
         {chords.length > 1 ? ' One bar per chord, through the progression.' : ''}
       </p>
       <button type="button" className="btn-play" aria-pressed={playing} onClick={() => setPlaying(!playing)}>

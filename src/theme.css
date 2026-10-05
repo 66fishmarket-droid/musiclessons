@@ -153,5 +153,6 @@ audio { width: 100%; }
 .pk-stroke { fill: var(--c, var(--text)); font: 800 30px 'IBM Plex Sans', sans-serif; text-anchor: middle; dominant-baseline: central; opacity: 0.55; transition: opacity 80ms; }
 .pk-stroke.pk-ghost { opacity: 0.2; }
 .pk-stroke.pk-on { opacity: 1; }
+.pk-pm { fill: var(--text-2); font: 700 10px 'IBM Plex Sans', sans-serif; text-anchor: middle; }
 .nm-link { stroke: var(--muted); stroke-width: 2; opacity: 0.5; }
 .cd-dot.nm-flag { stroke: var(--gold); stroke-width: 2.5; stroke-dasharray: 3 2; }

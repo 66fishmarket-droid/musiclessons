@@ -1,6 +1,7 @@
+import { RECIPES } from '../../supabase/functions/_shared/engine/recipes.ts';
 import { describe, expect, it } from 'vitest';
 import { TUNINGS, noteAt } from '../../supabase/functions/_shared/engine/music.ts';
-import { PATTERNS, nextBarChord, patternCounts, resolvePattern, rhythmCounts, rhythmPattern, voiceRoles } from '../../supabase/functions/_shared/engine/patterns.ts';
+import { PATTERNS, swingOffset, nextBarChord, patternCounts, resolvePattern, rhythmCounts, rhythmPattern, voiceRoles } from '../../supabase/functions/_shared/engine/patterns.ts';
 import { STYLE_CATALOG } from '../../supabase/functions/_shared/engine/styles.ts';
 
 const G = { frets: [3, 2, 0, 0, 0, 3], fingers: [2, 1, 0, 0, 0, 3], barres: [] };
@@ -91,7 +92,7 @@ describe('rhythmPattern', () => {
       expect(p.steps).toHaveLength(r.grid.length);
       expect(p.beatsPerBar * p.stepsPerBeat * (p.bars ?? 1)).toBe(r.grid.length);
       r.grid.forEach((t, k) => {
-        expect(['D', 'U', 'd', 'u', 'x', null], `${r.name} slot ${k} "${t}"`).toContain(p.strokes![k]);
+        expect(['D', 'U', 'd', 'u', 'x', 'M', 'm', null], `${r.name} slot ${k} "${t}"`).toContain(p.strokes![k]);
         expect(p.steps[k].length > 0 || p.strokes![k] !== null || t === '-', `${r.name} slot ${k} "${t}"`).toBe(true);
       });
     }
@@ -121,6 +122,67 @@ describe('boogie riff (5/6 tokens)', () => {
   });
 });
 
+describe('style data says what is played (audit 2026-10-05)', () => {
+  const all = STYLE_CATALOG.profiles.flatMap(prof => prof.rhythm_patterns);
+  it('has no strums in patterns its research calls picked single notes or an arpeggio', () => {
+    for (const r of all.filter(r => /single notes|arpeggio|alternate-picked across/i.test(`${r.name} ${r.note ?? ''}`) && /rock|neo_soul/.test(r.id))) {
+      expect(r.grid.filter(t => 'DUdMm'.includes(t) && t !== '-'), r.id).toEqual([]);
+    }
+  });
+  it('marks palm mutes in every strummed pattern called palm-muted or a chug', () => {
+    for (const r of all.filter(r => /palm|chug/i.test(r.name) && !r.grid.some(t => t === '5' || t === '6'))) {
+      expect(r.grid.some(t => t === 'M' || t === 'm'), r.id).toBe(true);
+    }
+  });
+});
+
+describe('picked single notes (audit group 2)', () => {
+  const jangle = rhythmPattern('Jangle', 'lcnhncnhlcnhncnh'.split(''));
+  it('picks one string at a time with the pick, root first, showing the shape fret', () => {
+    expect(jangle.steps[0]).toEqual([{ finger: 'pick', role: 'bass' }]);
+    expect(jangle.strokes![0]).toBeNull();
+    expect(resolvePattern(jangle, G, 'G').slice(0, 4).map(s => [s[0].string, s[0].fret])).toEqual([[0, 3], [3, 0], [4, 0], [5, 3]]);
+  });
+  it('names the string on each count', () => {
+    expect(rhythmCounts(rhythmPattern('x', 'l-------n---h---'.split(''))))
+      .toBe('1 pick the root · 3 pick the second-highest string · 4 pick the highest string');
+  });
+});
+
+describe('pushes into the next bar (audit group 5)', () => {
+  it('marks slots from the push onwards as the next chord, and says so in the counts', () => {
+    const p = rhythmPattern('Push', 'D-D-D-D-D-D-D-DU'.split(''), null, 14);
+    expect(p.push).toBe(14);
+    expect(rhythmCounts(p)).toMatch(/4& strum down \(next bar's chord, early\) · 4a strum up \(next bar's chord, early\)$/);
+  });
+  it('carries the push from the style data into the day and the anticipation skill', () => {
+    const rock = STYLE_CATALOG.profiles.flatMap(x => x.rhythm_patterns).find(r => r.id === 'rock_classic.push_into_the_next_bar')!;
+    expect(rock.push).toBe(14);
+    expect(RECIPES['rhythm.l3.anticipations'].gridPush).toBe(14);
+  });
+});
+
+describe('swing (audit group 3)', () => {
+  it('delays each "&" by the swing ratio on 8th swing, leaving beats and 16th straight grids alone', () => {
+    const p = rhythmPattern('Charleston', 'D-D-D-D-D-D-D-D-'.split(''), { ratio: 2, sixteenths: false });
+    expect(swingOffset(p, 0)).toBe(0);
+    expect(swingOffset(p, 2)).toBeCloseTo(2 / 3 - 0.5); // a beat fraction: the "&" moves to the last triplet
+    expect(swingOffset(rhythmPattern('x', 'D-D-D-D-D-D-D-D-'.split('')), 2)).toBe(0);
+  });
+  it('delays the "e" and "a" on 16th swing', () => {
+    const p = rhythmPattern('Ghost', 'DUDUDUDUDUDUDUDU'.split(''), { ratio: 1.4, sixteenths: true });
+    expect(swingOffset(p, 2)).toBe(0);
+    expect(swingOffset(p, 1)).toBeCloseTo((1.4 / 2.4 - 0.5) / 2);
+  });
+  it('ignores a ratio too small to hear and 12-slot grids already in triplets', () => {
+    expect(rhythmPattern('x', 'D-D-D-D-D-D-D-D-'.split(''), { ratio: 1, sixteenths: false }).swing).toBeUndefined();
+    expect(rhythmPattern('Shuffle', 'B-DB-DB-DB-D'.split(''), { ratio: 2, sixteenths: false }).swing).toBeUndefined();
+  });
+  it('says it is swung before the counts', () => {
+    expect(rhythmCounts(rhythmPattern('x', 'D-D-------------'.split(''), { ratio: 2, sixteenths: false }))).toMatch(/^Swung: .*"&".* late\. 1 strum down · 1& strum down$/);
+  });
+});
+
 describe('rhythmCounts', () => {
   it('spells out what the picking hand does on each count', () => {
     expect(rhythmCounts(rhythmPattern('Boom-chick', 'B---D---B---D---'.split(''))))
@@ -131,6 +193,9 @@ describe('rhythmCounts', () => {
       .toBe('1 strum down · 1& strum down · 1a strum up · 2 mute (slap or choke) · 2& strum down · 2a strum up');
     expect(rhythmCounts(rhythmPattern('Shuffle (12/8, 12 slots)', 'B-DB-D------'.split(''))))
       .toBe('1 thumb plays the bass note · 1-let strum down · 2 thumb plays the bass note · 2-let strum down');
+  });
+  it('names palm-muted strokes', () => {
+    expect(rhythmCounts(rhythmPattern('x', 'D-m-M-----------'.split('')))).toBe('1 strum down · 1& palm-muted strum up · 2 palm-muted strum down');
   });
   it('marks the second bar of a two-bar rhythm', () => {
     expect(rhythmCounts(rhythmPattern('Guajeo', 'P'.concat('-'.repeat(15), 'P', '-'.repeat(15)).split('')))).toBe('1 fingers pluck the top strings · bar 2: 1 fingers pluck the top strings');

@@ -24,19 +24,24 @@ export const INFERRED_PATTERNS = new Set([
   'celtic|Reel syncopated up-accent', 'celtic|Waltz rolling strum (3/4, 12 slots)', 'jazz_swing|Offbeat stabs',
   'gypsy_jazz|Valse musette (3/4, 12 slots)', 'neo_soul|Backbeat stab', 'neo_soul|Kick-follow staccato',
   'neo_soul|Ghost-scratch 16ths', 'pop|Syncopated 16th push', 'pop_rock|Wonderwall-style 16th strum',
-  'rock_indie_alt|Chord + muted scratch',
+  'rock_indie_alt|Chord + muted scratch', 'soul|12/8 gospel ballad (swing to triplets)',
 ]);
 /** Progressions recalled rather than sourced (style|original numerals). */
 export const INFERRED_PROGRESSIONS = new Set(['son_salsa|im bIII ivm V']);
 /** Numeral corrections (style|original numerals → fixed). */
 export const PROGRESSION_FIXES: Record<string, string[]> = { 'west_african|I VII IV V': ['I', 'bVII', 'IV', 'V'] };
 const TOKEN_MAP: Record<string, string> = { T: 'B', F: 'P' };
-const TOKEN = /^(D|U|d|u|B|P|BP|N|x|5|6|-)$/;
+const TOKEN = /^(D|U|d|u|M|m|B|P|BP|N|x|5|6|l|c|n|h|-)$/;
 const GRID_LENGTHS = [12, 16, 24, 32];
 
 /** snake_case id fragment from a display name. */
 export const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 40);
 const strings = (v: unknown): string[] => (Array.isArray(v) ? v.map(String) : []);
+
+/** Palm-muted pattern: strums become M/m (palm-muted down/up) in place, except the slots listed as ringing open. */
+function palmMute(grid: string[], open: number[]): void {
+  grid.forEach((t, k) => { if (!open.includes(k)) grid[k] = t === 'D' ? 'M' : t === 'U' ? 'm' : t; });
+}
 
 /** Normalises raw drafts into StyleProfiles and lists every validation problem found. */
 export function mergeProfiles(drafts: unknown[]): { profiles: StyleProfile[]; issues: string[] } {
@@ -52,11 +57,12 @@ export function mergeProfiles(drafts: unknown[]): { profiles: StyleProfile[]; is
       const raw = String(p.grid16 ?? p.grid ?? '');
       const grid = (/\s/.test(raw.trim()) ? raw.trim().split(/\s+/) : raw.split('')).map(t => TOKEN_MAP[t] ?? t);
       const pid = `${id}.${slug(p.name)}`;
+      if (p.palm_mute) palmMute(grid, Array.isArray(p.accents) && /open|un-muted/i.test(`${p.name} ${p.note ?? ''}`) ? p.accents : []);
       if (!GRID_LENGTHS.includes(grid.length)) issues.push(`${pid}: grid length ${grid.length}`);
       const bad = [...new Set(grid.filter(t => !TOKEN.test(t)))];
       if (bad.length) issues.push(`${pid}: bad tokens ${bad.join('')}`);
       const verified = p.confidence ? p.confidence === 'sourced' : !INFERRED_PATTERNS.has(`${id}|${p.name}`);
-      return { id: pid, name: String(p.name), grid, accents: Array.isArray(p.accents) ? p.accents : [], verified, note: p.note ?? p.grid_note ?? null };
+      return { id: pid, name: String(p.name), grid, accents: Array.isArray(p.accents) ? p.accents : [], verified, note: p.note ?? p.grid_note ?? null, ...(typeof p.push === 'number' ? { push: p.push } : {}) };
     });
     const progressions: ProgressionDef[] = (d.progressions ?? []).map((p: any) => {
       const original = strings(p.roman).flatMap(r => r.trim().split(/\s+/));

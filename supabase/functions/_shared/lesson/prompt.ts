@@ -56,7 +56,7 @@ export function buildMessages({ plan, skills, style, settings, recent, questions
     music: {
       scale: `${plan.music.scale.tonic} ${plan.music.scale.name}`, scale_notes: plan.music.scale.notes,
       progression: plan.music.progression, rhythm: plan.music.rhythm,
-      rhythm_counts: plan.music.rhythm ? rhythmCounts(rhythmPattern(plan.music.rhythm.name, plan.music.rhythm.grid)) : null,
+      rhythm_counts: plan.music.rhythm ? rhythmCounts(rhythmPattern(plan.music.rhythm.name, plan.music.rhythm.grid, plan.music.rhythm.swing, plan.music.rhythm.push)) : null,
     },
     allowed_chords: allowedChords(plan, skills),
     blocks: plan.blocks.map(b => ({ kind: b.kind, minutes: b.minutes, items: b.items })),
