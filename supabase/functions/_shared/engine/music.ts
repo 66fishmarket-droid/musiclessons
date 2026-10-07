@@ -63,12 +63,23 @@ export function scalePositions(tonic: string, scaleName: string, maxFret = 12): 
 }
 
 /** One playable position: four frets starting one below the lowest root on the E or A string, or on it, whichever
- * holds more scale notes (major shapes reach back a fret; minor pentatonic starts on the root and needs the b3 above it). */
+ * holds more scale notes (major shapes reach back a fret; minor pentatonic starts on the root and needs the b3 above it).
+ * The box must play the scale low to high without skipping a degree; minor and modal shapes (G dorian at fret 3 lost
+ * its 2 and 6) only manage that with a five-fret stretch, so widen to five when no four-fret box is gapless. */
 export function scaleBox(positions: FretNote[]): { from: number; to: number; notes: FretNote[] } {
   const root = Math.min(...positions.filter(p => p.degree === 1 && p.string <= 1).map(p => p.fret));
-  const box = (from: number) => ({ from, to: from + 3, notes: positions.filter(p => p.fret >= from && p.fret <= from + 3) });
-  const below = box(Math.max(0, root - 1)), on = box(root);
-  return on.notes.length > below.notes.length ? on : below;
+  const order = [...new Set(positions.map(p => p.degree))].sort((a, b) => a - b);
+  const box = (from: number, span = 3) => ({ from, to: from + span, notes: positions.filter(p => p.fret >= from && p.fret <= from + span) });
+  const gapless = ({ notes }: { notes: FretNote[] }) => {
+    const run = notes.map(n => ({ pitch: Note.midi(TUNING[n.string])! + n.fret, i: order.indexOf(n.degree) })).sort((a, b) => a.pitch - b.pitch);
+    return run.every((n, k) => k === 0 || n.i === run[k - 1].i || n.i === (run[k - 1].i + 1) % order.length);
+  };
+  const better = (below: ReturnType<typeof box>, on: ReturnType<typeof box>) => on.notes.length > below.notes.length ? on : below;
+  for (const span of [3, 4]) {
+    const fits = [box(Math.max(0, root - 1), span), box(root, span)].filter(gapless);
+    if (fits.length) return fits.reduce(better);
+  }
+  return better(box(Math.max(0, root - 1)), box(root));
 }
 
 type DbPosition ={ frets: number[]; fingers: number[]; baseFret: number; barres: number[] };
