@@ -797,6 +797,13 @@ export const GLOSSARY: GlossaryEntry[] = [
     sources: ["vault:Research/glossary/groove.md", "Open Music Theory, \"Drumbeats\" — https://viva.pressbooks.pub/openmusictheory/chapter/drumbeats/", "Open Music Theory, \"Swing Rhythms\" — https://viva.pressbooks.pub/openmusictheory/chapter/swing-rhythms/"],
   },
   {
+    id: "vamp", term: "Vamp",
+    match: ["one-chord vamp", "vamp", "vamps"],
+    plain: "A short chord pattern repeated over and over, often a single chord held for many bars. Funk lives on one-chord vamps: the band sits on one chord and the groove does the work.",
+    why: "With the harmony standing still, your ear moves to rhythm and tone, so small changes in timing and muting become the music.",
+    sources: ["vault:Research/glossary/vamp.md", "Wikipedia, \"Vamp (music)\" (tier 5) — https://en.wikipedia.org/wiki/Vamp_(music)", "Premier Guitar, \"One-Chord Vamps and the Truth\" (tier 4) — https://www.premierguitar.com/lessons/scales/minor-pentatonic-scale"],
+  },
+  {
     id: "dynamics", term: "Dynamics",
     match: ["dynamics", "dynamic"],
     plain: "How loud or soft the music is, and how that changes over time. On guitar: how hard you strum or pick, and how many strings ring.",

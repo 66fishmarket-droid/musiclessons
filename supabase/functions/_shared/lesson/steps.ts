@@ -128,9 +128,13 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
       })), rhythms: b.items.map(i => reviewRhythm(i.ref)) };
       case 'apply': {
         const ctx = plan.music.rhythm ? base : slotContext(plan, { grid: APPLY_DEFAULT_GRID, gridName: 'Steady down-strums' });
+        // A one-chord progression (funk's Dorian vamp) has no "through" to play, so say why it's one chord instead.
+        const vamp = new Set(plan.music.progression.chords).size === 1;
         return make(renderSteps([
           '{rhythm_name}: {rhythm_counts}',
-          'Play it on {chord1} until it is steady, then through {chords}, one chord per bar.',
+          vamp
+            ? 'This is a one-chord vamp: stay on {chord1} for 8 bars or more. Nothing changes in the harmony, so all the interest is in the rhythm; keep it tight and even.'
+            : 'Play it on {chord1} until it is steady, then through {chords}, one chord per bar.',
           'Keep the picking hand going and hum or sing any tune over it.',
         ], ctx));
       }
