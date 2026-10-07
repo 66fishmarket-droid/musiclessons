@@ -1,6 +1,6 @@
 # Glossary review
 
-136 terms, in the order definitions build up.
+137 terms, in the order definitions build up.
 
 1. **Strings and string numbers** — The guitar has six strings, numbered from the thinnest: string 1 is the thin, highest-sounding high E (nearest the floor as you hold it) and string 6 is the thick, low E. Diagrams draw them as vertical lines with string 6 on the left.
    *Why it works:* Thinner, tighter strings vibrate faster and so sound higher, which is why the numbering runs from thin and high to thick and low.
@@ -450,106 +450,110 @@
    *Why it works:* Groove is beat, subdivision and accent locked together and repeated, steady enough to predict and varied enough to be interesting.
    _match: groove, grooves_
 
-113. **Dynamics** — How loud or soft the music is, and how that changes over time. On guitar: how hard you strum or pick, and how many strings ring.
+113. **Vamp** — A short chord pattern repeated over and over, often a single chord held for many bars. Funk lives on one-chord vamps: the band sits on one chord and the groove does the work.
+   *Why it works:* With the harmony standing still, your ear moves to rhythm and tone, so small changes in timing and muting become the music.
+   _match: one-chord vamp, vamp, vamps_
+
+114. **Dynamics** — How loud or soft the music is, and how that changes over time. On guitar: how hard you strum or pick, and how many strings ring.
    *Why it works:* Volume changes shape tension and release just as harmony does; a quiet section makes the loud one feel bigger.
    _match: dynamics, dynamic_
 
-114. **Stop-time** — The band plays one short, sharp hit, usually on beat 1, then goes silent for the rest of the bar (or longer) while the singer or soloist carries on, before everyone comes back in.
+115. **Stop-time** — The band plays one short, sharp hit, usually on beat 1, then goes silent for the rest of the bar (or longer) while the singer or soloist carries on, before everyone comes back in.
    *Why it works:* The pulse keeps going in everyone's head during the silence; stop-time shows how strong the beat is by taking the sound away from it.
    _match: stop-time, stop time_
 
-115. **12-bar blues** — The classic blues layout over 12 bars: four of I, two of IV, two of I, then V, IV, I, V. Usually played as dominant 7th chords with a long-short, swinging strum; variants move to IV in bar 2 or shorten it to 8 bars.
+116. **12-bar blues** — The classic blues layout over 12 bars: four of I, two of IV, two of I, then V, IV, I, V. Usually played as dominant 7th chords with a long-short, swinging strum; variants move to IV in bar 2 or shorten it to 8 bars.
    *Why it works:* I, IV and V are the home chord and its two closest neighbours, a 5th below and a 5th above, so the pattern feels like leaving home and returning.
    _match: 12-bar blues, 12-bar, twelve-bar blues, twelve-bar_
 
-116. **Quick change** — A 12-bar blues that moves to the IV chord in bar 2 and back to I in bar 3, instead of staying on I for the first four bars. In G: G7, C7, G7, G7.
+117. **Quick change** — A 12-bar blues that moves to the IV chord in bar 2 and back to I in bar 3, instead of staying on I for the first four bars. In G: G7, C7, G7, G7.
    *Why it works:* In G, the IV chord C7 contains B flat, the flat 3rd of G and a blue note, so the quick change brings that bluesy clash in early.
    _match: quick change, quick-change, quick to four_
 
-117. **Turnaround** — The last two bars of a 12-bar blues, which head back to V so the form can start again. On guitar it is often a short lick walking down the higher strings onto V7.
+118. **Turnaround** — The last two bars of a 12-bar blues, which head back to V so the form can start again. On guitar it is often a short lick walking down the higher strings onto V7.
    *Why it works:* Ending on V leaves the tension unresolved, so the ear expects the home chord next and the pattern rolls naturally into its next pass.
    _match: turnaround, turnarounds_
 
-118. **Palm muting** — Resting the edge of your picking hand lightly on the strings right next to the bridge while you play, so they give a short, chunky thud instead of ringing.
+119. **Palm muting** — Resting the edge of your picking hand lightly on the strings right next to the bridge while you play, so they give a short, chunky thud instead of ringing.
    *Why it works:* Muting cuts the ringing so each strum becomes short, which lets accents and rests stand out clearly against the beat.
    _match: palm muting, palm mute, palm-muted, palm muted, palm mutes_
 
-119. **Boogie (5–6 riff)** — A rolling two-note riff on the low strings: a power chord (root + 5th), then the little finger reaches two frets further to make root + 6th, back and forth on every beat with a shuffle feel. Guitarists took it from the left hand of boogie-woogie piano.
+120. **Boogie (5–6 riff)** — A rolling two-note riff on the low strings: a power chord (root + 5th), then the little finger reaches two frets further to make root + 6th, back and forth on every beat with a shuffle feel. Guitarists took it from the left hand of boogie-woogie piano.
    *Why it works:* The root never moves, so the low end stays anchored, while the 5th-to-6th rocking adds motion; swung, it drives a 12-bar blues like a train.
    _match: boogie, boogies, root-5/root-6_
 
-120. **Chuck** — A percussive strum where the fretting hand relaxes just enough to stop the strings ringing, so you hear a short "chk" instead of the chord. Shown as × in strumming patterns.
+121. **Chuck** — A percussive strum where the fretting hand relaxes just enough to stop the strings ringing, so you hear a short "chk" instead of the chord. Shown as × in strumming patterns.
    *Why it works:* A chuck turns the guitar into a drum: placed on beats 2 and 4 it plays the backbeat, while the other strums carry the chord.
    _match: chuck, chucks_
 
-121. **Ghost strum** — A strum where your hand keeps moving down and up in time but barely touches the strings, or misses them, so it is nearly silent.
+122. **Ghost strum** — A strum where your hand keeps moving down and up in time but barely touches the strings, or misses them, so it is nearly silent.
    *Why it works:* Ghost strums keep the hand marking every subdivision, so the strums you do hear land exactly in time.
    _match: ghost strum, ghost strums, ghost, ghosts_
 
-122. **Hammer-on** — Pick a note, then bring another finger down hard onto a higher fret of the same string so a second note sounds without picking again.
+123. **Hammer-on** — Pick a note, then bring another finger down hard onto a higher fret of the same string so a second note sounds without picking again.
    *Why it works:* The string is already vibrating; shortening it with a new fret raises the pitch, which is how two notes come from one pick stroke.
    _match: hammer-on, hammer-ons, hammer on, hammered_
 
-123. **Pull-off** — The reverse of a hammer-on: with two fingers on the same string, pick the higher note, then flick the top finger off sideways so the lower note sounds without picking again.
+124. **Pull-off** — The reverse of a hammer-on: with two fingers on the same string, pick the higher note, then flick the top finger off sideways so the lower note sounds without picking again.
    *Why it works:* Removing a finger lengthens the vibrating string, so the pitch drops; the flick re-plucks the string to keep it sounding.
    _match: pull-off, pull-offs, pull off, pulled off_
 
-124. **Slide** — Play a note, then keep pressing while you move the same finger along the string to another fret, so the sound glides to the new note without picking again.
+125. **Slide** — Play a note, then keep pressing while you move the same finger along the string to another fret, so the sound glides to the new note without picking again.
    *Why it works:* Moving the finger changes the length of string that vibrates, so the pitch glides through every half step between the two frets.
    _match: slide, slides, sliding, slid_
 
-125. **p-i-m-a** — Letters for the picking-hand fingers, from their Spanish names: p = pulgar (thumb), i = indice (index), m = medio (middle), a = anular (ring). Usually the thumb plays the low strings and i, m, a one higher string each.
+126. **p-i-m-a** — Letters for the picking-hand fingers, from their Spanish names: p = pulgar (thumb), i = indice (index), m = medio (middle), a = anular (ring). Usually the thumb plays the low strings and i, m, a one higher string each.
    *Why it works:* Giving each finger its own string lets you play the notes of a chord separately and at the same time, like a small band in one hand.
    _match: p-i-m-a, pima, p-i-m_
 
-126. **Pinch** — Plucking a low string with the thumb and a higher string with a finger at the same moment, as if pinching the strings together.
+127. **Pinch** — Plucking a low string with the thumb and a higher string with a finger at the same moment, as if pinching the strings together.
    *Why it works:* A pinch sounds a low and a high note together, giving the root underneath and the melody on top in one motion.
    _match: pinch, pinches, pinched_
 
-127. **Arpeggio** — The notes of a chord played one after another instead of all at once, for example picking the strings of a chord shape one at a time.
+128. **Arpeggio** — The notes of a chord played one after another instead of all at once, for example picking the strings of a chord shape one at a time.
    *Why it works:* An arpeggio spells the chord out (root, 3rd, 5th) in time, so you hear each note and the harmony at once.
    _match: arpeggio, arpeggios, arpeggiated, arpeggiate_
 
-128. **Alternate bass / alternating thumb** — The thumb switches back and forth between two low strings on the beats, usually the root and another note of the chord, while the fingers pick higher strings in between.
+129. **Alternate bass / alternating thumb** — The thumb switches back and forth between two low strings on the beats, usually the root and another note of the chord, while the fingers pick higher strings in between.
    *Why it works:* Alternating root and 5th down low marks every beat, so a single guitar covers both the pulse and the harmony.
    _match: alternate bass, alternating bass, alternating thumb_
 
-129. **Travis picking** — A fingerstyle pattern named after Merle Travis: the thumb alternates between two low strings on every beat while the fingers pick higher strings on the "&" between them.
+130. **Travis picking** — A fingerstyle pattern named after Merle Travis: the thumb alternates between two low strings on every beat while the fingers pick higher strings on the "&" between them.
    *Why it works:* The steady thumb is the pulse and the fingers play the offbeats, so the pattern is a built-in syncopation.
    _match: travis, travis picking, travis-picking, travis pattern_
 
-130. **Bass and treble** — Bass means the low notes, on the thick strings (6, 5 and 4); treble means the high notes, on the thin strings (3, 2 and 1).
+131. **Bass and treble** — Bass means the low notes, on the thick strings (6, 5 and 4); treble means the high notes, on the thin strings (3, 2 and 1).
    *Why it works:* The lowest note decides how a chord sounds most strongly, so the bass usually plays the root while the treble carries the melody and colour.
    _match: bass, treble, bass note, bass notes_
 
-131. **Verse** — The part of a song that tells the story: the music repeats each time but the words change. Verses usually lead into the main section that repeats with the same words.
+132. **Verse** — The part of a song that tells the story: the music repeats each time but the words change. Verses usually lead into the main section that repeats with the same words.
    *Why it works:* Verses usually sit lower and calmer in energy so the next section can lift above them; the contrast is what makes the song feel like it goes somewhere.
    _match: verse, verses_
 
-132. **Chorus** — The part of a song that comes back with the same words each time, usually carrying the title and the most memorable melody. It is often the loudest, highest part.
+133. **Chorus** — The part of a song that comes back with the same words each time, usually carrying the title and the most memorable melody. It is often the loudest, highest part.
    *Why it works:* The chorus releases the tension built in the verse, often by landing on the home chord and raising the energy.
    _match: chorus, choruses_
 
-133. **Pre-chorus** — A short section between the verse and the chorus that builds anticipation, often with new chords, rising energy, and stopping just before the chorus arrives.
+134. **Pre-chorus** — A short section between the verse and the chorus that builds anticipation, often with new chords, rising energy, and stopping just before the chorus arrives.
    *Why it works:* The pre-chorus builds tension, often ending on the dominant or an unresolved chord, so the chorus feels like a release when it lands.
    _match: pre-chorus, pre-choruses, prechorus_
 
-134. **Phrase** — A short musical idea with a beginning, middle and end, like a sentence in speech, usually 2 or 4 bars long and often ending with a breath or pause.
+135. **Phrase** — A short musical idea with a beginning, middle and end, like a sentence in speech, usually 2 or 4 bars long and often ending with a breath or pause.
    *Why it works:* Phrases end on a goal, often a resolution to the home note or chord, which is why music feels like it is speaking in sentences.
    _match: phrase, phrases, phrasing_
 
-135. **Register** — How high or low a passage sits overall: the same melody can be played in a low, middle or high register, for example lower on the neck or an octave up.
+136. **Register** — How high or low a passage sits overall: the same melody can be played in a low, middle or high register, for example lower on the neck or an octave up.
    *Why it works:* Moving to a higher register raises energy and brightness without changing the notes, which is why choruses often sit higher than verses.
    _match: register, registers_
 
-136. **Prosody** — When the music fits what the words mean: the melody, rhythm, chords and phrasing all support the feeling of the lyric. Stressed syllables fall on strong beats.
+137. **Prosody** — When the music fits what the words mean: the melody, rhythm, chords and phrasing all support the feeling of the lyric. Stressed syllables fall on strong beats.
    *Why it works:* Strong beats, rising melody, and resolution all carry feeling on their own; prosody lines those feelings up with the meaning of the words.
    _match: prosody_
 
 ## Terms per recipe (key of G)
 
 - **Locked 8ths and 16ths** (rhythm.l1.locked_8ths): Fretting hand / picking hand, Beat, Strum, Chord, Bar, Tempo (bpm)
-- **Accents and palm muting** (rhythm.l1.accents_palm_mute): Palm muting, Fretting hand / picking hand, Strings and string numbers, Bridge (two meanings), Strum, Mute / muted, Chord, Bar, Tempo (bpm)
+- **Accents and palm muting** (rhythm.l1.accents_palm_mute): Palm muting, Fretting hand / picking hand, Strings and string numbers, Bridge (two meanings), Strum, Chord, Bar, Tempo (bpm)
 - **Backbeat chuck** (rhythm.l2.backbeat_chuck): Chuck, Fretting hand / picking hand, Pick, Chord, Strum, Mute / muted, Beat, Bar, Tempo (bpm)
 - **Ghost strums** (rhythm.l2.ghost_strums): Ghost strum, Subdivision (8ths, 16ths), Strings and string numbers, Strum, Mute / muted, Chord, Bar, Tempo (bpm)
 - **Anticipations and syncopation** (rhythm.l3.anticipations): Anticipation, Chord, Subdivision (8ths, 16ths), Beat, Strum, Fretting hand / picking hand, Downbeat, Bar, Tempo (bpm)

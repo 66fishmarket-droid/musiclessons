@@ -23,6 +23,12 @@ describe('buildSteps', () => {
     expect(apply.instructions[0]).toContain(plan.music.rhythm!.name);
     expect(apply.instructions.join(' ')).toContain(`{${plan.music.progression.chords[0]}}`);
   });
+  it('calls a one-chord progression a vamp instead of "then through {Gm7}, one chord per bar"', () => {
+    const vamp = { ...PLAN, music: { ...PLAN.music, progression: { roman: ['Im7'], chords: ['Gm7'] } } };
+    const text = buildSteps(vamp, SKILL_MAP).blocks.find(b => b.kind === 'apply')!.instructions.join(' ');
+    expect(text).toContain('one-chord vamp: stay on {Gm7}');
+    expect(text).not.toContain('then through');
+  });
   it('falls back to steady down-strums on Apply when the day has no style rhythm', () => {
     const noRhythm = { ...PLAN, music: { ...PLAN.music, rhythm: null } };
     const apply = buildSteps(noRhythm, SKILL_MAP).blocks.find(b => b.kind === 'apply')!;
