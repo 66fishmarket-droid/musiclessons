@@ -113,11 +113,11 @@ describe('scaleBox', () => {
     expect(g.notes).toContainEqual({ string: 0, fret: 3, note: 'G', degree: 1 });
     expect(g.notes).toHaveLength(17); // three notes on every string but B
     const c = scaleBox(scalePositions('C', 'major'));
-    expect([c.from, c.to]).toEqual([2, 5]); // root on the A string, fret 3
+    expect([c.from, c.to]).toEqual([3, 7]); // root on the A string, fret 3; frets 2-5 skipped F at the top
   });
   it('uses open position when the root is an open string', () => {
-    expect(scaleBox(scalePositions('E', 'minor'))).toMatchObject({ from: 0, to: 3 });
-    expect(scaleBox(scalePositions('A', 'major'))).toMatchObject({ from: 0, to: 3 });
+    expect(scaleBox(scalePositions('E', 'minor'))).toMatchObject({ from: 0, to: 4 }); // F# on the D string is fret 4
+    expect(scaleBox(scalePositions('A', 'major'))).toMatchObject({ from: 0, to: 4 }); // G# on the low E is fret 4
   });
   it('starts minor pentatonic on the root so the b3 above it on both E strings is in the box', () => {
     const ab = scaleBox(scalePositions('Ab', 'minor pentatonic'));
@@ -125,6 +125,24 @@ describe('scaleBox', () => {
     expect(ab.notes).toHaveLength(12); // two notes on every string
     expect(ab.notes).toContainEqual({ string: 0, fret: 7, note: 'Cb', degree: 3 });
     expect(ab.notes).toContainEqual({ string: 5, fret: 7, note: 'Cb', degree: 3 });
+  });
+  it('widens to five frets when four would skip a degree (G dorian lost its 2 and 6)', () => {
+    const g = scaleBox(scalePositions('G', 'dorian'));
+    expect(g.to - g.from).toBe(4);
+    expect(g.notes).toContainEqual({ string: 1, fret: 7, note: 'E', degree: 6 });
+    expect(g.notes).toContainEqual({ string: 2, fret: 7, note: 'A', degree: 2 });
+  });
+  it('plays every key and scale low to high without skipping a degree', () => {
+    const keys = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'];
+    const scales = ['major', 'minor', 'dorian', 'mixolydian', 'phrygian', 'lydian', 'harmonic minor', 'minor pentatonic', 'major pentatonic', 'blues'];
+    const open = [40, 45, 50, 55, 59, 64];
+    for (const k of keys) for (const s of scales) {
+      const all = scalePositions(k, s);
+      const order = [...new Set(all.map(p => p.degree))].sort((a, b) => a - b);
+      const run = scaleBox(all).notes.map(n => ({ p: open[n.string] + n.fret, i: order.indexOf(n.degree) })).sort((a, b) => a.p - b.p);
+      const skip = run.find((n, j) => j > 0 && n.i !== run[j - 1].i && n.i !== (run[j - 1].i + 1) % order.length);
+      expect(skip, `${k} ${s}`).toBeUndefined();
+    }
   });
 });
 
