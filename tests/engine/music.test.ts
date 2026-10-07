@@ -128,9 +128,16 @@ describe('scaleBox', () => {
   });
   it('widens to five frets when four would skip a degree (G dorian lost its 2 and 6)', () => {
     const g = scaleBox(scalePositions('G', 'dorian'));
-    expect(g.to - g.from).toBe(4);
-    expect(g.notes).toContainEqual({ string: 1, fret: 7, note: 'E', degree: 6 });
-    expect(g.notes).toContainEqual({ string: 2, fret: 7, note: 'A', degree: 2 });
+    expect([g.from, g.to]).toEqual([2, 6]); // the traditional shape: 6 and 2 on the D and G strings at fret 2, not fret 7
+    expect(g.notes).toContainEqual({ string: 2, fret: 2, note: 'E', degree: 6 });
+    expect(g.notes).toContainEqual({ string: 3, fret: 2, note: 'A', degree: 2 });
+  });
+  it('never shows the same pitch twice in a box', () => {
+    const open = [40, 45, 50, 55, 59, 64];
+    for (const k of ['C', 'D', 'E', 'F', 'G', 'A', 'Bb']) for (const s of ['major', 'minor', 'dorian', 'mixolydian']) {
+      const pitches = scaleBox(scalePositions(k, s)).notes.map(n => open[n.string] + n.fret);
+      expect(new Set(pitches).size, `${k} ${s}`).toBe(pitches.length);
+    }
   });
   it('plays every key and scale low to high without skipping a degree', () => {
     const keys = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'];
