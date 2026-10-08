@@ -38,3 +38,18 @@ export function shapesFor(chord: string, known: Voicing[] = []): Voicing[] {
   const seen = new Set(known.map(v => v.frets.join()));
   return [...known, ...more.filter(v => !seen.has(v.frets.join()))].slice(0, 6);
 }
+
+type KV = Pick<Storage, 'getItem' | 'setItem'>;
+const SHAPE_KEY = (chord: string) => `shape:${chord}`;
+
+/** The shape to draw for a chord: the one the learner picked under Other shapes (this device), else the lesson's first. */
+export function shapeFor(chord: string, known: Voicing[] = [], kv: KV = localStorage): Voicing | undefined {
+  let picked: string | null = null;
+  try { picked = kv.getItem(SHAPE_KEY(chord)); } catch { /* storage blocked: use the lesson's */ }
+  return (picked ? shapesFor(chord, known).find(v => v.frets.join() === picked) : undefined) ?? known[0];
+}
+
+/** Makes `v` this chord's default shape on this device (VoicingSheet "Use this shape"). */
+export function pickShape(chord: string, v: Voicing, kv: KV = localStorage): void {
+  try { kv.setItem(SHAPE_KEY(chord), v.frets.join()); } catch { /* storage blocked: the pick is not kept */ }
+}

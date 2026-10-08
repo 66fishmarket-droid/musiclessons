@@ -114,7 +114,28 @@ function powerChordVoicings(tonic: string): Voicing[] {
   });
 }
 
-/** Up to `limit` playable shapes: chords-db lookup by interval structure, generated shapes for power chords. */
+/** Chord types whose open shapes are the beginner set; every other type starts on a CAGED barre (owner, 2026-10-08). */
+const OPEN_FIRST = new Set(['major', 'minor', '7']);
+
+/** The open E or A chord of this type slid up to `tonic` with a barre (CAGED E/A shape), lower on the neck wins; null if neither open shape can move. */
+function cagedVoicing(tonic: string, suffix: string): Voicing | null {
+  const shapes = ([['E', 0], ['A', 1]] as const).flatMap(([key, bass]) => {
+    const open = DB.chords[key]?.find(c => c.suffix === suffix)?.positions.find(p => p.baseFret === 1
+      && p.frets[bass] === 0 && p.frets.slice(0, bass).every(f => f < 0) && Math.max(...p.fingers) <= 3); // the barre takes finger 1
+    if (!open) return [];
+    const r = (Note.chroma(tonic)! - Note.chroma(key)! + 12) % 12;
+    if (r === 0) return [{ r, v: { frets: open.frets, fingers: open.fingers, barres: [] } }];
+    return [{ r, v: {
+      frets: open.frets.map(f => (f < 0 ? f : f + r)),
+      fingers: open.frets.map((f, s) => (f < 0 ? 0 : f === 0 ? 1 : open.fingers[s] + 1)),
+      barres: [r],
+    } }];
+  });
+  return shapes.sort((a, b) => a.r - b.r)[0]?.v ?? null;
+}
+
+/** Up to `limit` playable shapes, easiest first: chords-db lookup by interval structure (a CAGED barre leads for extended
+ * chords, where the open shapes are awkward grips), generated shapes for power chords. */
 export function chordVoicings(name: string, limit = 2): Voicing[] {
   const chord = Chord.get(name);
   if (chord.empty || !chord.tonic) throw new Error(`Unknown chord: ${name}`);
@@ -123,11 +144,14 @@ export function chordVoicings(name: string, limit = 2): Voicing[] {
   const suffix = SUFFIX_BY_INTERVALS.get(chord.intervals.join(','));
   const entry = key && suffix ? DB.chords[key]?.find(c => c.suffix === suffix) : undefined;
   if (!entry) return [];
-  return entry.positions.slice(0, limit).map(p => ({
+  const listed = entry.positions.map(p => ({
     frets: p.frets.map(f => (f <= 0 ? f : f + p.baseFret - 1)),
     fingers: p.fingers,
     barres: p.barres.map(b => b + p.baseFret - 1),
   }));
+  const caged = OPEN_FIRST.has(entry.suffix) ? null : cagedVoicing(chord.tonic, entry.suffix);
+  const all = caged ? [caged, ...listed.filter(v => v.frets.join() !== caged.frets.join())] : listed;
+  return all.slice(0, limit);
 }
 
 /** Closed triad shapes on three strings (frets 0–15, span ≤ 4), lowest position first. */

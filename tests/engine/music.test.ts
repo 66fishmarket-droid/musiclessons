@@ -1,4 +1,5 @@
 import { STYLE_CATALOG } from '../../supabase/functions/_shared/engine/styles.ts';
+import { romanToChords } from '../../supabase/functions/_shared/engine/roman.ts';
 import { describe, expect, it } from 'vitest';
 import { Chord, Note } from 'tonal';
 import {
@@ -51,6 +52,31 @@ describe('chordVoicings', () => {
     expect(chordVoicings('E5')[0].frets).toEqual([0, 2, 2, -1, -1, -1]);
   });
   it('returns [] for chords missing from the database', () => expect(chordVoicings('C7#5#9')).toEqual([]));
+  it('starts extended chords on the lower of the E- and A-shape barres (owner, 2026-10-07: open Dmaj7 is harder)', () => {
+    expect(chordVoicings('Dmaj7')[0]).toEqual({ frets: [-1, 5, 7, 6, 7, 5], fingers: [0, 1, 3, 2, 4, 1], barres: [5] });
+    expect(chordVoicings('Gm7')[0].frets).toEqual([3, 5, 3, 3, 3, 3]);
+    expect(chordVoicings('Cmaj7')[0].frets).toEqual([-1, 3, 5, 4, 5, 3]);
+  });
+  it('keeps open shapes first for plain major, minor and 7 chords, and when the chord is the open E or A shape', () => {
+    expect(chordVoicings('G')[0].frets).toEqual([3, 2, 0, 0, 0, 3]);
+    expect(chordVoicings('D')[0].frets).toEqual([-1, -1, 0, 2, 3, 2]);
+    expect(chordVoicings('E7')[0].frets).toEqual([0, 2, 0, 1, 0, 0]);
+    expect(chordVoicings('Am7')[0].frets).toEqual([-1, 0, 2, 0, 1, 0]);
+    expect(chordVoicings('Em7')[0].frets[0]).toBe(0);
+  });
+  it('gives every style chord in every key a first shape of chord tones and at most 4 fingers', () => {
+    const keys = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'];
+    const chords = new Set(STYLE_CATALOG.profiles.flatMap(p => p.progressions.flatMap(pr => keys.flatMap(k => romanToChords(k, pr.roman)))));
+    for (const name of chords) {
+      const v = chordVoicings(name)[0];
+      if (!v) continue;
+      const chord = Chord.get(name);
+      // chords-db's 11 voicings keep the major 3rd, which tonal's 11 leaves out; guitarists play both
+      const tones = [...chord.notes, ...(chord.aliases.includes('11') ? [Note.transpose(chord.tonic!, '3M')] : [])].map(n => Note.chroma(n));
+      expect(sounded(v.frets).every(c => tones.includes(c)), name).toBe(true);
+      expect(Math.max(...v.fingers), name).toBeLessThanOrEqual(4);
+    }
+  });
 });
 
 describe('triadInversions', () => {

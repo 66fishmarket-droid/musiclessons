@@ -1,8 +1,9 @@
 import { Chord, Interval, Note } from 'tonal';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { TUNING, type Voicing } from '../../supabase/functions/_shared/engine/music.ts';
 import { nextBarChord, resolvePattern, swingOffset, type PickPattern, type Stroke } from '../../supabase/functions/_shared/engine/patterns.ts';
 import { audio, blip, pluck } from '../audio/clock.ts';
+import { shapeFor } from '../lib/chordLabels.ts';
 
 const STRING_NAMES = ['E', 'A', 'D', 'G', 'B', 'e'];
 const FINGER_CLASS = { p: 'pk-p', i: 'pk-i', m: 'pk-m', a: 'pk-a', pick: 'pk-i' } as const;
@@ -28,12 +29,12 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
   idx: number; onIdx: (i: number) => void; bpm: number;
 }) {
   const stepsFor = (i: number) => {
-    const v = voicings[chords[i]]?.[0];
+    const v = shapeFor(chords[i], voicings[chords[i]]);
     return v ? resolvePattern(pattern, v, chords[i]) : pattern.steps.map(() => []);
   };
   const chord = chords[idx];
-  const voicing = voicings[chord]?.[0];
-  const steps = useMemo(() => stepsFor(idx), [pattern, chords, voicings, idx]);
+  const voicing = shapeFor(chord, voicings[chord]);
+  const steps = stepsFor(idx); // not memoised: a shape picked under Other shapes must show on the next render
   const [playing, setPlaying] = useState(false);
   const [pos, setPos] = useState(-1);
   const stepMs = 60_000 / bpm / pattern.stepsPerBeat;
@@ -67,7 +68,7 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
       const t = audio().currentTime + swingOffset(pattern, i) * 60 / bpm; // swung offbeats sound late
       for (const n of barSteps[i]) pluck(t, Note.freq(n.note) ?? 220);
       const st = strokes?.[i];
-      if (st) strum(t, st, live.current.voicings[chords[sounding]]?.[0]);
+      if (st) strum(t, st, shapeFor(chords[sounding], live.current.voicings[chords[sounding]]));
       k++;
     };
     play();

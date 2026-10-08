@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Voicing } from '../../supabase/functions/_shared/engine/music.ts';
-import type { DotMode } from '../lib/chordLabels.ts';
+import { shapeFor, type DotMode } from '../lib/chordLabels.ts';
 import { ChordDiagram, ModeToggle } from './ChordDiagram.tsx';
 
 /** Progression blocks: the current chord large, the next chord, tappable progression chips (Instrument layout). */
@@ -11,7 +11,7 @@ export function ChordPanel({ chords, voicings, idx, onIdx, onShapes }: {
   if (chords.length === 0) return null;
   const cur = chords[idx];
   const next = chords[(idx + 1) % chords.length];
-  const v = voicings[cur]?.[0];
+  const v = shapeFor(cur, voicings[cur]);
   return (
     <>
       <section className="card panel" aria-label="Chords">
