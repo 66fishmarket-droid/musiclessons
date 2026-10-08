@@ -1,3 +1,4 @@
+import { Chord, Note } from 'tonal';
 import { reviewView, stepElements } from '../../src/lib/lesson.ts';
 import { describe, expect, it } from 'vitest';
 import { buildMusic, swingOf } from '../../supabase/functions/_shared/engine/music.ts';
@@ -9,7 +10,8 @@ import { elementsOf, STYLE_CATALOG } from '../../supabase/functions/_shared/engi
 import type { LessonPlan } from '../../supabase/functions/_shared/engine/types.ts';
 import { APPLY_DEFAULT_GRID, buildSteps } from '../../supabase/functions/_shared/lesson/steps.ts';
 import { SKILLS } from '../../supabase/seed/curriculum.ts';
-import { PLAN, SKILL_MAP, newUserState } from './fixtures.ts';
+import { assembleLesson, fallbackColour } from '../../supabase/functions/_shared/lesson/fallback.ts';
+import { FUNK_PLAN, PLAN, SKILL_MAP, newUserState } from './fixtures.ts';
 
 describe('buildSteps', () => {
   it('writes one block per plan block, same kinds, every block with at least one step', () => {
@@ -28,6 +30,60 @@ describe('buildSteps', () => {
     const text = buildSteps(vamp, SKILL_MAP).blocks.find(b => b.kind === 'apply')!.instructions.join(' ');
     expect(text).toContain('one-chord vamp: stay on {Gm7}');
     expect(text).not.toContain('then through');
+  });
+  it('plays the warm-up scale in Apply when it came from the style (funk vamp: link step after the vamp line)', () => {
+    const apply = buildSteps(FUNK_PLAN, SKILL_MAP).blocks.find(b => b.kind === 'apply')!;
+    expect(apply.instructions).toHaveLength(4);
+    expect(apply.instructions[1]).toContain('one-chord vamp');
+    expect(apply.instructions[2]).toBe('Every fourth bar, swap the groove for a short G dorian phrase from the warm-up shape: four notes, ending on the note G. Then straight back into the groove.');
+    expect(apply.instructions.join(' ')).not.toContain('then through');
+  });
+  it('adds the link step on a major-scale style day too (folk), and not on a no-style day', () => {
+    const folk = STYLE_CATALOG.profiles.find(p => p.id === 'folk')!;
+    const el = elementsOf(folk)[0];
+    const plan = { ...PLAN, music: buildMusic({ key: 'G', track: 'rhythm', style: folk, element: el }),
+      style_element: { style: 'folk', element_id: el.id, kind: el.kind, is_new: false } };
+    expect(buildSteps(plan, SKILL_MAP).blocks.find(b => b.kind === 'apply')!.instructions[2]).toContain('G major phrase');
+    expect(buildSteps(PLAN, SKILL_MAP).blocks.find(b => b.kind === 'apply')!.instructions).toHaveLength(3);
+  });
+  it('puts the thread on every block and the path on the stored lesson', () => {
+    const steps = buildSteps(FUNK_PLAN, SKILL_MAP);
+    expect(steps.blocks.find(b => b.kind === 'new_skill')!.bridge).toMatch(/^Change of focus: /);
+    expect(steps.blocks.find(b => b.kind === 'reset')!).toMatchObject({ intro: '', bridge: '' });
+    expect(steps.path[0]).toContain('G dorian →');
+    const lesson = assembleLesson(FUNK_PLAN, SKILL_MAP, fallbackColour(FUNK_PLAN, SKILL_MAP), true, steps);
+    expect(lesson.path).toEqual(steps.path);
+    expect(lesson.blocks[0].intro).toBe(steps.blocks[0].intro);
+  });
+  it('reviews degrees in the day scale only when it has 7 notes (pentatonic days stay in major)', () => {
+    for (const p of STYLE_CATALOG.profiles) {
+      const el = elementsOf(p)[0];
+      const music = buildMusic({ key: 'A', track: 'rhythm', style: p, element: el });
+      const plan = { ...PLAN, key: 'A', music, style_element: { style: p.id, element_id: el.id, kind: el.kind, is_new: false },
+        review: [{ item_type: 'theory' as const, ref: 'theory.l1.degrees' }],
+        blocks: [...PLAN.blocks, { kind: 'review' as const, minutes: 5, items: [{ ref: 'theory:theory.l1.degrees', target: null }] }] };
+      const line = buildSteps(plan, SKILL_MAP).blocks.find(b => b.kind === 'review')!.instructions[0];
+      expect(line, p.id).toContain(music.scale.notes.length === 7 ? `Play A ${music.scale.name},` : 'Play A major,');
+    }
+  });
+  it('plays the link phrase over the home chord, which every style progression has', () => {
+    for (const p of STYLE_CATALOG.profiles) {
+      const el = elementsOf(p)[0];
+      const music = buildMusic({ key: 'A', track: 'rhythm', style: p, element: el });
+      const plan = { ...PLAN, key: 'A', music, style_element: { style: p.id, element_id: el.id, kind: el.kind, is_new: false } };
+      const link = buildSteps(plan, SKILL_MAP).blocks.find(b => b.kind === 'apply')!.instructions.find(s => s.includes('phrase from the warm-up shape'))!;
+      expect(link, p.id).toBeTruthy();
+      if (new Set(music.progression.chords).size === 1) continue; // vamp: "every fourth bar", the one chord is home
+      const home = /comes back to \{([^}]+)\}/.exec(link)?.[1];
+      expect(home, p.id).toBeDefined();
+      expect(Note.chroma(Chord.get(home!).tonic!), `${p.id} ${home}`).toBe(Note.chroma('A'));
+    }
+  });
+  it('reviews scale degrees in the day scale, not forced major', () => {
+    const plan = { ...FUNK_PLAN, review: [{ item_type: 'theory' as const, ref: 'theory.l1.degrees' }],
+      blocks: [...FUNK_PLAN.blocks, { kind: 'review' as const, minutes: 5, items: [{ ref: 'theory:theory.l1.degrees', target: null }] }] };
+    const review = buildSteps(plan, SKILL_MAP).blocks.find(b => b.kind === 'review')!;
+    expect(review.instructions[0]).toContain('Play G dorian, the notes G, A, Bb, C, D, E');
   });
   it('falls back to steady down-strums on Apply when the day has no style rhythm', () => {
     const noRhythm = { ...PLAN, music: { ...PLAN.music, rhythm: null } };

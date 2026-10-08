@@ -7,14 +7,14 @@ const base = { title: 't', why_it_matters: 'w', theory_card: 'c', songs: [], cre
 describe('blockText', () => {
   it('reads new engine + colour content', () => {
     const c = { ...base, blocks: [{ kind: 'warmup' as const, instructions: ['a'], target_text: '', listen_for: 'l', more: 'm' }] };
-    expect(blockText(c, 0)).toEqual({ instructions: ['a'], target_text: '', listen_for: 'l', more: ['m'] });
+    expect(blockText(c, 0)).toEqual({ instructions: ['a'], target_text: '', listen_for: 'l', more: ['m'], intro: '', bridge: '' });
   });
   it('reads lessons stored before engine-written steps (tips/explanation, no listen_for) (Review Focus 3)', () => {
     const old = { ...base, blocks: [{ kind: 'warmup', instructions: ['a'], target_text: 'x', tips: 'tip', explanation: '' }] };
-    expect(blockText(old as never, 0)).toEqual({ instructions: ['a'], target_text: 'x', listen_for: '', more: ['tip'] });
+    expect(blockText(old as never, 0)).toEqual({ instructions: ['a'], target_text: 'x', listen_for: '', more: ['tip'], intro: '', bridge: '' });
   });
   it('is safe on a missing block', () => {
-    expect(blockText({ ...base, blocks: [] }, 3)).toEqual({ instructions: [''], target_text: '', listen_for: '', more: [] });
+    expect(blockText({ ...base, blocks: [] }, 3)).toEqual({ instructions: [''], target_text: '', listen_for: '', more: [], intro: '', bridge: '' });
   });
 });
 
@@ -98,5 +98,22 @@ describe('stepElements', () => {
     expect(stepElements(undefined, 'review', 0, 2)).toBeNull();
     expect(stepElements(undefined, 'reset', 0, 1)).toBeNull();
     expect(stepElements(undefined, 'warmup', 0, 4)).toBeNull();
+  });
+});
+
+describe('thread text', () => {
+  it('defaults intro and bridge to empty on lessons stored before they existed', () => {
+    const content = { title: '', why_it_matters: '', theory_card: '', songs: [], create_prompt: '',
+      blocks: [{ kind: 'warmup', instructions: ['x'], target_text: '', listen_for: '', more: '' }] } as never;
+    expect(blockText(content, 0)).toMatchObject({ intro: '', bridge: '' });
+  });
+  it('finds glossary terms in the intro', () => {
+    const content = { title: '', why_it_matters: '', theory_card: '', songs: [], create_prompt: '',
+      blocks: [{ kind: 'warmup', instructions: ['x'], target_text: '', listen_for: '', more: '', intro: 'Dorian is natural minor with a raised 6th.', bridge: '' }] } as never;
+    expect(blockTerms(content, 0).map(t => t.id)).toContain('dorian');
+  });
+  it('shows the scale card and chords on the Apply link step', () => {
+    expect(stepElements(undefined, 'apply', 2, 4)).toEqual(['card', 'scale', 'chords', 'metronome']);
+    expect(stepElements(undefined, 'apply', 2, 3)).toEqual(['card', 'chords', 'metronome']); // older 3-step Apply
   });
 });

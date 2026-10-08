@@ -1,5 +1,6 @@
-import { planLesson } from '../../supabase/functions/_shared/engine/planner.ts';
-import type { StyleCatalog } from '../../supabase/functions/_shared/engine/styles.ts';
+import { planLesson, targetFor } from '../../supabase/functions/_shared/engine/planner.ts';
+import { buildMusic } from '../../supabase/functions/_shared/engine/music.ts';
+import { elementsOf, STYLE_CATALOG, type StyleCatalog } from '../../supabase/functions/_shared/engine/styles.ts';
 import type { LessonPlan, PlannerState, Skill } from '../../supabase/functions/_shared/engine/types.ts';
 import type { Colour } from '../../supabase/functions/_shared/lesson/contract.ts';
 import { SKILLS } from '../../supabase/seed/curriculum.ts';
@@ -22,3 +23,14 @@ export function validColour(plan: LessonPlan = PLAN): Colour {
   };
 }
 export const MET = { metSkills: [] as string[], stepsText: '' };
+
+const FUNK = STYLE_CATALOG.profiles.find(p => p.id === 'funk')!;
+const SCRATCH = elementsOf(FUNK).find(e => e.id === 'funk.the_one_scratch')!;
+/** 2026-10-07's real lesson: B-string rule in G, funk "The One + scratch", so G dorian over a Gm7 vamp, question and answer. */
+export const FUNK_PLAN: LessonPlan = {
+  ...PLAN, key: 'G', track: 'fretboard', skill_id: 'fretboard.l1.b_string_rule', create_task_id: 'question_answer',
+  music: buildMusic({ key: 'G', track: 'fretboard', style: FUNK, element: SCRATCH }),
+  style_element: { style: 'funk', element_id: SCRATCH.id, kind: 'rhythm', is_new: true },
+  blocks: PLAN.blocks.map(b => b.kind === 'new_skill'
+    ? { ...b, items: [{ ref: 'skill:fretboard.l1.b_string_rule', target: targetFor(SKILL_MAP.get('fretboard.l1.b_string_rule')!) }] } : b),
+};
