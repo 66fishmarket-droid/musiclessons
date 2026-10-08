@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { planLesson } from '../../supabase/functions/_shared/engine/planner.ts';
 import { STYLE_CATALOG } from '../../supabase/functions/_shared/engine/styles.ts';
 import { PROMPT_VERSION, SYSTEM_PROMPT, buildMessages } from '../../supabase/functions/_shared/lesson/prompt.ts';
-import { PLAN, SKILL_MAP, newUserState } from './fixtures.ts';
+import { FUNK_PLAN, PLAN, SKILL_MAP, newUserState } from './fixtures.ts';
 import { rhythmCounts, rhythmPattern } from '../../supabase/functions/_shared/engine/patterns.ts';
 
 const briefOf = (content: string) => JSON.parse(content.slice(content.indexOf('\n') + 1));
@@ -15,11 +15,18 @@ describe('buildMessages', () => {
   });
   const brief = briefOf(msgs[1].content);
 
+  it('gives the model the lesson path and each block intro and bridge, so more does not repeat them', () => {
+    const funk = STYLE_CATALOG.profiles.find(p => p.id === 'funk')!;
+    const b = briefOf(buildMessages({ plan: FUNK_PLAN, skills: SKILL_MAP, style: funk, settings, recent: [], questions: [], metSkills: [] })[1].content);
+    expect(b.path[0]).toContain('G dorian →');
+    expect(b.steps.find((s: { kind: string }) => s.kind === 'apply')).toMatchObject({ bridge: expect.stringContaining('Same G dorian notes') });
+    expect(SYSTEM_PROMPT).toContain('intro and bridge');
+  });
   it('sends the fixed system prompt first', () => {
     expect(msgs[0]).toEqual({ role: 'system', content: SYSTEM_PROMPT });
     expect(msgs[1].content.startsWith("Add colour to today's lesson. Plan and fixed steps:\n")).toBe(true);
     expect(PROMPT_VERSION).toMatch(/^gc-\d{4}-\d{2}-\d{2}[a-z]?$/);
-    expect(PROMPT_VERSION).toBe('gc-2026-10-01');
+    expect(PROMPT_VERSION).toBe('gc-2026-10-07');
     expect(SYSTEM_PROMPT).toMatch(/do not restate or contradict/);
     expect(SYSTEM_PROMPT).not.toMatch(/instructions: 2 to 5/);
     expect(SYSTEM_PROMPT).not.toMatch(/App tools:/);

@@ -42,7 +42,7 @@ One or two sentences above the steps. Sources:
 |---|---|
 | warmup | the scale's glossary entry (`plain`) plus, when linked, "the scale {style} players use" |
 | new_skill / retest | `skill.description` |
-| apply | style profile name + rhythm or progression name + `feel.accents` (e.g. "beat 1 heavy, chank on 2 and 4"); with no style, the circle-of-fifths line (§4) |
+| apply | short style name + element name ("Funk groove: The One + scratch"); `feel.accents` left out because its terms (tumbao, golpe, clave…) have no glossary entries; with no style, the circle-of-fifths line (§4) |
 | create | a new `why` field on each `CreateTask` (5 short engine-written lines) |
 | review | fixed: "Spaced review: a quick pass over things you learned earlier, so they stick." |
 | reset, record | none (empty string, the UI shows nothing) |

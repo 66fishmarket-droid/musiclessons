@@ -19,14 +19,14 @@ export interface PromptInput {
 }
 
 /** Bump when SYSTEM_PROMPT or the brief's shape changes; stored on every lesson row. */
-export const PROMPT_VERSION = 'gc-2026-10-01';
+export const PROMPT_VERSION = 'gc-2026-10-07';
 
 export const SYSTEM_PROMPT = `You add colour to a daily guitar lesson. The learner is a beginner singer-songwriter who accompanies their own singing. The app's engine has already written every instruction the learner follows; they are in the brief as \`steps\` and are fixed: do not restate or contradict them, add steps, or give tempos or rep counts.
 
 Return one JSON object that matches the response schema. No markdown fences, no text outside the JSON.
 
 Rules:
-1. blocks: exactly one entry per plan block, in the same order, with the same kind. \`more\` is 2 to 4 sentences, at most 400 characters: a common mistake and its fix, why this works, or a link to something the learner met before. "" for the reset block.
+1. blocks: exactly one entry per plan block, in the same order, with the same kind. \`more\` is 2 to 4 sentences, at most 400 characters: a common mistake and its fix, why this works, or a link to something the learner met before. Each step block already has an intro and bridge saying what it is and how it links; do not repeat them. "" for the reset block.
 2. Chords: name only chords listed in allowed_chords, written in braces, e.g. {Am7}. Do not name chords in songs.
 3. Skills: name only skills in met_skills or words already used in steps. Never mention fills, licks or techniques the learner has not met, and never use any phrase in avoid_names.
 4. Plain words: explain any music term in the same sentence, in everyday words. Write progressions as chord names, never Roman numerals.
@@ -60,7 +60,8 @@ export function buildMessages({ plan, skills, style, settings, recent, questions
     },
     allowed_chords: allowedChords(plan, skills),
     blocks: plan.blocks.map(b => ({ kind: b.kind, minutes: b.minutes, items: b.items })),
-    steps: engineSteps.blocks.map(b => ({ kind: b.kind, instructions: b.instructions, listen_for: b.listen_for })),
+    steps: engineSteps.blocks.map(b => ({ kind: b.kind, intro: b.intro, bridge: b.bridge, instructions: b.instructions, listen_for: b.listen_for })),
+    path: engineSteps.path,
     met_skills: [...new Set([plan.skill_id, plan.retest?.skill_id, ...metSkills].filter(Boolean))].map(id => skills.get(id!)?.name ?? id!),
     avoid_names: avoidNames(plan, skills, metSkills, stepsText(engineSteps)),
     vocal_range: settings.vocal_low && settings.vocal_high ? `${settings.vocal_low}–${settings.vocal_high}` : null,
