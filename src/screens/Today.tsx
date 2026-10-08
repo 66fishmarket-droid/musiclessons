@@ -3,6 +3,7 @@ import { Burst } from '../components/Burst.tsx';
 import { SkillSheet } from '../components/SkillSheet.tsx';
 import { completedDays } from '../lib/api.ts';
 import { weekDays } from '../lib/dates.ts';
+import { shapeFor } from '../lib/chordLabels.ts';
 import { BLOCK_META, type TodayLesson } from '../lib/lesson.ts';
 import { loadSession } from '../lib/session.ts';
 import { db } from '../lib/supabase.ts';
@@ -80,7 +81,7 @@ export function Today({ lesson, onStart }: { lesson: TodayLesson; onStart: () =>
       </button>
       {about && (
         <SkillSheet skillId={plan.skill_id} chord={plan.music.progression.chords[0]}
-          voicing={plan.music.voicings[plan.music.progression.chords[0]]?.[0]}
+          voicing={shapeFor(plan.music.progression.chords[0], plan.music.voicings[plan.music.progression.chords[0]])}
           bpm={plan.blocks.find(b => b.kind === 'new_skill')?.items[0]?.target?.start ?? 60}
           onClose={() => setAbout(false)} />
       )}

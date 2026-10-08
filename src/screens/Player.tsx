@@ -15,6 +15,7 @@ import { SkillSheet } from '../components/SkillSheet.tsx';
 import { TriadBoard } from '../components/TriadBoard.tsx';
 import { VoicingSheet } from '../components/VoicingSheet.tsx';
 import { clock } from '../lib/dates.ts';
+import { shapeFor } from '../lib/chordLabels.ts';
 import { keyAction } from '../lib/keys.ts';
 import { tempoLadder } from '../lib/ladder.ts';
 import { BLOCK_META, blockCard, blockTerms, blockText, bpmTarget, refLabel, reviewView, startBpm, elementVisible, isMinorScale, stepElements, tonicOf, type TodayLesson } from '../lib/lesson.ts';
@@ -229,7 +230,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
         <button type="button" className="btn-ghost" disabled={i === 0} onClick={() => onMove(i - 1)}>‹ Back</button>
         <button type="button" className="btn-ghost" onClick={() => onMove(i + 1)}>Skip ›</button>
       </nav>
-      {about && skillId && <SkillSheet skillId={skillId} chord={chord} voicing={plan.music.voicings[chord]?.[0]} bpm={metro.bpm} onClose={() => setAbout(false)} />}
+      {about && skillId && <SkillSheet skillId={skillId} chord={chord} voicing={shapeFor(chord, plan.music.voicings[chord])} bpm={metro.bpm} onClose={() => setAbout(false)} />}
       {sheet && <VoicingSheet chord={sheet} known={plan.music.voicings[sheet]} onClose={() => setSheet(null)} />}
     </main>
   );

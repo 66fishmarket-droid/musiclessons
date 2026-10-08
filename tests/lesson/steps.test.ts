@@ -211,7 +211,7 @@ describe('buildSteps', () => {
         }
       }
     }
-  });
+  }, 20_000); // ~3s alone; the full parallel suite pushes it past the 5s default
 });
 
 describe('per-step elements line up with the engine-written steps', () => {

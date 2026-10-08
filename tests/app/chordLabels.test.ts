@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { baseFret, dotLabels, rootStrings, shapesFor } from '../../src/lib/chordLabels.ts';
+import { baseFret, dotLabels, pickShape, rootStrings, shapeFor, shapesFor } from '../../src/lib/chordLabels.ts';
 
 const G = { frets: [3, 2, 0, 0, 0, 3], fingers: [2, 1, 0, 0, 0, 3], barres: [] };
 const D = { frets: [-1, -1, 0, 2, 3, 2], fingers: [0, 0, 0, 1, 3, 2], barres: [] };
@@ -42,5 +42,25 @@ describe('shapesFor', () => {
   it('returns [] for names chords-db does not know instead of throwing', () => {
     expect(shapesFor('H7')).toEqual([]);
     expect(shapesFor('the E string')).toEqual([]);
+  });
+});
+
+describe('shapeFor / pickShape', () => {
+  const kv = () => { const m = new Map<string, string>(); return { getItem: (k: string) => m.get(k) ?? null, setItem: (k: string, v: string) => void m.set(k, v), removeItem: (k: string) => void m.delete(k) }; };
+  it("draws the lesson's first shape until the learner picks another under Other shapes", () => {
+    const store = kv();
+    expect(shapeFor('G', [G], store)).toEqual(G);
+    const other = shapesFor('G', [G])[1];
+    pickShape('G', other, store);
+    expect(shapeFor('G', [G], store)).toEqual(other);
+    expect(shapeFor('C', [], store)).toBeUndefined();
+  });
+  it('falls back to the lesson shape when storage throws or holds a shape the chord no longer has', () => {
+    const broken = { getItem: () => { throw new Error('blocked'); }, setItem: () => { throw new Error('blocked'); }, removeItem: () => {} };
+    expect(shapeFor('G', [G], broken)).toEqual(G);
+    expect(() => pickShape('G', G, broken)).not.toThrow();
+    const store = kv();
+    store.setItem('shape:G', '9,9,9,9,9,9');
+    expect(shapeFor('G', [G], store)).toEqual(G);
   });
 });
