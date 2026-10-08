@@ -21,6 +21,13 @@
 - `scaleInApply` is effectively always true on style days.
 - Data: gypsy_jazz pairs Am6 (F#) with A harmonic minor (F).
 
-## Next
-- Easiest chord shape first: `chordVoicings` (engine/music.ts) takes chords-db order; ChordPanel shows `[0]`.
-- `npm run vault:sync` once local Supabase is running (it failed with ECONNREFUSED this session).
+## On dev, not deployed: easiest chord shape first (8955468)
+- `chordVoicings`: extended chords (anything but major, minor, 7) lead with the lower E- or A-shape barre, the open E/A chord of
+  that type slid up with a barre. Dmaj7 → x-5-7-6-7-5. Am7/Em7 keep their open shapes (they already are the E/A shape).
+- "Use this shape" in Other shapes saves a per-chord pick in localStorage (`shape:<chord>`); `shapeFor` reads it at every draw site.
+- Costs: Cmaj7 now starts on a barre; the step text's "root on string N" follows the engine's shape, not a picked one.
+- Verified in the local app (picked G shape 2 → panel redrew). Tests 573/573. Needs merge + `generate-lesson` redeploy.
+
+## Later
+- Some chords-db shapes for plain chords put a non-root in the bass (e.g. Ab7's first shape).
+- The `steps.test.ts` sweep takes ~3s; timeout raised to 20s.
