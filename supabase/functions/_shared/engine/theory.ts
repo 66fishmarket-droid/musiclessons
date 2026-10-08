@@ -1,7 +1,8 @@
 /**
  * One concrete review task per theory topic: a sentence of "what it is" plus something to play, in the day's key.
- * lesson/steps.ts renders these against the key's MAJOR scale (so a minor-flavoured style day can't give wrong notes);
- * the text says "{key} major" wherever the scale matters. Same slots as recipes (engine/render.ts).
+ * lesson/steps.ts renders these against the key's MAJOR scale (so a minor-flavoured style day can't give wrong notes),
+ * except topics in THEORY_DAY_SCALE, whose text works in any 7-note scale and uses {scale}; the rest say "{key} major"
+ * wherever the scale matters. Same slots as recipes (engine/render.ts).
  */
 export const THEORY_REVIEWS: Record<string, string> = {
   'theory.l1.intervals':
@@ -11,7 +12,7 @@ export const THEORY_REVIEWS: Record<string, string> = {
   'theory.l1.circle_of_fifths':
     'keys a 5th apart are neighbours on the circle of fifths. Play the chords on {degrees:1}, {degrees:4}, {degrees:5}, then back to {degrees:1} (I-IV-V-I in {key} major): the 4 and 5 chords are the two keys next to {key} on the circle, one step each way, which is why they sound at home together.',
   'theory.l1.degrees':
-    'every note in a key has a number. Play {key} major, the notes {degrees:1,2,3,4,5,6,7}, saying 1 to 7 as you go, then jump straight to 1, 3 and 5 by number.',
+    'every note in a key has a number. Play {key} {scale}, the notes {degrees:1,2,3,4,5,6,7}, saying 1 to 7 as you go, then jump straight to 1, 3 and 5 by number.',
   'theory.l2.triads':
     'a triad is three notes stacked in 3rds. Play the notes {degrees:1,3,5} one at a time, then together as the {key} chord; now move the note {degrees:3} down one fret and hear the same chord turn minor.',
   'theory.l2.diatonic_qualities':
@@ -31,3 +32,6 @@ export const THEORY_REVIEWS: Record<string, string> = {
   'theory.l5.harmonise_melody':
     'one melody note can sit under several chords. Sing or play the note {degrees:3}, then strum the chords on {degrees:1}, {degrees:3} and {degrees:6} under it: that note belongs to all three.',
 };
+
+/** Theory reviews that read right in the day's scale (spec 2026-10-07 §7); every other topic stays in {key} major. */
+export const THEORY_DAY_SCALE: ReadonlySet<string> = new Set(['theory.l1.degrees']);

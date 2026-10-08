@@ -1,4 +1,4 @@
-import { planLesson } from '../../supabase/functions/_shared/engine/planner.ts';
+import { planLesson, targetFor } from '../../supabase/functions/_shared/engine/planner.ts';
 import { buildMusic } from '../../supabase/functions/_shared/engine/music.ts';
 import { elementsOf, STYLE_CATALOG, type StyleCatalog } from '../../supabase/functions/_shared/engine/styles.ts';
 import type { LessonPlan, PlannerState, Skill } from '../../supabase/functions/_shared/engine/types.ts';
@@ -31,4 +31,6 @@ export const FUNK_PLAN: LessonPlan = {
   ...PLAN, key: 'G', track: 'fretboard', skill_id: 'fretboard.l1.b_string_rule', create_task_id: 'question_answer',
   music: buildMusic({ key: 'G', track: 'fretboard', style: FUNK, element: SCRATCH }),
   style_element: { style: 'funk', element_id: SCRATCH.id, kind: 'rhythm', is_new: true },
+  blocks: PLAN.blocks.map(b => b.kind === 'new_skill'
+    ? { ...b, items: [{ ref: 'skill:fretboard.l1.b_string_rule', target: targetFor(SKILL_MAP.get('fretboard.l1.b_string_rule')!) }] } : b),
 };

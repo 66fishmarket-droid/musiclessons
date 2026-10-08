@@ -5,10 +5,11 @@ import { renderSteps, slotContext } from '../engine/render.ts';
 import { swingOf } from '../engine/music.ts';
 import { romanToChords } from '../engine/roman.ts';
 import { STYLE_CATALOG } from '../engine/styles.ts';
-import { THEORY_REVIEWS } from '../engine/theory.ts';
+import { THEORY_DAY_SCALE, THEORY_REVIEWS } from '../engine/theory.ts';
 import type { BlockKind, LessonPlan, PlanBlock, Skill } from '../engine/types.ts';
 import type { ReviewRhythm } from './contract.ts';
 import type { Target } from '../engine/types.ts';
+import { lessonThread } from './thread.ts';
 
 /** A plan target as plain words (moved here from fallback.ts, which re-exports it). */
 export function targetText(t: Target | null): string {
@@ -20,9 +21,14 @@ export function targetText(t: Target | null): string {
 
 export interface EngineBlock {
   kind: BlockKind; instructions: string[]; target_text: string; listen_for: string;
+  /** What the block is and why (always visible), and how it links to what came before; '' when none (lesson/thread.ts). */
+  intro: string; bridge: string;
   /** Review only, one per step: a style rhythm item's grid so the app can draw its card (the catalogue stays server-side); null otherwise. */
   rhythms?: (ReviewRhythm | null)[];
 }
+
+/** buildSteps' output: the blocks, the Create prompt card and the lesson path for the Today screen. */
+export interface EngineSteps { blocks: EngineBlock[]; create_prompt: string; path: string[] }
 
 /** Every word the learner reads from the engine's steps (instructions plus each block's listen_for) — the
  * allowance text for the no-unmet-skill-names check (contract.ts avoidNames) and the brief. */
@@ -46,11 +52,12 @@ const RESETS = {
 };
 
 /** Every instruction the learner reads, from the plan: recipes, block templates and the Create library (spec §5). */
-export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { blocks: EngineBlock[]; create_prompt: string } {
+export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): EngineSteps {
   const day = Math.floor(Date.parse(plan.date) / 86_400_000);
   const skillOf = (id: string) => skills.get(id);
   const task = CREATE_TASKS.find(t => t.id === plan.create_task_id) ?? CREATE_TASKS[0];
   const base = slotContext(plan, {});
+  const thread = lessonThread(plan, skills);
 
   // `limit` slices the templates before rendering, so a slot in a later step (e.g. the bpm ladder) is never
   // evaluated when the caller only wants an early step — needed on review, where the item's target is always null.
@@ -101,7 +108,10 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
 
   const build = (b: PlanBlock): EngineBlock => {
     const target_text = targetText(b.items[0]?.target ?? null);
-    const make = (instructions: string[], listen_for = ''): EngineBlock => ({ kind: b.kind, instructions, target_text, listen_for });
+    const make = (instructions: string[], listen_for = ''): EngineBlock => ({
+      kind: b.kind, instructions, target_text, listen_for,
+      intro: thread.blocks[b.kind]?.intro ?? '', bridge: thread.blocks[b.kind]?.bridge ?? '',
+    });
     switch (b.kind) {
       case 'warmup': return make(renderSteps([
         'Hum or lip-trill for 30 seconds to wake your voice up.',
@@ -122,7 +132,7 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
         if (type === 'style') return reviewStyleLine(ref);
         if (type === 'skill' && skillOf(ref)) return reviewSkillLine(ref, b, i);
         if (type === 'theory' && THEORY_REVIEWS[ref]) {
-          return renderSteps([`${skillOf(ref)?.name ?? ref}: ${THEORY_REVIEWS[ref]}`], { ...base, scale: 'major' })[0];
+          return renderSteps([`${skillOf(ref)?.name ?? ref}: ${THEORY_REVIEWS[ref]}`], { ...base, scale: THEORY_DAY_SCALE.has(ref) ? base.scale : 'major' })[0];
         }
         return `Review: ${skillOf(ref)?.name ?? ref}.`;
       })), rhythms: b.items.map(i => reviewRhythm(i.ref)) };
@@ -135,6 +145,8 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
           vamp
             ? 'This is a one-chord vamp: stay on {chord1} for 8 bars or more. Nothing changes in the harmony, so all the interest is in the rhythm; keep it tight and even.'
             : 'Play it on {chord1} until it is steady, then through {chords}, one chord per bar.',
+          // The scale came from today's style: play it, don't just mention it (spec 2026-10-07 §5). Shown with the scale card (src/lib/lesson.ts).
+          ...(thread.scaleInApply ? ['Every fourth bar, swap the groove for a short {key} {scale} phrase from the warm-up shape: four notes, ending on the note {degrees:1}. Then straight back into the groove.'] : []),
           'Keep the picking hand going and hum or sing any tune over it.',
         ], ctx));
       }
@@ -151,5 +163,5 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): { bloc
       }
     }
   };
-  return { blocks: plan.blocks.map(build), create_prompt: renderSteps([task.prompt], base)[0] };
+  return { blocks: plan.blocks.map(build), create_prompt: renderSteps([task.prompt], base)[0], path: thread.path };
 }

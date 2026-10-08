@@ -3,7 +3,7 @@ import { COLOUR_JSON_SCHEMA, validateColour, type LessonContent } from './contra
 import { assembleLesson, fallbackColour } from './fallback.ts';
 import type { Complete } from './llm.ts';
 import type { ChatMessage } from './prompt.ts';
-import { buildSteps, stepsText, type EngineBlock } from './steps.ts';
+import { buildSteps, stepsText, type EngineSteps } from './steps.ts';
 
 export interface Attempt { model: string; errors: string[]; cost: number | null; ms: number }
 export interface Written { content: LessonContent; llm_model: string; attempts: Attempt[] }
@@ -26,7 +26,7 @@ export function parseJson(text: string): unknown {
 export async function writeLesson(
   messages: ChatMessage[], plan: LessonPlan, skills: Map<string, Skill>, complete: Complete, models: (string | undefined)[],
   metSkills: string[] = [],
-  steps: { blocks: EngineBlock[]; create_prompt: string } = buildSteps(plan, skills), // computed once per request, shared with assembleLesson
+  steps: EngineSteps = buildSteps(plan, skills), // computed once per request, shared with assembleLesson
 ): Promise<Written> {
   const attempts: Attempt[] = [];
   const engineStepsText = stepsText(steps);

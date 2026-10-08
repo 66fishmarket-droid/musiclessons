@@ -2,7 +2,7 @@ import { rhythmCounts, rhythmPattern } from '../engine/patterns.ts';
 import type { StyleProfile } from '../engine/styles.ts';
 import type { LessonPlan, Settings, Skill } from '../engine/types.ts';
 import { allowedChords, avoidNames } from './contract.ts';
-import { buildSteps, stepsText, type EngineBlock } from './steps.ts';
+import { buildSteps, stepsText, type EngineSteps } from './steps.ts';
 
 export interface ChatMessage { role: 'system' | 'user'; content: string }
 export interface PromptInput {
@@ -15,7 +15,7 @@ export interface PromptInput {
   metSkills: string[];
   /** Precomputed engine steps for `plan`; computed once here when omitted (callers that already have it, e.g.
    * service.ts, pass it through so buildSteps runs once per request instead of once per caller). */
-  steps?: { blocks: EngineBlock[]; create_prompt: string };
+  steps?: EngineSteps;
 }
 
 /** Bump when SYSTEM_PROMPT or the brief's shape changes; stored on every lesson row. */

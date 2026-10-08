@@ -6,12 +6,16 @@ import type { BlockKind, LessonPlan, Skill } from '../engine/types.ts';
 
 export interface Song { title: string; artist: string; why: string; capo: number }
 /** `tips`/`explanation` exist only on lessons stored before the engine wrote the steps. */
-export interface BlockContent { kind: BlockKind; instructions: string[]; target_text: string; listen_for: string; more: string; tips?: string; explanation?: string; rhythms?: (ReviewRhythm | null)[] }
+export interface BlockContent { kind: BlockKind; instructions: string[]; target_text: string; listen_for: string; more: string; tips?: string; explanation?: string; rhythms?: (ReviewRhythm | null)[];
+  /** Engine-written framing (lesson/thread.ts); absent on lessons stored before 2026-10-07. */
+  intro?: string; bridge?: string }
 /** A style rhythm review step's pattern, for the app's card. */
 export interface ReviewRhythm { name: string; grid: string[]; swing?: Swing | null; push?: number | null }
 export interface LessonContent {
   title: string; why_it_matters: string; theory_card: string; songs: Song[]; create_prompt: string;
   blocks: BlockContent[];
+  /** Today's path (lesson/thread.ts); absent on lessons stored before 2026-10-07. */
+  path?: string[];
   /** Set only on the plan-only lesson served when every model fails. */
   fallback?: true;
 }
