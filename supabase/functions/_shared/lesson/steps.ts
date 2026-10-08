@@ -1,3 +1,4 @@
+import { Chord, Note } from 'tonal';
 import { CREATE_TASKS } from '../engine/create.ts';
 import { APPLY_DEFAULT_GRID } from '../engine/patterns.ts';
 import { PLAYS_THROUGH, playStep, recipeFor } from '../engine/recipes.ts';
@@ -132,23 +133,28 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): Engine
         if (type === 'style') return reviewStyleLine(ref);
         if (type === 'skill' && skillOf(ref)) return reviewSkillLine(ref, b, i);
         if (type === 'theory' && THEORY_REVIEWS[ref]) {
-          return renderSteps([`${skillOf(ref)?.name ?? ref}: ${THEORY_REVIEWS[ref]}`], { ...base, scale: THEORY_DAY_SCALE.has(ref) ? base.scale : 'major' })[0];
+          return renderSteps([`${skillOf(ref)?.name ?? ref}: ${THEORY_REVIEWS[ref]}`], { ...base, scale: THEORY_DAY_SCALE.has(ref) && plan.music.scale.notes.length === 7 ? base.scale : 'major' })[0]; // pentatonics can't count 1 to 7
         }
         return `Review: ${skillOf(ref)?.name ?? ref}.`;
       })), rhythms: b.items.map(i => reviewRhythm(i.ref)) };
       case 'apply': {
         const ctx = plan.music.rhythm ? base : slotContext(plan, { grid: APPLY_DEFAULT_GRID, gridName: 'Steady down-strums' });
         // A one-chord progression (funk's Dorian vamp) has no "through" to play, so say why it's one chord instead.
-        const vamp = new Set(plan.music.progression.chords).size === 1;
+        const { chords } = plan.music.progression;
+        const vamp = new Set(chords).size === 1;
+        const home = chords.find(c => Note.chroma(Chord.get(c).tonic ?? '') === Note.chroma(plan.key)) ?? chords[0];
         return make(renderSteps([
           '{rhythm_name}: {rhythm_counts}',
           vamp
             ? 'This is a one-chord vamp: stay on {chord1} for 8 bars or more. Nothing changes in the harmony, so all the interest is in the rhythm; keep it tight and even.'
             : 'Play it on {chord1} until it is steady, then through {chords}, one chord per bar.',
           // The scale came from today's style: play it, don't just mention it (spec 2026-10-07 §5). Shown with the scale card (src/lib/lesson.ts).
-          ...(thread.scaleInApply ? ['Every fourth bar, swap the groove for a short {key} {scale} phrase from the warm-up shape: four notes, ending on the note {degrees:1}. Then straight back into the groove.'] : []),
+          // The phrase ends on the home note, so it goes over the home chord: another bar's chord can clash (flamenco E over A phrygian).
+          ...(thread.scaleInApply ? [vamp
+            ? 'Every fourth bar, swap the groove for a short {key} {scale} phrase from the warm-up shape: four notes, ending on the note {degrees:1}. Then straight back into the groove.'
+            : 'Each time the progression comes back to HOME, swap that bar\'s groove for a short {key} {scale} phrase from the warm-up shape: four notes, ending on the note {degrees:1}. Then straight back into the groove.'] : []),
           'Keep the picking hand going and hum or sing any tune over it.',
-        ], ctx));
+        ], ctx).map(s => s.replace('HOME', `{${home}}`))); // renderSteps has no slot for the home chord
       }
       case 'create': return make(renderSteps(task.steps, base));
       case 'record': return make([

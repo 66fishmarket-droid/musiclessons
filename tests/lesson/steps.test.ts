@@ -1,3 +1,4 @@
+import { Chord, Note } from 'tonal';
 import { reviewView, stepElements } from '../../src/lib/lesson.ts';
 import { describe, expect, it } from 'vitest';
 import { buildMusic, swingOf } from '../../supabase/functions/_shared/engine/music.ts';
@@ -53,6 +54,30 @@ describe('buildSteps', () => {
     const lesson = assembleLesson(FUNK_PLAN, SKILL_MAP, fallbackColour(FUNK_PLAN, SKILL_MAP), true, steps);
     expect(lesson.path).toEqual(steps.path);
     expect(lesson.blocks[0].intro).toBe(steps.blocks[0].intro);
+  });
+  it('reviews degrees in the day scale only when it has 7 notes (pentatonic days stay in major)', () => {
+    for (const p of STYLE_CATALOG.profiles) {
+      const el = elementsOf(p)[0];
+      const music = buildMusic({ key: 'A', track: 'rhythm', style: p, element: el });
+      const plan = { ...PLAN, key: 'A', music, style_element: { style: p.id, element_id: el.id, kind: el.kind, is_new: false },
+        review: [{ item_type: 'theory' as const, ref: 'theory.l1.degrees' }],
+        blocks: [...PLAN.blocks, { kind: 'review' as const, minutes: 5, items: [{ ref: 'theory:theory.l1.degrees', target: null }] }] };
+      const line = buildSteps(plan, SKILL_MAP).blocks.find(b => b.kind === 'review')!.instructions[0];
+      expect(line, p.id).toContain(music.scale.notes.length === 7 ? `Play A ${music.scale.name},` : 'Play A major,');
+    }
+  });
+  it('plays the link phrase over the home chord, which every style progression has', () => {
+    for (const p of STYLE_CATALOG.profiles) {
+      const el = elementsOf(p)[0];
+      const music = buildMusic({ key: 'A', track: 'rhythm', style: p, element: el });
+      const plan = { ...PLAN, key: 'A', music, style_element: { style: p.id, element_id: el.id, kind: el.kind, is_new: false } };
+      const link = buildSteps(plan, SKILL_MAP).blocks.find(b => b.kind === 'apply')!.instructions.find(s => s.includes('phrase from the warm-up shape'))!;
+      expect(link, p.id).toBeTruthy();
+      if (new Set(music.progression.chords).size === 1) continue; // vamp: "every fourth bar", the one chord is home
+      const home = /comes back to \{([^}]+)\}/.exec(link)?.[1];
+      expect(home, p.id).toBeDefined();
+      expect(Note.chroma(Chord.get(home!).tonic!), `${p.id} ${home}`).toBe(Note.chroma('A'));
+    }
   });
   it('reviews scale degrees in the day scale, not forced major', () => {
     const plan = { ...FUNK_PLAN, review: [{ item_type: 'theory' as const, ref: 'theory.l1.degrees' }],

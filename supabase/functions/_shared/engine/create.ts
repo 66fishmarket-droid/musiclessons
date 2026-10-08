@@ -10,7 +10,7 @@ const RECORD = 'Record it with the app\'s recorder and listen back once.';
 export const CREATE_TASKS: CreateTask[] = [
   {
     id: 'melody_135', songwriting: ['songwriting.l1.core_loops'], label: 'a four-bar tune on 1, 3 and 5',
-    why: 'Notes 1, 3 and 5 are the chord\'s own notes, so a tune built from them always fits: the safest way into writing a melody.',
+    why: 'Notes 1, 3 and 5 make the home chord, so a tune built from them always sounds like it belongs to the key: the safest way into writing a melody.',
     prompt: 'Make up a four-bar tune using only the notes {degrees:1,3,5} while you play {chords}, one bar each.',
     steps: [
       'A four-bar tune is a short melody that lasts four bars: one bar per chord, four beats per bar.',

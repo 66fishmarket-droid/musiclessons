@@ -18,6 +18,13 @@ export interface LessonThread {
 export const shortStyleName = (name: string): string => name.replace(/\s*\(.*\)\s*$/, '');
 
 const braced = (chords: string[]) => [...new Set(chords)].map(c => `{${c}}`).join(' ');
+/** "the chord {Gm7}" / "the chords {G}, {C} and {D}": Today shows the path without chord chips, so say they're chords. */
+const chordPhrase = (chords: string[]) => {
+  const u = [...new Set(chords)].map(c => `{${c}}`);
+  return u.length === 1 ? `the chord ${u[0]}` : `the chords ${u.slice(0, -1).join(', ')} and ${u.at(-1)}`;
+};
+/** Glossary examples are written in one fixed key ("In G that's G, A, B, D, E"); the warm-up names today's notes instead. */
+const KEYED_EXAMPLE = /\s*In [A-G][#b]? that's [^.]*\./g;
 
 /** How today's blocks connect: a what-and-why intro per block, a bridge naming the link or the change of focus,
  * and the lesson path. Links only where the plan already has them (owner, 2026-10-07: "link where natural only"). */
@@ -41,7 +48,7 @@ export function lessonThread(plan: LessonPlan, skills: Map<string, Skill>): Less
 
   const blocks: LessonThread['blocks'] = {
     warmup: {
-      intro: `${scaleTerm?.plain ?? `${scale} is today's scale.`}${scaleInApply ? ` It's today's scale because ${style} players build their phrases from it, and Apply uses it.` : ''}`,
+      intro: `Today's scale: ${scale} (${music.scale.notes.join(', ')}).${scaleTerm ? ` ${scaleTerm.plain.replace(KEYED_EXAMPLE, '')}` : ''}${scaleInApply ? ` It's today's scale because ${style} players build their phrases from it, and Apply uses it.` : ''}`,
       bridge: '',
     },
     retest: {
@@ -64,21 +71,23 @@ export function lessonThread(plan: LessonPlan, skills: Map<string, Skill>): Less
         : `Strumming ${chords} with today's rhythm.`,
       bridge: scaleInApply
         ? `Same ${scale} notes, now over the ${chords} groove: ${style} players build their phrases from this scale.`
+        : skill?.track === 'rhythm' && has('new_skill') ? `Same strumming hand as the new skill, now over ${chords}.`
         : 'Change of focus: rhythm. The warm-up scale isn\'t used here; this is about locking the strum to the beat.',
     },
     create: {
       intro: task.why,
-      bridge: `Same ${chords} as Apply.${scaleInApply ? ` The notes come from the ${scale} warm-up.` : ''}`,
+      bridge: `Same ${chords} as Apply.${scaleInApply && task.show.some(s => s.includes('scale')) ? ` The notes come from the ${scale} warm-up.` : ''}`,
     },
     record: { intro: '', bridge: 'Same groove as Apply.' },
   };
 
   const path: string[] = [];
-  if (has('warmup')) path.push(`Warm-up: ${scale}${scaleInApply ? ` → Apply plays it over a ${style} groove on ${chords}.` : '.'}`);
+  const onChords = chordPhrase(music.progression.chords);
+  if (has('warmup')) path.push(`Warm-up: ${scale}${scaleInApply ? ` → Apply plays it over the ${style} groove on ${onChords}.` : '.'}`);
   if (has('new_skill')) path.push(`New skill: ${skill?.name ?? plan.skill_id}${sameScale || inStyle ? '.' : ' (separate from the scale).'}`);
-  if (has('apply') && !scaleInApply) path.push(`Apply: ${profile ? `${style} groove` : 'strumming'} on ${chords}.`);
+  if (has('apply') && !scaleInApply) path.push(`Apply: ${profile ? `${style} groove` : 'strumming'} on ${onChords}.`);
   if (has('review')) { const n = plan.review.length; path.push(`Review: ${n} earlier item${n === 1 ? '' : 's'}.`); }
-  if (has('create')) path.push(`Create: ${task.label} on ${chords}.`);
+  if (has('create')) path.push(`Create: ${task.label} on ${onChords}.`);
 
   for (const k of Object.keys(blocks) as BlockKind[]) if (!has(k)) delete blocks[k];
   return { scaleInApply, path: path.slice(0, 5), blocks };
