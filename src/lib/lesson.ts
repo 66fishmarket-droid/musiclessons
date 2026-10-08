@@ -73,6 +73,8 @@ const FIXED_SHOW: Partial<Record<BlockKind, StepElement[][]>> = {
   apply: [['card', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'chords', 'metronome']],
   record: [['recorder'], ['recorder'], ['recorder']],
 };
+// Apply with the link step (lesson/steps.ts, scale from today's style): the third step plays the warm-up scale, so show it.
+const APPLY_LINK_SHOW: StepElement[][] = [['card', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'scale', 'chords', 'metronome'], ['card', 'chords', 'metronome']];
 
 /**
  * What the current step shows besides its text, or null for the whole block's elements (review and reset blocks, or a
@@ -82,6 +84,7 @@ export function stepElements(recipe: SkillRecipe | undefined, kind: BlockKind, s
   const show = kind === 'new_skill' ? recipe?.show
     : kind === 'retest' ? recipe?.show && [recipe.show[0], ...recipe.show.slice(0, stepCount - 1)]
     : kind === 'create' ? CREATE_TASKS.find(t => t.id === createTaskId)?.show
+    : kind === 'apply' && stepCount === APPLY_LINK_SHOW.length ? APPLY_LINK_SHOW
     : FIXED_SHOW[kind];
   if (!show || show.length !== stepCount) return null;
   return show[step] ?? null;
@@ -104,16 +107,16 @@ export function reviewView(plan: LessonPlan, content: LessonContent, i: number, 
 }
 
 /** One block's text, reading both engine-written lessons and ones stored before them (tips/explanation). */
-export function blockText(content: LessonContent, i: number): { instructions: string[]; target_text: string; listen_for: string; more: string[] } {
+export function blockText(content: LessonContent, i: number): { instructions: string[]; target_text: string; listen_for: string; more: string[]; intro: string; bridge: string } {
   const b = content.blocks[i] as (Partial<BlockContent> & { tips?: string; explanation?: string }) | undefined;
-  if (!b) return { instructions: [''], target_text: '', listen_for: '', more: [] };
+  if (!b) return { instructions: [''], target_text: '', listen_for: '', more: [], intro: '', bridge: '' };
   const more = b.more !== undefined ? [b.more] : [b.tips ?? '', b.explanation ?? ''];
-  return { instructions: b.instructions?.length ? b.instructions : [''], target_text: b.target_text ?? '', listen_for: b.listen_for ?? '', more: more.filter(Boolean) };
+  return { instructions: b.instructions?.length ? b.instructions : [''], target_text: b.target_text ?? '', listen_for: b.listen_for ?? '', more: more.filter(Boolean), intro: b.intro ?? '', bridge: b.bridge ?? '' };
 }
 
 /** Glossary terms used in one block's text (steps, target, listen-for, create prompt on the create block, LLM more). */
 export function blockTerms(content: LessonContent, i: number): GlossaryEntry[] {
   const t = blockText(content, i);
   const createPrompt = content.blocks[i]?.kind === 'create' ? content.create_prompt : '';
-  return termsIn([...t.instructions, t.target_text, t.listen_for, createPrompt, ...t.more]);
+  return termsIn([t.intro, t.bridge, ...t.instructions, t.target_text, t.listen_for, createPrompt, ...t.more]);
 }

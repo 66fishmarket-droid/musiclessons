@@ -150,6 +150,13 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
       <h1 className="title title-sm">{text.target_text || meta.label}</h1>
       {skillId && <button type="button" className="btn-ghost" style={{ alignSelf: 'flex-start' }} onClick={() => setAbout(true)}>About this skill ›</button>}
 
+      {(text.intro || text.bridge) && (
+        <section className="stack-sm" aria-label="What and why">
+          {text.intro && <p><ChordText text={text.intro} onChord={setSheet} /></p>}
+          {text.bridge && <p className="muted"><ChordText text={text.bridge} onChord={setSheet} /></p>}
+        </section>
+      )}
+
       <section className="card step" aria-live="polite">
         <div className="step-text">
           <small className="muted">Step {step + 1} of {steps.length}</small>
@@ -163,7 +170,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
       {block.kind === 'warmup' && on('scale') && <ScaleBoard scale={plan.music.scale} />}
       {block.kind === 'create' && <section className="card"><p><ChordText text={content.create_prompt} onChord={setSheet} /></p></section>}
       {showChords && on('chords') && <ChordPanel chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} onShapes={setSheet} />}
-      {block.kind === 'create' && on('scale') && <ScaleBoard scale={plan.music.scale} />}
+      {(block.kind === 'create' || block.kind === 'apply') && on('scale') && <ScaleBoard scale={plan.music.scale} />}
       {block.kind === 'create' && on('recorder') && <Recorder onTake={() => {}} />}
       {block.kind === 'record' && on('recorder') && <Recorder onTake={onTake} />}
       {card === 'scale' && on('card') && <ScaleBoard scale={plan.music.scale} highlight={recipe?.degrees} />}

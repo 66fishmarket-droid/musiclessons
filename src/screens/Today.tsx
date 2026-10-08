@@ -40,6 +40,11 @@ export function Today({ lesson, onStart }: { lesson: TodayLesson; onStart: () =>
         <span className="pill">{plan.track.replaceAll('_', ' ')} · new skill</span>
         <h1 className="title">{content.title}</h1>
         <p className="text-2">{content.why_it_matters}</p>
+        {content.path && content.path.length > 0 && (
+          <ul className="stack-sm" aria-label="Today's path" style={{ paddingLeft: 18, margin: 0 }}>
+            {content.path.map(line => <li key={line} className="text-2">{line.replace(/[{}]/g, '')}</li>)}
+          </ul>
+        )}
         <button type="button" className="btn-ghost" style={{ alignSelf: 'flex-start' }} onClick={() => setAbout(true)}>About this skill ›</button>
       </section>
       <section className="list" aria-label="Today's blocks">
