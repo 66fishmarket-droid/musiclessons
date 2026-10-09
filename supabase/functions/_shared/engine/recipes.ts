@@ -517,7 +517,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
     listenFor: 'The hammered note ringing as loud as a picked one, then the plain chord landing clean when the finger lifts.',
   },
   'fills.l1.open_chord_pulloffs': {
-    card: 'chords',
+    card: 'chords', grid: 'D---D---D---q-o-', gridName: 'Strums, pull-off on beat 4',
     steps: [
       'A pull-off: fret a note, then flick that finger off the string sideways so the open string below it sounds, without picking again.',
       'On {chord1}, pull off one fretted note to its open string on beat 4, then land back on the chord on beat 1.',

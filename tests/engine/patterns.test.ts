@@ -218,3 +218,20 @@ describe('patternCounts', () => {
     for (const p of Object.values(PATTERNS)) expect(patternCounts(p).length).toBeGreaterThan(0);
   });
 });
+
+describe('pull-off demo (q/o tokens; owner 2026-10-09: no way to hear the pull-off lesson)', () => {
+  const pull = rhythmPattern('Pull-off', RECIPES['fills.l1.open_chord_pulloffs'].grid!.split(''));
+  const A7 = { frets: [-1, 0, 2, 0, 2, 0], fingers: [0, 0, 2, 0, 3, 0], barres: [] };
+  const D7 = { frets: [-1, -1, 0, 2, 1, 2], fingers: [0, 0, 0, 2, 1, 3], barres: [] };
+  it('picks the highest fretted note on beat 4, then its open string on 4&', () => {
+    const s = resolvePattern(pull, A7, 'A7');
+    expect(s[12]).toMatchObject([{ role: 'pull', string: 4, fret: 2, note: 'C#4' }]);
+    expect(s[14]).toMatchObject([{ role: 'pull_open', string: 4, fret: 0, note: 'B3' }]);
+    expect(resolvePattern(pull, D7, 'D7')[14]).toMatchObject([{ string: 5, fret: 0 }]);
+  });
+  it('leaves the pull-off out on a full barre, where no fretted string can ring open', () => {
+    const s = resolvePattern(pull, { frets: [5, 7, 5, 6, 5, 5], fingers: [1, 3, 1, 2, 1, 1], barres: [5] }, 'A7');
+    expect(s[12]).toEqual([]);
+    expect(s[14]).toEqual([]);
+  });
+});

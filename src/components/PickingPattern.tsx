@@ -77,7 +77,8 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
   }, [playing, stepMs, pattern, chords, bpm]); // steps come from live.current, so a chord change mid-play does not restart the bar
 
   const riff = steps.some(st => st.some(n => n.role.startsWith('riff_')));
-  const picked = steps.some(st => st.some(n => n.finger === 'pick'));
+  const pulls = steps.some(st => st.some(n => n.role === 'pull'));
+  const picked = !pulls && steps.some(st => st.some(n => n.finger === 'pick'));
   // Left column: the chord shape's frets, or for a riff the root + 5th it starts from.
   const leftFret = (s: number) => {
     if (riff) { const n = steps.flat().find(x => x.string === s && x.role !== 'riff_6'); return n ? n.fret : '×'; }
@@ -121,7 +122,9 @@ export function PickingPattern({ pattern, chords, voicings, idx, onIdx, bpm }: {
         </svg>
       </div>
       <p className="muted" style={{ fontSize: 13 }}>
-        {picked
+        {pulls
+          ? `↓ strum the chord. On beat 4, pick the fretted note shown, then flick that finger off sideways so the same string rings open (0) without picking again: that's the pull-off. Land back on the chord on beat 1.`
+          : picked
           ? 'Numbers are frets on the chord shape. Hold the shape and pick one string at a time, alternating down and up.'
           : riff
           ? `Numbers are frets. Each column is two notes picked down together: the root (${Chord.get(chord).tonic}) plus its 5th, then the root plus its 6th two frets further up. Swing it: long, short.`
