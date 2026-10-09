@@ -114,6 +114,8 @@ describe('boogie riff (5/6 tokens)', () => {
     expect(at('Db7', 0)).toEqual([[1, 4, 'R'], [2, 6, '5']]); // IV moves across a string, same fret
     expect(at('Eb7', 2)).toEqual([[1, 6, 'R'], [2, 10, '6']]);
     expect(at('A7', 0)).toEqual([[1, 0, 'R'], [2, 2, '5']]); // open A string
+    expect(at('D7', 2)).toEqual([[2, 0, 'R'], [3, 4, '6']]); // open D string, same 0-2-4 shape a string down from A
+    expect(at('E7', 0)).toEqual([[0, 0, 'R'], [1, 2, '5']]);
   });
   it('explains the riff before the counts', () => {
     const words = rhythmCounts(boogie);

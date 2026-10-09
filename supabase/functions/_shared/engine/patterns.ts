@@ -50,10 +50,13 @@ export const PATTERNS: Record<string, PickPattern> = {
   waltz: { id: 'waltz', name: 'Waltz boom-chuck-chuck', beatsPerBar: 3, stepsPerBeat: 1, steps: [[P], [I, M, A], [I, M, A]] },
 };
 
-/** Boogie riff root: the chord's root on string 6 or 5, whichever is the lower fret, so I and IV sit at the same fret a string apart. */
+/** Boogie riff root: an open string 6, 5 or 4 when the root is one (E, A, D keep the open 0-2-4 shape), else string 6 or 5,
+ * whichever is the lower fret, so I and IV sit at the same fret a string apart. */
 export function riffRoot(chord: string, tuning: readonly string[] = TUNING): { string: number; fret: number } {
   const root = Note.chroma(Chord.get(chord).tonic ?? 'C')!;
   const fretOn = (s: number) => (root - Note.chroma(tuning[s])! + 12) % 12;
+  const open = [0, 1, 2].find(s => fretOn(s) === 0);
+  if (open !== undefined) return { string: open, fret: 0 };
   return fretOn(0) <= fretOn(1) ? { string: 0, fret: fretOn(0) } : { string: 1, fret: fretOn(1) };
 }
 
@@ -157,7 +160,8 @@ const PICK_TOKEN: Record<string, string> = { bass: 'l', t3: 'c', t2: 'n', t1: 'h
 /** Said before a riff's counts, so "root-5/root-6" is never left undefined. */
 const RIFF_HOW = 'Root-5/root-6 means two notes on neighbouring low strings, picked down together. For each chord, put your first finger '
   + "on its root (string 6 or 5, the fret the card shows) and your third finger two frets higher on the next string: that's the root + 5th, "
-  + 'a power chord. For the root + 6th, reach your little finger two frets past that. Swing it: the 5th is long, the 6th comes late '
+  + 'a power chord. For the root + 6th, reach your little finger two frets past that. When the root is an open string (E, A or D), '
+  + 'leave it open and use your first finger at fret 2 and third finger at fret 4 on the next string; the same shape moves across a string for each chord. Swing it: the 5th is long, the 6th comes late '
   + 'and short on the "-let" of each beat. Counts:';
 const COUNT_SUB: Record<number, string[]> = { 1: [''], 2: ['', '&'], 3: ['', '-trip', '-let'], 4: ['', 'e', '&', 'a'] };
 
