@@ -95,6 +95,8 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
   });
   const pattern = useMemo(() => {
     if (card === 'pattern') return skillPatterns[pi] ?? skillPatterns[0];
+    // Chord skills (fills, songwriting) get a playable walk through the progression: the skill's own grid (the pull-off) or steady strums.
+    if (card === 'chords') return rhythmPattern(recipe?.gridName ?? 'Steady down-strums', (recipe?.grid ?? APPLY_DEFAULT_GRID).split(''));
     if (card !== 'rhythm') return undefined;
     if (rv?.rhythm) return rhythmPattern(rv.rhythm.name, rv.rhythm.grid, rv.rhythm.swing, rv.rhythm.push);
     if (block.kind !== 'apply' && recipe?.grid) return rhythmPattern(recipe.gridName ?? "Today's rhythm", recipe.grid.split(''), null, recipe.gridPush);
@@ -184,7 +186,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
           {skillPatterns.map((p, k) => <button key={p.id} type="button" aria-pressed={k === pi} onClick={() => setPi(k)}>{p.name}</button>)}
         </div>
       )}
-      {pattern && on('card') && chords.length > 0 && <PickingPattern key={pattern.id} pattern={pattern} chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} bpm={metro.bpm} />}
+      {pattern && (card === 'chords' ? on('chords') : on('card')) && chords.length > 0 && <PickingPattern key={pattern.id} pattern={pattern} chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} bpm={metro.bpm} />}
       {(card === 'note_caller' ? on('card') : !!els?.includes('note_caller')) && <NoteCaller metro={metro} />}
       {hasMetro && elementVisible(els, 'metronome', metro.playing || drone) && (
         <Metronome metro={metro} target={target} ladder={target !== null ? tempoLadder(first, target) : null}

@@ -114,6 +114,8 @@ describe('boogie riff (5/6 tokens)', () => {
     expect(at('Db7', 0)).toEqual([[1, 4, 'R'], [2, 6, '5']]); // IV moves across a string, same fret
     expect(at('Eb7', 2)).toEqual([[1, 6, 'R'], [2, 10, '6']]);
     expect(at('A7', 0)).toEqual([[1, 0, 'R'], [2, 2, '5']]); // open A string
+    expect(at('D7', 2)).toEqual([[2, 0, 'R'], [3, 4, '6']]); // open D string, same 0-2-4 shape a string down from A
+    expect(at('E7', 0)).toEqual([[0, 0, 'R'], [1, 2, '5']]);
   });
   it('explains the riff before the counts', () => {
     const words = rhythmCounts(boogie);
@@ -216,5 +218,22 @@ describe('patternCounts', () => {
   });
   it('covers every pattern without throwing', () => {
     for (const p of Object.values(PATTERNS)) expect(patternCounts(p).length).toBeGreaterThan(0);
+  });
+});
+
+describe('pull-off demo (q/o tokens; owner 2026-10-09: no way to hear the pull-off lesson)', () => {
+  const pull = rhythmPattern('Pull-off', RECIPES['fills.l1.open_chord_pulloffs'].grid!.split(''));
+  const A7 = { frets: [-1, 0, 2, 0, 2, 0], fingers: [0, 0, 2, 0, 3, 0], barres: [] };
+  const D7 = { frets: [-1, -1, 0, 2, 1, 2], fingers: [0, 0, 0, 2, 1, 3], barres: [] };
+  it('picks the highest fretted note on beat 4, then its open string on 4&', () => {
+    const s = resolvePattern(pull, A7, 'A7');
+    expect(s[12]).toMatchObject([{ role: 'pull', string: 4, fret: 2, note: 'C#4' }]);
+    expect(s[14]).toMatchObject([{ role: 'pull_open', string: 4, fret: 0, note: 'B3' }]);
+    expect(resolvePattern(pull, D7, 'D7')[14]).toMatchObject([{ string: 5, fret: 0 }]);
+  });
+  it('pulls off to the barre fret on a barre shape, where no string can ring open', () => {
+    const s = resolvePattern(pull, { frets: [5, 7, 5, 6, 5, 5], fingers: [1, 3, 1, 2, 1, 1], barres: [5] }, 'A7');
+    expect(s[12]).toMatchObject([{ string: 3, fret: 6 }]);
+    expect(s[14]).toMatchObject([{ string: 3, fret: 5 }]);
   });
 });
