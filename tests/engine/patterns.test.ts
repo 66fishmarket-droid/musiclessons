@@ -229,9 +229,9 @@ describe('pull-off demo (q/o tokens; owner 2026-10-09: no way to hear the pull-o
     expect(s[14]).toMatchObject([{ role: 'pull_open', string: 4, fret: 0, note: 'B3' }]);
     expect(resolvePattern(pull, D7, 'D7')[14]).toMatchObject([{ string: 5, fret: 0 }]);
   });
-  it('leaves the pull-off out on a full barre, where no fretted string can ring open', () => {
+  it('pulls off to the barre fret on a barre shape, where no string can ring open', () => {
     const s = resolvePattern(pull, { frets: [5, 7, 5, 6, 5, 5], fingers: [1, 3, 1, 2, 1, 1], barres: [5] }, 'A7');
-    expect(s[12]).toEqual([]);
-    expect(s[14]).toEqual([]);
+    expect(s[12]).toMatchObject([{ string: 3, fret: 6 }]);
+    expect(s[14]).toMatchObject([{ string: 3, fret: 5 }]);
   });
 });

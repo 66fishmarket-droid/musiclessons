@@ -88,3 +88,19 @@ describe('renderSteps', () => {
     }
   });
 });
+
+describe('{pull_off} (owner 2026-10-09: the pull-off step never said which finger)', () => {
+  const plan = (chords: string[], key = 'A') => ({ ...PLAN, key, music: { ...PLAN.music, progression: { roman: chords.map(() => 'I'), chords }, voicings: Object.fromEntries(chords.map(c => [c, [VOICINGS[c]]])) } });
+  const VOICINGS: Record<string, { frets: number[]; fingers: number[]; barres: number[] }> = {
+    A7: { frets: [-1, 0, 2, 0, 2, 0], fingers: [0, 0, 2, 0, 3, 0], barres: [] },
+    Bm: { frets: [2, 2, 4, 4, 3, 2], fingers: [1, 1, 3, 4, 2, 1], barres: [2] },
+  };
+  it('names the finger, string and fret on the first chord, and the open string that rings', () => {
+    expect(renderSteps(['On {chord1}, {pull_off}.'], slotContext(plan(['A7']), {}))[0])
+      .toBe('On {A7}, pick string 2 (fret 2), then flick your ring finger (3) off it sideways so the open B string rings.');
+  });
+  it('pulls off to the barre on a barre shape', () => {
+    expect(renderSteps(['{pull_off}'], slotContext(plan(['Bm'], 'B'), {}))[0])
+      .toBe('pick string 2 (fret 3), then flick your middle finger (2) off it sideways so the note under your barre (fret 2) rings');
+  });
+});

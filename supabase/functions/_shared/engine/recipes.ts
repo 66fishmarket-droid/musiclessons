@@ -520,7 +520,7 @@ export const RECIPES: Record<string, SkillRecipe> = {
     card: 'chords', grid: 'D---D---D---q-o-', gridName: 'Strums, pull-off on beat 4',
     steps: [
       'A pull-off: fret a note, then flick that finger off the string sideways so the open string below it sounds, without picking again.',
-      'On {chord1}, pull off one fretted note to its open string on beat 4, then land back on the chord on beat 1.',
+      'On {chord1}, strum on beats 1, 2 and 3. On beat 4, {pull_off}, without picking again. Land back on the chord on beat 1.',
       'Go through {chords}, one pull-off at the end of each bar.', LADDER,
     ],
     show: [[], ['chords'], ['chords', 'metronome'], ['chords', 'metronome']],

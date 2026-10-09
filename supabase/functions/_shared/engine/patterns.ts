@@ -5,7 +5,7 @@ import { TUNING, noteAt, type Voicing } from './music.ts';
 export type Finger = 'p' | 'i' | 'm' | 'a' | 'pick';
 /** bass = lowest root string; alt = alternate bass; t1/t2/t3 = highest, second- and third-highest sounding strings.
  * riff_* = the boogie riff's root, 5th and 6th on the two lowest strings, placed from the chord name, not the shape.
- * pull/pull_open = a pull-off: the shape's highest fretted note, then the same string open (see pullString). */
+ * pull/pull_open = a pull-off: the shape's highest fretted note, then the same string open or at the barre (see pullOff). */
 export type Role = 'bass' | 'alt' | 't1' | 't2' | 't3' | 'riff_root' | 'riff_5' | 'riff_6' | 'pull' | 'pull_open';
 /** Strum strokes from style rhythm grids: D/U down/up, d/u muted ghost strokes, M/m palm-muted down/up, x mute, choke or slap. */
 export type Stroke = 'D' | 'U' | 'd' | 'u' | 'M' | 'm' | 'x';
@@ -70,9 +70,13 @@ export function voiceRoles(v: Voicing, chord: string, tuning: readonly string[] 
   return { bass, alt, t1, t2, t3 };
 }
 
-/** The string a pull-off flicks to open: the highest fretted string no barre holds down; null on a shape with none (a full barre). */
-export function pullString(v: Voicing): number | null {
-  for (let s = 5; s >= 0; s--) if (v.frets[s] > 0 && v.barres.every(b => b > v.frets[s])) return s;
+/** The pull-off on this shape: the highest string fretted above anything holding it down, from that fret to the open string
+ * or, on a barre shape, to the barre fret under it; null when every fretted note is the barre itself. */
+export function pullOff(v: Voicing): { string: number; from: number; to: number } | null {
+  for (let s = 5; s >= 0; s--) {
+    const to = Math.max(0, ...v.barres.filter(b => b < v.frets[s]));
+    if (v.frets[s] > 0 && !v.barres.includes(v.frets[s])) return { string: s, from: v.frets[s], to };
+  }
   return null;
 }
 
@@ -82,13 +86,13 @@ export function resolvePattern(p: PickPattern, v: Voicing, chord: string, tuning
   const tonic = Chord.get(chord).tonic;
   const riff = riffRoot(chord, tuning);
   const RIFF = { riff_root: [0, 0], riff_5: [1, 2], riff_6: [1, 4] } as const; // [strings up, frets up] from the riff root
-  const pull = pullString(v);
+  const pull = pullOff(v);
   return p.steps.map(step => step.flatMap(({ finger, role }): PickNote[] => {
     if (role === 'pull' || role === 'pull_open') {
       if (pull === null) return [];
-      const fret = role === 'pull' ? v.frets[pull] : 0;
-      const note = Note.transpose(tuning[pull], Interval.fromSemitones(fret));
-      return [{ finger, role, string: pull, note, interval: tonic ? DEGREE[(Note.chroma(note)! - Note.chroma(tonic)! + 12) % 12] : '', fret }];
+      const fret = role === 'pull' ? pull.from : pull.to;
+      const note = Note.transpose(tuning[pull.string], Interval.fromSemitones(fret));
+      return [{ finger, role, string: pull.string, note, interval: tonic ? DEGREE[(Note.chroma(note)! - Note.chroma(tonic)! + 12) % 12] : '', fret }];
     }
     const r = role.startsWith('riff_') ? RIFF[role as keyof typeof RIFF] : null;
     const string = r ? riff.string + r[0] : roles[role as keyof typeof roles];
@@ -116,7 +120,7 @@ const PICKED: Record<string, PickPattern['steps'][number]> = {
  * A style rhythm grid as a playable pattern. Grids are 16 slots (4/4 in 16ths), 12 (3/4 in 16ths when the name says
  * 3/4, else a 12/8 feel: 4 beats of triplets) or 32 (two bars of 16ths). B thumb bass, P fingers, BP pinch, N single note,
  * 5/6 the boogie riff's root + 5th / root + 6th, l/c/n/h one string picked with the pick (root, third-, second-highest, highest),
- * q/o a pull-off: q picks the highest fretted note, o is that string ringing open after the finger flicks off.
+ * q/o a pull-off: q picks the highest fretted note, o is that string ringing open (or at the barre) after the finger flicks off.
  */
 export function rhythmPattern(name: string, grid: string[], swing?: Swing | null, push?: number | null): PickPattern {
   const [beatsPerBar, stepsPerBeat, bars] =
@@ -147,7 +151,7 @@ const DOING: Record<string, string> = {
   M: 'palm-muted strum down', m: 'palm-muted strum up',
   5: 'root + 5th', 6: 'root + 6th',
   l: 'pick the root', c: 'pick the third-highest string', n: 'pick the second-highest string', h: 'pick the highest string',
-  q: 'pick the highest fretted note', o: 'pull off to the open string',
+  q: 'pick the highest fretted note', o: 'pull off',
 };
 const PICK_TOKEN: Record<string, string> = { bass: 'l', t3: 'c', t2: 'n', t1: 'h', pull: 'q', pull_open: 'o' };
 /** Said before a riff's counts, so "root-5/root-6" is never left undefined. */

@@ -1,5 +1,6 @@
 import { Interval, Scale } from 'tonal';
-import { PATTERNS, patternCounts, rhythmCounts, rhythmPattern, voiceRoles, type PickPattern, type Swing } from './patterns.ts';
+import { TUNING, type Voicing } from './music.ts';
+import { PATTERNS, patternCounts, pullOff, rhythmCounts, rhythmPattern, voiceRoles, type PickPattern, type Swing } from './patterns.ts';
 import type { LessonPlan, Target } from './types.ts';
 
 /** Scale names whose {degrees:N} fallback (see resolveDegree) should use the key's natural minor, not major —
@@ -24,9 +25,21 @@ function resolveDegree(key: string, dayScaleName: string, n: number): string {
   return Scale.get(`${key} ${parent}`).notes[n - 1];
 }
 
+const FINGER_NAME = ['', 'index', 'middle', 'ring', 'little'];
+/** The pull-off on this shape in words (patterns.ts pullOff, so text and card agree). */
+function pullOffText(v: Voicing): string {
+  const p = pullOff(v);
+  if (!p) return 'this shape is one flat barre with nothing to pull off, so tap Other shapes for one with a finger above the barre, pick that note and flick the finger off it sideways';
+  const f = v.fingers[p.string];
+  return `pick string ${6 - p.string} (fret ${p.from}), then flick your ${FINGER_NAME[f] ? `${FINGER_NAME[f]} finger (${f})` : 'finger'} off it sideways so `
+    + (p.to === 0 ? `the open ${TUNING[p.string].replace(/\d/, '')} string rings` : `the note under your barre (fret ${p.to}) rings`);
+}
+
 export interface SlotCtx {
   key: string; scale: string; chords: string[]; scaleNotes: string[]; target: Target | null;
   pattern: PickPattern | null; rhythm: PickPattern | null; rootString: number | null;
+  /** "pick string 2 (fret 2), then flick your ring finger (3) off it sideways so the open B string rings": the first chord's pull-off, as the card plays it. */
+  pullOff: string | null;
 }
 
 /** "G" · "G and B" · "G, B and D". */
@@ -46,6 +59,7 @@ export function slotContext(plan: LessonPlan, opts: { target?: Target | null; pa
     key: plan.key, scale: music.scale.name, chords: music.progression.chords, scaleNotes: music.scale.notes,
     target: opts.target ?? null, pattern: opts.patternId ? PATTERNS[opts.patternId] ?? null : null, rhythm,
     rootString: v && chord1 ? 6 - voiceRoles(v, chord1).bass : null, // guitarists count strings 6 (low E) to 1
+    pullOff: v ? pullOffText(v) : null,
   };
 }
 
@@ -67,6 +81,7 @@ export function renderSteps(templates: string[], ctx: SlotCtx): string[] {
       case 'chords': return ctx.chords.length ? braced(ctx.chords) : null;
       case 'chord1': return ctx.chords[0] ? `{${ctx.chords[0]}}` : null;
       case 'root_string': return ctx.rootString !== null ? String(ctx.rootString) : null;
+      case 'pull_off': return ctx.pullOff;
       case 'start_bpm': return t?.metric === 'bpm' && t.start !== null ? String(t.start) : null;
       case 'target_bpm': return t?.metric === 'bpm' && t.target !== null ? String(t.target) : null;
       case 'target_reps': return t?.metric === 'clean_reps' && t.target !== null ? String(t.target) : null;
