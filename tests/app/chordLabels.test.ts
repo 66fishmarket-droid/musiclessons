@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { baseFret, dotLabels, pickShape, rootStrings, shapeFor, shapesFor } from '../../src/lib/chordLabels.ts';
+import { baseFret, dotLabels, pickShape, rootStrings, shapeFor, shapesFor, withPickedShapes } from '../../src/lib/chordLabels.ts';
+import { chordVoicings } from '../../supabase/functions/_shared/engine/music.ts';
+import { buildSteps } from '../../supabase/functions/_shared/lesson/steps.ts';
+import { PLAN, SKILL_MAP } from '../lesson/fixtures.ts';
 
 const G = { frets: [3, 2, 0, 0, 0, 3], fingers: [2, 1, 0, 0, 0, 3], barres: [] };
 const D = { frets: [-1, -1, 0, 2, 3, 2], fingers: [0, 0, 0, 1, 3, 2], barres: [] };
@@ -62,5 +65,26 @@ describe('shapeFor / pickShape', () => {
     const store = kv();
     store.setItem('shape:G', '9,9,9,9,9,9');
     expect(shapeFor('G', [G], store)).toEqual(G);
+  });
+});
+
+describe('withPickedShapes (owner 2026-10-19: step text described the lesson shape, the card drew the picked one)', () => {
+  const store = () => { const m = new Map<string, string>(); return { getItem: (k: string) => m.get(k) ?? null, setItem: (k: string, v: string) => void m.set(k, v) }; };
+  const chords = ['A7', 'E7'];
+  const plan = { ...PLAN, skill_id: 'fills.l1.sus_add_hammers', key: 'A',
+    music: { ...PLAN.music, progression: { roman: ['I', 'V'], chords }, voicings: Object.fromEntries(chords.map(c => [c, chordVoicings(c)])) } };
+  const stored = buildSteps(plan, SKILL_MAP);
+  const content = { blocks: stored.blocks.map(b => ({ ...b, more: '' })), create_prompt: stored.create_prompt, path: stored.path, songs: [] } as never;
+  it('keeps the stored text when nothing was picked', () => {
+    expect(withPickedShapes(content, plan, SKILL_MAP, store())).toBe(content);
+  });
+  it('re-renders the steps with the picked shape', () => {
+    const kv = store();
+    const alt = shapesFor('A7', plan.music.voicings.A7).find(v => v.frets.join() !== plan.music.voicings.A7[0].frets.join())!;
+    pickShape('A7', alt, kv);
+    const want = buildSteps({ ...plan, music: { ...plan.music, voicings: { ...plan.music.voicings, A7: [alt, ...plan.music.voicings.A7] } } }, SKILL_MAP);
+    const got = withPickedShapes(content, plan, SKILL_MAP, kv) as { blocks: { instructions: string[] }[] };
+    expect(got.blocks.map(b => b.instructions)).toEqual(want.blocks.map(b => b.instructions));
+    expect(got.blocks.map(b => b.instructions)).not.toEqual(stored.blocks.map(b => b.instructions));
   });
 });

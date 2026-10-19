@@ -1,5 +1,8 @@
 import { Chord, Note } from 'tonal';
 import { chordVoicings, noteAt, type Voicing } from '../../supabase/functions/_shared/engine/music.ts';
+import type { LessonPlan, Skill } from '../../supabase/functions/_shared/engine/types.ts';
+import type { LessonContent } from '../../supabase/functions/_shared/lesson/contract.ts';
+import { buildSteps } from '../../supabase/functions/_shared/lesson/steps.ts';
 
 export type DotMode = 'fingers' | 'intervals';
 const DEGREE = ['R', 'b9', '9', 'b3', '3', '4', 'b5', '5', '#5', '6', 'b7', '7'];
@@ -52,4 +55,20 @@ export function shapeFor(chord: string, known: Voicing[] = [], kv: KV = localSto
 /** Makes `v` this chord's default shape on this device (VoicingSheet "Use this shape"). */
 export function pickShape(chord: string, v: Voicing, kv: KV = localStorage): void {
   try { kv.setItem(SHAPE_KEY(chord), v.frets.join()); } catch { /* storage blocked: the pick is not kept */ }
+}
+
+/** The lesson's text re-rendered with the learner's picked shapes, so steps naming a finger, string or fret ({pull_off},
+ * {hammer_on}, {root_string}) describe the shape the card draws. Owner 2026-10-19. Unchanged when nothing was picked. */
+export function withPickedShapes(content: LessonContent, plan: LessonPlan, skills: Map<string, Skill>, kv: KV = localStorage): LessonContent {
+  const voicings = { ...plan.music.voicings };
+  let changed = false;
+  for (const c of plan.music.progression.chords) {
+    const v = shapeFor(c, voicings[c], kv);
+    if (v && v !== voicings[c]?.[0]) { voicings[c] = [v, ...(voicings[c] ?? []).filter(k => k !== v)]; changed = true; }
+  }
+  if (!changed) return content;
+  try {
+    const steps = buildSteps({ ...plan, music: { ...plan.music, voicings } }, skills);
+    return { ...content, blocks: content.blocks.map((b, i) => (steps.blocks[i] ? { ...b, instructions: steps.blocks[i].instructions } : b)) };
+  } catch { return content; } // a shape the engine can't describe: keep the stored text
 }
