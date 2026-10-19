@@ -312,7 +312,7 @@
           "-",
           "D",
           "-",
-          "-",
+          "x",
           "-",
           "B",
           "-",
@@ -320,12 +320,12 @@
           "-",
           "D",
           "-",
-          "-",
+          "x",
           "-"
         ],
         "accents": [],
         "verified": true,
-        "note": null
+        "note": "Chuck = a choked strum: ease the fretting hand off the strings right after the strum so it cuts short, unlike the ringing boom-chick (practitioner consensus, tier 4)."
       },
       {
         "id": "bluegrass.boom_chuck_with_upstrokes",
@@ -338,7 +338,7 @@
           "D",
           "-",
           "U",
-          "-",
+          "x",
           "B",
           "-",
           "-",
@@ -346,11 +346,11 @@
           "D",
           "-",
           "U",
-          "-"
+          "x"
         ],
         "accents": [],
         "verified": true,
-        "note": null
+        "note": "Chuck = a choked strum: ease the fretting hand off the strings right after the strum so it cuts short, unlike the ringing boom-chick (practitioner consensus, tier 4)."
       },
       {
         "id": "bluegrass.bass_strum_up_down_up",
@@ -412,16 +412,16 @@
           "-",
           "D",
           "-",
-          "-",
+          "x",
           "-",
           "D",
           "-",
-          "-",
+          "x",
           "-"
         ],
         "accents": [],
         "verified": true,
-        "note": null
+        "note": "Chuck = a choked strum: ease the fretting hand off the strings right after the strum so it cuts short, unlike the ringing boom-chick (practitioner consensus, tier 4)."
       }
     ],
     "progressions": [
