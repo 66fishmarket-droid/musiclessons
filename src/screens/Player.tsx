@@ -172,7 +172,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
 
       {block.kind === 'warmup' && on('scale') && <ScaleBoard scale={plan.music.scale} />}
       {block.kind === 'create' && <section className="card"><p><ChordText text={content.create_prompt} onChord={setSheet} /></p></section>}
-      {showChords && on('chords') && <ChordPanel chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} onShapes={setSheet} />}
+      {showChords && on('chords') && <ChordPanel chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} onShapes={setSheet} lift={recipe?.lift} />}
       {(block.kind === 'create' || block.kind === 'apply') && on('scale') && <ScaleBoard scale={plan.music.scale} />}
       {block.kind === 'create' && on('recorder') && <Recorder onTake={() => {}} />}
       {block.kind === 'record' && on('recorder') && <Recorder onTake={onTake} />}

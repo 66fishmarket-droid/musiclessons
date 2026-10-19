@@ -14,6 +14,7 @@ export interface SkillRecipe {
   majorKeyOnly?: boolean; // planner.ts keeps this skill's day off a minor-family style scale; its steps assume a major key.
   map?: MapKind; // the neck map a 'neck_map' card draws (engine/neck.ts)
   show?: StepElement[][]; // per step, what Player shows besides the text (new_skill blocks only); omit = whole block's elements
+  lift?: boolean; // the chord panel adds a Chord / Lifted flip (patterns.ts liftedShape), for hammer-on and pull-off skills
 }
 
 const LADDER = 'Start at {start_bpm} bpm. Add 5 bpm after each clean pass, up to {target_bpm}; drop back 5 after two misses in a row.';
@@ -506,18 +507,18 @@ export const RECIPES: Record<string, SkillRecipe> = {
   // to {chord1} itself and its root ({degrees:1}), never claimed as something the card's diagram shows
   // (the card draws chords-db's first voicing, usually open, not a barre or a CAGED-labelled shape).
   'fills.l1.sus_add_hammers': {
-    card: 'chords',
+    card: 'chords', lift: true,
     steps: [
-      'A hammer-on: tap a fretting-hand finger onto a higher fret on the same string without picking again, so the new note rings straight out of the old one.',
-      'On {chord1}, hammer a free finger onto the next fret up on the same string, then lift straight back off to the plain chord.',
-      'Go through {chords}, one hammer-on and lift-off per bar.',
+      'A hammer-on: tap a fretting-hand finger onto a higher fret on the same string without picking again, so the new note rings straight out of the old one. Lifting one chord finger swaps its note for the open string\'s, a colour note (on many open chords the sus2, sus4 or add9 sound); hammering it back brings the plain chord home.',
+      'On {chord1}, {hammer_on}.',
+      'Go through {chords}, one lift-and-hammer per bar, always the same finger for each chord: {hammer_each}.',
       LADDER,
     ],
     show: [[], ['chords'], ['chords', 'metronome'], ['chords', 'metronome']],
     listenFor: 'The hammered note ringing as loud as a picked one, then the plain chord landing clean when the finger lifts.',
   },
   'fills.l1.open_chord_pulloffs': {
-    card: 'chords', grid: 'D---D---D---q-o-', gridName: 'Strums, pull-off on beat 4',
+    card: 'chords', lift: true, grid: 'D---D---D---q-o-', gridName: 'Strums, pull-off on beat 4',
     steps: [
       'A pull-off: fret a note, then flick that finger off the string sideways so the open string below it sounds, without picking again.',
       'On {chord1}, strum on beats 1, 2 and 3. On beat 4, {pull_off}, without picking again. Land back on the chord on beat 1.',
