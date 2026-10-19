@@ -83,6 +83,17 @@ export function pullOff(v: Voicing): { string: number; from: number; to: number 
   return null;
 }
 
+/** The shape with the pull-off finger lifted (pullOff's `to`): where a hammer-on starts and a pull-off lands, so the chord
+ * card can flip between it and the full chord. null when there is nothing to lift. */
+export function liftedShape(v: Voicing): Voicing | null {
+  const p = pullOff(v);
+  if (!p) return null;
+  const frets = [...v.frets], fingers = [...v.fingers];
+  frets[p.string] = p.to;
+  fingers[p.string] = p.to === 0 ? 0 : 1; // landing on the barre: the index finger holds it
+  return { ...v, frets, fingers };
+}
+
 /** Each step of a pattern on this chord shape: finger, role, string, pitch with octave, and interval from the root. */
 export function resolvePattern(p: PickPattern, v: Voicing, chord: string, tuning: readonly string[] = TUNING): PickNote[][] {
   const roles = voiceRoles(v, chord, tuning);

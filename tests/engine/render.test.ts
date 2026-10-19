@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Note } from 'tonal';
-import { buildMusic, scalePositions } from '../../supabase/functions/_shared/engine/music.ts';
+import { buildMusic, chordVoicings, scalePositions } from '../../supabase/functions/_shared/engine/music.ts';
+import { liftedShape } from '../../supabase/functions/_shared/engine/patterns.ts';
 import { listNotes, renderSteps, slotContext } from '../../supabase/functions/_shared/engine/render.ts';
 import { STYLE_CATALOG } from '../../supabase/functions/_shared/engine/styles.ts';
 import { PLAN } from '../lesson/fixtures.ts';
@@ -98,6 +99,20 @@ describe('{pull_off} (owner 2026-10-09: the pull-off step never said which finge
   it('names the finger, string and fret on the first chord, and the open string that rings', () => {
     expect(renderSteps(['On {chord1}, {pull_off}.'], slotContext(plan(['A7']), {}))[0])
       .toBe('On {A7}, pick string 2 (fret 2), then flick your ring finger (3) off it sideways so the open B string rings.');
+  });
+  it('{hammer_on}/{hammer_each} reverse the pull-off, so four-finger shapes like B7 still work (owner 2026-10-19)', () => {
+    const chords = ['E7', 'A7', 'E7', 'B7'];
+    const real = { ...PLAN, key: 'E', music: { ...PLAN.music, progression: { roman: chords.map(() => 'I'), chords }, voicings: Object.fromEntries(chords.map(c => [c, chordVoicings(c)])) } };
+    const [one, each] = renderSteps(['On {chord1}, {hammer_on}.', '{hammer_each}'], slotContext(real, {}));
+    expect(one).toMatch(/^On \{E7\}, lift your \w+ finger \(\d\) off string \d and strum, so the open [A-G] string rings, then hammer that finger back onto fret \d without picking again\.$/);
+    expect(each.split(' · ').map(p => p.split(':')[0])).toEqual(['{E7}', '{A7}', '{B7}']); // one entry per distinct chord
+    expect(each).not.toContain('Other shapes');
+    expect(renderSteps(['{hammer_on}'], slotContext(plan(['A7']), {}))[0])
+      .toBe('lift your ring finger (3) off string 2 and strum, so the open B string rings, then hammer that finger back onto fret 2 without picking again');
+  });
+  it('liftedShape takes the hammer finger off, open or onto the barre (the Chord / Lifted flip)', () => {
+    expect(liftedShape(chordVoicings('B7')[0])).toMatchObject({ frets: [-1, 2, 1, 2, 0, 0], fingers: [0, 2, 1, 3, 0, 0] });
+    expect(liftedShape(VOICINGS.Bm as never)).toMatchObject({ frets: [2, 2, 4, 4, 2, 2], fingers: [1, 1, 3, 4, 1, 1] });
   });
   it('pulls off to the barre on a barre shape', () => {
     expect(renderSteps(['{pull_off}'], slotContext(plan(['Bm'], 'B'), {}))[0])

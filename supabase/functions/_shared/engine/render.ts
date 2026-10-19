@@ -35,11 +35,37 @@ function pullOffText(v: Voicing): string {
     + (p.to === 0 ? `the open ${TUNING[p.string].replace(/\d/, '')} string rings` : `the note under your barre (fret ${p.to}) rings`);
 }
 
+const fingerText = (f: number) => (FINGER_NAME[f] ? `${FINGER_NAME[f]} finger (${f})` : 'finger');
+const FLAT_BARRE = 'this shape is one flat barre with nothing to hammer onto, so tap Other shapes for one with a finger above the barre';
+
+/** The hammer-on on this shape in words: the pull-off reversed (same finger, string and frets), so it needs no spare
+ * finger and works on four-finger shapes like B7. Owner 2026-10-19: "hammer a free finger" named no string and B7 has none free. */
+function hammerOnText(v: Voicing): string {
+  const p = pullOff(v);
+  if (!p) return FLAT_BARRE;
+  return `lift your ${fingerText(v.fingers[p.string])} off string ${6 - p.string} and strum, so `
+    + (p.to === 0 ? `the open ${TUNING[p.string].replace(/\d/, '')} string rings` : `the note under your barre (fret ${p.to}) rings`)
+    + `, then hammer that finger back onto fret ${p.from} without picking again`;
+}
+
+/** "{E7}: index finger (1), string 3, fret 1 · {A7}: …": each chord's hammer-on, for steps that go through {chords}. */
+function hammerEachText(chords: string[], voicings: Record<string, Voicing[]>): string | null {
+  const parts = [...new Set(chords)].map(c => {
+    const v = voicings[c]?.[0];
+    const p = v && pullOff(v);
+    if (!v) return null;
+    return p ? `{${c}}: ${fingerText(v.fingers[p.string])}, string ${6 - p.string}, fret ${p.from}` : `{${c}}: ${FLAT_BARRE}`;
+  });
+  return parts.length && parts.every(Boolean) ? parts.join(' · ') : null;
+}
+
 export interface SlotCtx {
   key: string; scale: string; chords: string[]; scaleNotes: string[]; target: Target | null;
   pattern: PickPattern | null; rhythm: PickPattern | null; rootString: number | null;
   /** "pick string 2 (fret 2), then flick your ring finger (3) off it sideways so the open B string rings": the first chord's pull-off, as the card plays it. */
   pullOff: string | null;
+  /** The first chord's hammer-on (hammerOnText), and every chord's in short (hammerEachText). */
+  hammerOn: string | null; hammerEach: string | null;
 }
 
 /** "G" · "G and B" · "G, B and D". */
@@ -60,6 +86,7 @@ export function slotContext(plan: LessonPlan, opts: { target?: Target | null; pa
     target: opts.target ?? null, pattern: opts.patternId ? PATTERNS[opts.patternId] ?? null : null, rhythm,
     rootString: v && chord1 ? 6 - voiceRoles(v, chord1).bass : null, // guitarists count strings 6 (low E) to 1
     pullOff: v ? pullOffText(v) : null,
+    hammerOn: v ? hammerOnText(v) : null, hammerEach: hammerEachText(music.progression.chords, music.voicings),
   };
 }
 
@@ -82,6 +109,8 @@ export function renderSteps(templates: string[], ctx: SlotCtx): string[] {
       case 'chord1': return ctx.chords[0] ? `{${ctx.chords[0]}}` : null;
       case 'root_string': return ctx.rootString !== null ? String(ctx.rootString) : null;
       case 'pull_off': return ctx.pullOff;
+      case 'hammer_on': return ctx.hammerOn;
+      case 'hammer_each': return ctx.hammerEach;
       case 'start_bpm': return t?.metric === 'bpm' && t.start !== null ? String(t.start) : null;
       case 'target_bpm': return t?.metric === 'bpm' && t.target !== null ? String(t.target) : null;
       case 'target_reps': return t?.metric === 'clean_reps' && t.target !== null ? String(t.target) : null;
