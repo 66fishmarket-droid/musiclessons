@@ -15,7 +15,7 @@ import { SkillSheet } from '../components/SkillSheet.tsx';
 import { TriadBoard } from '../components/TriadBoard.tsx';
 import { VoicingSheet } from '../components/VoicingSheet.tsx';
 import { clock } from '../lib/dates.ts';
-import { shapeFor } from '../lib/chordLabels.ts';
+import { shapeFor, withPickedShapes } from '../lib/chordLabels.ts';
 import { keyAction } from '../lib/keys.ts';
 import { tempoLadder } from '../lib/ladder.ts';
 import { BLOCK_META, blockCard, blockTerms, blockText, bpmTarget, refLabel, reviewView, startBpm, elementVisible, isMinorScale, stepElements, tonicOf, type TodayLesson } from '../lib/lesson.ts';
@@ -64,7 +64,9 @@ function useSecondsLeft(total: number, since: number): number {
 function BlockView({ lesson, session, onLog, onMove, onTake }: {
   lesson: TodayLesson; session: Session; onLog: (l: Log) => void; onMove: (to: number) => void; onTake: (url: string) => void;
 }) {
-  const { plan, content } = lesson;
+  const { plan } = lesson;
+  const [sheet, setSheet] = useState<string | null>(null);
+  const content = useMemo(() => withPickedShapes(lesson.content, plan, SKILLS_BY_ID), [lesson, plan, sheet]); // sheet: re-read picks when Other shapes closes
   const i = session.index;
   const block = plan.blocks[i];
   const text = blockText(content, i);
@@ -109,7 +111,6 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
   useDrone(drone ? tonic : null);
   const els = rv ? rv.els : stepElements(recipe, block.kind, step, steps.length, plan.create_task_id);
   const on = (e: StepElement) => elementVisible(els, e);
-  const [sheet, setSheet] = useState<string | null>(null);
   const [about, setAbout] = useState(false);
   const total = block.minutes * 60;
   const left = useSecondsLeft(total, session.blockStartedAt);
