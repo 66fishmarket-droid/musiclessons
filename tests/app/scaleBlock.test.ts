@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { readDroneOff, writeDroneOff } from '../../src/lib/dronePref.ts';
+import { droneStartsOn, readDroneOff, writeDroneOff } from '../../src/lib/dronePref.ts';
 import { itemList, refLabel, stepElements, warmupShow } from '../../src/lib/lesson.ts';
 import type { ScaleBlock } from '../../supabase/functions/_shared/engine/types.ts';
 
@@ -45,5 +45,12 @@ describe('scale block in the player', () => {
     expect(readDroneOff(broken)).toBe(false);
     expect(() => writeDroneOff(true, broken)).not.toThrow();
     expect(readDroneOff(undefined)).toBe(false);
+  });
+
+  it('starts the warm-up drone only after a tap (a reload straight into the warm-up would play nothing on iOS)', () => {
+    const store = { getItem: () => null, setItem: () => {}, removeItem: () => {} };
+    expect(droneStartsOn(store, true)).toBe(true);
+    expect(droneStartsOn(store, false)).toBe(false);
+    expect(droneStartsOn({ ...store, getItem: () => '1' }, true)).toBe(false);
   });
 });

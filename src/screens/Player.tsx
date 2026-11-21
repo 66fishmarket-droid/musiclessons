@@ -10,8 +10,8 @@ import { NoteCaller } from '../components/NoteCaller.tsx';
 import { PickingPattern } from '../components/PickingPattern.tsx';
 import { Rail } from '../components/Rail.tsx';
 import { PositionBoard, ScaleBoard } from '../components/ScaleBoard.tsx';
-import { readDroneOff, writeDroneOff } from '../lib/dronePref.ts';
-import { dayParent, renderRef } from '../../supabase/functions/_shared/engine/scaleShapes.ts';
+import { droneStartsOn, writeDroneOff } from '../lib/dronePref.ts';
+import { dayParent, nearestTo, renderRef } from '../../supabase/functions/_shared/engine/scaleShapes.ts';
 import { Recorder } from '../components/Recorder.tsx';
 import { SkillSheet } from '../components/SkillSheet.tsx';
 import { TriadBoard } from '../components/TriadBoard.tsx';
@@ -112,7 +112,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
   // Scale warm-up (spec 2026-11-21): the drone starts on unless the learner switched it off last time; other blocks start silent
   // (BlockView remounts per block, so leaving the warm-up stops it).
   const sb = block.kind === 'warmup' ? plan.scale_block : null;
-  const [drone, setDroneState] = useState(() => !!sb && !readDroneOff(globalThis.localStorage));
+  const [drone, setDroneState] = useState(() => !!sb && droneStartsOn(globalThis.localStorage, (navigator as Navigator & { userActivation?: { hasBeenActive: boolean } }).userActivation?.hasBeenActive ?? true));
   const setDrone = (on: boolean) => { setDroneState(on); if (sb) writeDroneOff(!on, globalThis.localStorage); };
   useDrone(drone ? tonic : null);
   const sstep = sb?.steps[step];
@@ -121,7 +121,8 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
   const position = useMemo(() => {
     if (!sstep?.ref) return null;
     const parent = dayParent(plan.music.scale.name);
-    return { placed: renderRef(sstep.ref, plan.key, parent), second: sstep.to ? renderRef(sstep.to, plan.key, parent) : undefined };
+    const placed = renderRef(sstep.ref, plan.key, parent);
+    return { placed, parent, second: sstep.to ? nearestTo(renderRef(sstep.to, plan.key, parent), placed) : undefined };
   }, [sstep, plan.key, plan.music.scale.name]);
   const els = rv ? rv.els : stepElements(recipe, block.kind, step, steps.length, plan.create_task_id, sb);
   const on = (e: StepElement) => elementVisible(els, e);
@@ -191,7 +192,7 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
       {block.kind === 'warmup' && !sb && on('scale') && <ScaleBoard scale={plan.music.scale} />}
       {sb && position && on('scale') && (hidden
         ? <button type="button" className="btn-ghost" onClick={() => setShownStep(step)}>Show the position</button>
-        : <PositionBoard placed={position.placed} second={position.second} labelTonic={tonicOf(plan.key)} />)}
+        : <PositionBoard placed={position.placed} second={position.second} labelTonic={tonicOf(plan.key)} labelParent={position.parent} />)}
       {block.kind === 'create' && <section className="card"><p><ChordText text={content.create_prompt} onChord={setSheet} /></p></section>}
       {showChords && on('chords') && <ChordPanel chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} onShapes={setSheet} lift={recipe?.lift} />}
       {(block.kind === 'create' || block.kind === 'apply') && on('scale') && <ScaleBoard scale={plan.music.scale} />}

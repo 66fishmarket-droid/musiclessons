@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { LADDER, neighbours, parseRef, placeShape, renderRef, dayParent } from '../../supabase/functions/_shared/engine/scaleShapes.ts';
+import { LADDER, dayNote, nearestTo, overlaps, neighbours, parseRef, placeShape, renderRef, dayParent } from '../../supabase/functions/_shared/engine/scaleShapes.ts';
 
 describe('scaleShapes', () => {
   it('places A minor pentatonic box 1 around the E-shape Am at fret 5', () => {
@@ -54,5 +54,31 @@ describe('scaleShapes', () => {
         }
       }
     }
+  });
+
+  it('labels every board note from the parent scale of the day, in every key: no sharps, and the home note is 1', () => {
+    for (const t of ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']) {
+      for (const parent of ['major', 'minor'] as const) {
+        for (const id of LADDER) {
+          const labels = renderRef(id, t, parent).notes.map(n => dayNote(t, parent, n.note).label);
+          const where = `${id} in ${t} ${parent}: ${labels.join(' ')}`;
+          expect(labels.some(l => l.includes('#')), where).toBe(false);
+          expect(labels, where).toContain('1');
+        }
+      }
+    }
+    expect(dayNote('Db', 'minor', 'E')).toEqual({ label: 'b3', name: 'Fb' });
+  });
+
+  it('knows when two positions can share notes on the neck: not the C-shape in open C and a D-shape', () => {
+    expect(overlaps('major:A', 'major:G', 'G', 'major')).toBe(true);
+    expect(overlaps('major:C', 'major:D', 'C', 'major')).toBe(false);
+  });
+
+  it('moves a Connect neighbour to the octave that overlaps the map position', () => {
+    const map = renderRef('major:A', 'G', 'major'); // frets 10-14
+    const near = nearestTo(renderRef('major:G', 'G', 'major'), map); // lowest placement is frets 0-4
+    expect(near.from).toBeGreaterThanOrEqual(10);
+    expect(near.notes.some(a => map.notes.some(b => a.string === b.string && a.fret === b.fret))).toBe(true);
   });
 });

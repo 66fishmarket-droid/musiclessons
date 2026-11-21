@@ -1,5 +1,5 @@
-import { Note } from 'tonal';
-import { boxAt, isGapless, scalePositions, TUNING, type FretNote, type ScaleWindow } from './music.ts';
+import { Note, Scale } from 'tonal';
+import { boxAt, degreeLabel, isGapless, scalePositions, TUNING, type FretNote, type ScaleWindow } from './music.ts';
 import { MINOR_FAMILY_SCALE } from './render.ts';
 
 export type Shape = 'C' | 'A' | 'G' | 'E' | 'D';
@@ -67,6 +67,29 @@ function computeShape(tonic: string, type: ScaleType, shape: Shape): PlacedShape
   const pool = gapless.length ? gapless.filter(c => c.to - c.from === gapless[0].to - gapless[0].from) : candidates;
   const best = pool.reduce((a, b) => (b.notes.length > a.notes.length ? b : a));
   return { tonic, scaleName, chord: `${tonic}${isMinorType(type) ? 'm' : ''}`, rootString: s.string, rootFret, ...best };
+}
+
+/** A board note as the learner reads it today: label counted in the day's parent scale, name spelled in that key
+ * (a relative-key render can respell, e.g. Fb as E on a Db minor day, which would break letter-based labels). */
+export function dayNote(dayTonic: string, parent: 'major' | 'minor', note: string): { label: string; name: string } {
+  const spelled = Scale.get(`${dayTonic} ${parent}`).notes.find(n => Note.chroma(n) === Note.chroma(note)) ?? note;
+  return { label: degreeLabel(dayTonic, spelled), name: spelled };
+}
+
+/** `p` moved by an octave (if that helps) so it overlaps `map` on the board: Connect needs shared notes to slide across. */
+export function nearestTo(p: PlacedShape, map: PlacedShape): PlacedShape {
+  const at = new Set(map.notes.map(n => `${n.string}/${n.fret}`));
+  const shifted = [0, -12, 12].map(o => ({ ...p, rootFret: p.rootFret + o, from: p.from + o, to: p.to + o, notes: p.notes.map(n => ({ ...n, fret: n.fret + o })) }))
+    .filter(s => s.from >= 0 && s.to <= 17);
+  const shared = (s: PlacedShape) => s.notes.filter(n => at.has(`${n.string}/${n.fret}`)).length;
+  return shifted.reduce((a, b) => (shared(b) > shared(a) ? b : a));
+}
+
+/** True when `to` can sit next to `map` on the neck with notes in common (an open C-shape has no D-shape below the nut). */
+export function overlaps(map: string, to: string, dayTonic: string, parent: 'major' | 'minor'): boolean {
+  const m = renderRef(map, dayTonic, parent);
+  const at = new Set(m.notes.map(n => `${n.string}/${n.fret}`));
+  return nearestTo(renderRef(to, dayTonic, parent), m).notes.some(n => at.has(`${n.string}/${n.fret}`));
 }
 
 /** A ladder position in today's key: a minor-type id on a major day uses the relative minor (and vice versa), same dots. */

@@ -4,6 +4,7 @@ import { buildMusic } from './music.ts';
 import { MINOR_FAMILY_SCALE } from './render.ts';
 import { RECIPES } from './recipes.ts';
 import { planScaleBlock } from './scaleBlock.ts';
+import { dayParent, overlaps } from './scaleShapes.ts';
 import { STYLE_CATALOG, type StyleCatalog, type StyleElement } from './styles.ts';
 import { buildBlocks } from './templates.ts';
 import {
@@ -150,7 +151,11 @@ export function planLesson(state: PlannerState, catalog: StyleCatalog = STYLE_CA
   const exclude = new Set([`skill:${skill.id}`, `skill:${retest?.skill_id}`, `style:${style?.element_id}`, `theory:${theory}`]);
   const review = pickReview(state, ctx, track, exclude);
   const target = targetFor(skill, ctx.progress.get(skill.id));
-  const scale_block = planScaleBlock(state, state.settings.session_minutes);
+  const profile = style ? catalog.profiles.find(p => p.id === style.style) ?? null : null;
+  const element = style ? catalog.elements.find(e => e.id === style.element_id) ?? null : null;
+  const music = buildMusic({ key, track, style: profile, element });
+  const parent = dayParent(music.scale.name);
+  const scale_block = planScaleBlock(state, state.settings.session_minutes, (map, to) => overlaps(map, to, key, parent));
   const items = (kind: BlockKind): PlanItem[] => {
     if (kind === 'new_skill') return [{ ref: `skill:${skill.id}`, target }];
     if (kind === 'retest' && retest) return [{ ref: `skill:${retest.skill_id}`, target: retest.target }];
@@ -160,8 +165,6 @@ export function planLesson(state: PlannerState, catalog: StyleCatalog = STYLE_CA
   };
   const blocks = buildBlocks(state.settings.session_minutes, { hasRetest: !!retest, hasReview: review.length > 0 })
     .map(b => ({ ...b, items: items(b.kind) }));
-  const profile = style ? catalog.profiles.find(p => p.id === style.style) ?? null : null;
-  const element = style ? catalog.elements.find(e => e.id === style.element_id) ?? null : null;
   const patterns = RECIPES[skill.id]?.card === 'pattern' ? RECIPES[skill.id].patterns ?? [] : [];
   const timesSeen = Math.max(0, state.recentLessons.filter(l => l.skill_id === skill.id).length - (ctx.isRepeat ? 1 : 0));
   const pattern_id = patterns.length ? patterns[timesSeen % patterns.length] : null;
@@ -169,7 +172,7 @@ export function planLesson(state: PlannerState, catalog: StyleCatalog = STYLE_CA
   return {
     date: state.today, template: `standard_${state.settings.session_minutes}`, track, skill_id: skill.id, key,
     is_repeat: ctx.isRepeat, style_element: style, theory_topic_id: theory, retest, review, blocks,
-    music: buildMusic({ key, track, style: profile, element }),
+    music,
     pattern_id, create_task_id, scale_block,
   };
 }

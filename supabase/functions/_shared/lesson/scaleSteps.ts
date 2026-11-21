@@ -1,6 +1,5 @@
 import { Chord, Note } from 'tonal';
-import { degreeLabel } from '../engine/music.ts';
-import { dayParent, parseRef, renderRef, type PlacedShape } from '../engine/scaleShapes.ts';
+import { dayNote, dayParent, nearestTo, parseRef, renderRef, type PlacedShape } from '../engine/scaleShapes.ts';
 import type { LessonPlan, ScaleStep, VariationId } from '../engine/types.ts';
 
 /** The warm-up's scale name in today's key: the plain parent (major/minor), pentatonic when the position is. */
@@ -11,8 +10,8 @@ export function warmScaleName(plan: LessonPlan, id: string): string {
 
 /** "the A minor pentatonic position around the E-shape Am chord at fret 5 (same dots as C major pentatonic, so 1 is the note C)";
  * `short` drops the relative-key clause when the sentence already gave it. */
-export function positionPhrase(plan: LessonPlan, id: string, short = false): string {
-  const p = place(plan, id);
+export function positionPhrase(plan: LessonPlan, id: string, short = false, placed?: PlacedShape): string {
+  const p = placed ?? place(plan, id);
   const where = p.rootFret === 0 ? 'in open position' : `at fret ${p.rootFret}`;
   const own = `the ${p.tonic} ${p.scaleName} position around the ${parseRef(id).shape}-shape ${p.chord} chord ${where}`;
   return p.tonic === plan.key || short ? own : `${own} (same dots as ${warmScaleName(plan, id)}, so 1 is the note ${plan.key})`;
@@ -24,8 +23,8 @@ const place = (plan: LessonPlan, id: string): PlacedShape => renderRef(id, plan.
 function targetPhrase(plan: LessonPlan, s: ScaleStep): string {
   const p = place(plan, s.ref!);
   const n = Number(s.degree!.replace('b', ''));
-  const note = p.notes.find(x => x.degree === n)?.note ?? p.tonic;
-  return `${degreeLabel(plan.key, note)} (the note ${Note.simplify(note)})`;
+  const d = dayNote(plan.key, dayParent(plan.music.scale.name), p.notes.find(x => x.degree === n)?.note ?? p.tonic);
+  return `${d.label} (the note ${d.name})`;
 }
 
 const VARY: Record<VariationId, (third: string) => string> = {
@@ -35,19 +34,33 @@ const VARY: Record<VariationId, (third: string) => string> = {
   triplets: () => 'Vary it: play the position as triplets, three notes to each metronome click, accenting the first of each three.',
 };
 
+/** Where each chord's phrase lands: its 3rd when the position has it (the note that says major or minor), else its root,
+ * else its 5th, else its 7th; a chord with none of them in the position (a borrowed chord) gets a rest, never an off-board note. */
+function landings(p: PlacedShape, chords: string[]): string {
+  const have = new Set(p.notes.map(n => Note.chroma(n.note)));
+  const ROLES: [RegExp, string][] = [[/^3[Mm]$/, '3rd'], [/^1P$/, 'root'], [/^5[PdA]$/, '5th'], [/^7[Mmd]$/, '7th']];
+  return chords.map(c => {
+    const { notes, intervals } = Chord.get(c);
+    for (const [re, role] of ROLES) {
+      const i = intervals.findIndex(iv => re.test(iv));
+      if (i >= 0 && have.has(Note.chroma(notes[i]))) return `the note ${Note.simplify(notes[i])} (its ${role}) over {${c}}`;
+    }
+    return `a rest over {${c}} (none of its notes are in this position)`;
+  }).join(', ');
+}
+
 /** Warm-up instructions, one per scale_block step (the Player pairs them 1:1 with each step's board). */
 export function scaleBlockSteps(plan: LessonPlan): string[] {
   const block = plan.scale_block!;
   const third = dayParent(plan.music.scale.name) === 'minor' ? 'b3' : '3';
   const chords = [...new Set(plan.music.progression.chords)];
-  const thirds = chords.map(c => `the note ${Note.simplify(Chord.get(c).notes[1] ?? Chord.get(c).tonic ?? c)} over {${c}}`).join(', ');
   const lines = block.steps.map(s => {
     const pos = positionPhrase(plan, s.ref!);
     switch (s.kind) {
       case 'retrieve':
       {
         const target = targetPhrase(plan, s);
-        return `Without looking: in ${pos}, play every ${target} on every string${target.startsWith('1 ') ? ', low to high' : ', then every 1'}. Tap Show to check.`;
+        return `Without looking: in ${pos}, play every ${target} in this position${target.startsWith('1 ') ? ', low to high' : ', then every 1'}. Tap Show to check.`;
       }
       case 'map': {
         const pent = parseRef(s.ref!).type.endsWith('pent');
@@ -59,9 +72,9 @@ export function scaleBlockSteps(plan: LessonPlan): string[] {
       case 'vary':
         return VARY[s.variation!](third);
       case 'connect':
-        return `Connect: play ${positionPhrase(plan, s.ref!, true)}, then slide along one string into ${positionPhrase(plan, s.to!, true)} (the faded dots). Cross over on the notes the two share, and go across and back twice.`;
+        return `Connect: play ${positionPhrase(plan, s.ref!, true)}, then slide along one string into ${positionPhrase(plan, s.to!, true, nearestTo(place(plan, s.to!), place(plan, s.ref!)))} (the faded dots). Cross over on the notes the two share, and go across and back twice.`;
       case 'use':
-        return `Use it: loop ${chords.map(c => `{${c}}`).join(' ')}, one chord per bar, and play 3-5 note phrases from this position, ending each phrase on the chord's 3rd: ${thirds}.`;
+        return `Use it: loop ${chords.map(c => `{${c}}`).join(' ')}, one chord per bar, and play 3-5 note phrases from this position, ending each phrase on a note of the chord: ${landings(place(plan, s.ref!), chords)}.`;
     }
   });
   lines[0] = `The drone plays the note ${plan.key} underneath; switch it off any time. ${lines[0]}`;

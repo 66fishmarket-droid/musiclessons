@@ -22,7 +22,7 @@ function retrieveDegree(id: string, seed: string): string {
 }
 
 /** Today's warm-up scale block: which positions to retrieve cold, which to map (new or weakest), and the step list. */
-export function planScaleBlock(state: PlannerState, minutes: SessionMinutes): ScaleBlock {
+export function planScaleBlock(state: PlannerState, minutes: SessionMinutes, canConnect: (map: string, to: string) => boolean = () => true): ScaleBlock {
   const { today } = state;
   const known = state.reviewItems.filter(r => r.item_type === 'scale' && LADDER.includes(r.ref));
   const rank = (id: string) => LADDER.indexOf(id);
@@ -50,7 +50,7 @@ export function planScaleBlock(state: PlannerState, minutes: SessionMinutes): Sc
   if (retrieve.length === 0 && !map_is_new) retrieve = [map];
 
   const full = minutes !== 25;
-  const connectTo = neighbours(map).find(n => known.some(r => r.ref === n));
+  const connectTo = neighbours(map).find(n => known.some(r => r.ref === n) && canConnect(map, n));
   const dayIndex = Math.floor(Date.parse(today) / DAY);
   const steps: ScaleStep[] = [
     ...retrieve.map(ref => ({ kind: 'retrieve' as const, ref, degree: retrieveDegree(ref, today + ref) })),

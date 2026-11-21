@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import { Note } from 'tonal';
 import { buildMusic } from '../../supabase/functions/_shared/engine/music.ts';
+import { dayParent, renderRef } from '../../supabase/functions/_shared/engine/scaleShapes.ts';
 import { planLesson } from '../../supabase/functions/_shared/engine/planner.ts';
 import { elementsOf, STYLE_CATALOG } from '../../supabase/functions/_shared/engine/styles.ts';
 import type { LessonPlan, ReviewItem } from '../../supabase/functions/_shared/engine/types.ts';
@@ -24,7 +26,7 @@ describe('scale block steps', () => {
     const plan = planLesson(known, STYLE_CATALOG);
     const [first] = warm(plan).instructions;
     expect(first).toMatch(/-shape [A-G][#b]?m? chord (at fret \d+|in open position)/);
-    expect(first).toMatch(/play every (b?\d) \(the note [A-G][#b]?\)/);
+    expect(first).toMatch(/play every (b?\d) \(the note [A-G][#b]*\) in this position/);
     expect(first).toContain('Tap Show');
   });
 
@@ -32,7 +34,7 @@ describe('scale block steps', () => {
     const plan = planLesson(known, STYLE_CATALOG);
     const home = { ...plan, scale_block: { ...plan.scale_block!, steps: [{ kind: 'retrieve' as const, ref: 'minor_pent:D', degree: 'b3' }, ...plan.scale_block!.steps.slice(1)] } };
     const [first] = warm({ ...home, key: 'G', music: buildMusic({ key: 'G', track: 'rhythm', style: null, element: null }) }).instructions;
-    expect(first).toContain('play every 1 (the note G) on every string');
+    expect(first).toContain('play every 1 (the note G) in this position');
     expect(first).not.toContain('then every 1');
   });
 
@@ -40,6 +42,17 @@ describe('scale block steps', () => {
     const plan = planLesson(known, STYLE_CATALOG);
     const use = warm(plan).instructions.at(-1)!;
     for (const c of new Set(plan.music.progression.chords)) expect(use).toContain(`over {${c}}`);
+  });
+
+  it('only names Use targets that are on the board, across every style', () => {
+    for (const p of STYLE_CATALOG.profiles) {
+      const el = elementsOf(p)[0];
+      const music = buildMusic({ key: 'A', track: 'rhythm', style: p, element: el });
+      const plan = { ...planLesson(known, STYLE_CATALOG), key: 'A', music };
+      const use = warm(plan).instructions.at(-1)!;
+      const board = renderRef(plan.scale_block!.map, 'A', dayParent(music.scale.name)).notes.map(n => Note.chroma(n.note));
+      for (const m of use.matchAll(/the note ([A-G][#b]*) /g)) expect(board, `${p.id}: ${m[1]} in "${use}"`).toContain(Note.chroma(m[1]));
+    }
   });
 
   it('uses the parent major/minor on modal and blues days, never the mode name', () => {

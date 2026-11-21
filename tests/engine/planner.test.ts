@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { CREATE_TASKS } from '../../supabase/functions/_shared/engine/create.ts';
 import { planLesson } from '../../supabase/functions/_shared/engine/planner.ts';
 import { RECIPES } from '../../supabase/functions/_shared/engine/recipes.ts';
+import { dayParent, overlaps } from '../../supabase/functions/_shared/engine/scaleShapes.ts';
 import { elementsOf, STYLE_CATALOG, type StyleCatalog, type StyleProfile } from '../../supabase/functions/_shared/engine/styles.ts';
 import type { LessonSummary, PlannerState, Skill, StyleChoice } from '../../supabase/functions/_shared/engine/types.ts';
 import { SKILLS } from '../../supabase/seed/curriculum.ts';
@@ -146,6 +147,15 @@ describe('planLesson', () => {
     expect(plan.review).toEqual([]);
     expect(plan.scale_block).toMatchObject({ map: 'minor_pent:E', retrieve: ['minor_pent:E'] });
     expect(plan.blocks[0]).toMatchObject({ kind: 'warmup', minutes: 4, items: [{ ref: 'scale:minor_pent:E', target: null }] });
+  });
+
+  it('only plans Connect when the two positions overlap in the lesson key', () => {
+    const items = ['major:E', 'major:A', 'major:C', 'major:G', 'major:D', 'major_pent:G'].map((ref, k) =>
+      ({ item_type: 'scale' as const, ref, interval_days: 3, next_due: `2026-10-0${k + 1}`, last_result: true }));
+    const plan = planLesson(state({ reviewItems: items }), catalog);
+    const c = plan.scale_block!.steps.find(s => s.kind === 'connect');
+    expect(c).toBeDefined();
+    expect(overlaps(c!.ref!, c!.to!, plan.key, dayParent(plan.music.scale.name))).toBe(true);
   });
 
   it('uses the skill\'s theory topic when it has one', () => {

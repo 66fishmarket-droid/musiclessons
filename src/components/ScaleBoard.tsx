@@ -1,6 +1,6 @@
 import type { MusicContent } from '../../supabase/functions/_shared/engine/music.ts';
 import { degreeLabel, scaleBox } from '../../supabase/functions/_shared/engine/music.ts';
-import type { PlacedShape } from '../../supabase/functions/_shared/engine/scaleShapes.ts';
+import { dayNote, type PlacedShape } from '../../supabase/functions/_shared/engine/scaleShapes.ts';
 import { FretGrid } from './FretGrid.tsx';
 
 const STRING_NAMES = ['E', 'A', 'D', 'G', 'B', 'e'];
@@ -21,14 +21,14 @@ export function ScaleBoard({ scale, highlight }: { scale: MusicContent['scale'];
 }
 
 /** One warm-up position (and Connect's neighbour, faded) labelled from today's home note; shared notes ringed. */
-export function PositionBoard({ placed, labelTonic, second }: { placed: PlacedShape; labelTonic: string; second?: PlacedShape }) {
+export function PositionBoard({ placed, labelTonic, labelParent, second }: { placed: PlacedShape; labelTonic: string; labelParent: 'major' | 'minor'; second?: PlacedShape }) {
   const from = Math.min(placed.from, second?.from ?? placed.from);
   const to = Math.max(placed.to, second?.to ?? placed.to);
   const at = (n: { string: number; fret: number }) => `${n.string}/${n.fret}`;
   const mine = new Set(placed.notes.map(at));
   const theirs = new Set(second?.notes.map(at) ?? []);
   const dot = (n: PlacedShape['notes'][number], dim: boolean) => {
-    const label = degreeLabel(labelTonic, n.note);
+    const { label } = dayNote(labelTonic, labelParent, n.note);
     return { string: n.string, fret: n.fret, label, root: label === '1', dim, flag: mine.has(at(n)) && theirs.has(at(n)) };
   };
   const dots = [...placed.notes.map(n => dot(n, false)), ...(second?.notes.filter(n => !mine.has(at(n))).map(n => dot(n, true)) ?? [])];

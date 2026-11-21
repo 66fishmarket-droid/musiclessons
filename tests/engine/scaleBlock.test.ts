@@ -25,6 +25,11 @@ describe('planScaleBlock', () => {
     expect(b.steps.find(s => s.kind === 'connect')).toMatchObject({ ref: 'minor_pent:D', to: 'minor_pent:E' });
   });
 
+  it('skips Connect when the neighbour cannot share notes in the lesson key', () => {
+    const b = planScaleBlock(state({ reviewItems: [scale('minor_pent:E', 7, '2026-10-17')] }), 30, () => false);
+    expect(b.steps.map(s => s.kind)).toEqual(['retrieve', 'map', 'vary', 'use']);
+  });
+
   it('holds back a new position under interval 7 and retrieves the map position cold when it is the only one', () => {
     const b = planScaleBlock(state({ reviewItems: [scale('minor_pent:E', 3, '2026-10-10')] }), 30);
     expect(b).toMatchObject({ map: 'minor_pent:E', map_is_new: false, retrieve: ['minor_pent:E'] });
