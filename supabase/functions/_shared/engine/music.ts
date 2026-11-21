@@ -70,22 +70,28 @@ export function scalePositions(tonic: string, scaleName: string, maxFret = 12): 
  * B-string one, so the doubled note neither shows nor tips the count toward the box above the root. */
 export function scaleBox(positions: FretNote[]): { from: number; to: number; notes: FretNote[] } {
   const root = Math.min(...positions.filter(p => p.degree === 1 && p.string <= 1).map(p => p.fret));
-  const order = [...new Set(positions.map(p => p.degree))].sort((a, b) => a - b);
-  const pitch = (n: FretNote) => Note.midi(TUNING[n.string])! + n.fret;
-  const box = (from: number, span = 3) => {
-    const inBox = positions.filter(p => p.fret >= from && p.fret <= from + span);
-    return { from, to: from + span, notes: inBox.filter(n => !inBox.some(m => m.string > n.string && pitch(m) === pitch(n))) };
-  };
-  const gapless = ({ notes }: { notes: FretNote[] }) => {
-    const run = notes.map(n => ({ pitch: pitch(n), i: order.indexOf(n.degree) })).sort((a, b) => a.pitch - b.pitch);
-    return run.every((n, k) => k === 0 || n.i === run[k - 1].i || n.i === (run[k - 1].i + 1) % order.length);
-  };
-  const better = (below: ReturnType<typeof box>, on: ReturnType<typeof box>) => on.notes.length > below.notes.length ? on : below;
+  const better = (below: ScaleWindow, on: ScaleWindow) => on.notes.length > below.notes.length ? on : below;
   for (const span of [3, 4]) {
-    const fits = [box(Math.max(0, root - 1), span), box(root, span)].filter(gapless);
+    const fits = [boxAt(positions, Math.max(0, root - 1), span), boxAt(positions, root, span)].filter(b => isGapless(b, positions));
     if (fits.length) return fits.reduce(better);
   }
-  return better(box(Math.max(0, root - 1)), box(root));
+  return better(boxAt(positions, Math.max(0, root - 1)), boxAt(positions, root));
+}
+
+export type ScaleWindow = { from: number; to: number; notes: FretNote[] };
+const pitchOf = (n: FretNote) => Note.midi(TUNING[n.string])! + n.fret;
+
+/** The scale notes in frets from..from+span, dropping a pitch doubled on a higher string (keeps the in-position one). */
+export function boxAt(positions: FretNote[], from: number, span = 3): ScaleWindow {
+  const inBox = positions.filter(p => p.fret >= from && p.fret <= from + span);
+  return { from, to: from + span, notes: inBox.filter(n => !inBox.some(m => m.string > n.string && pitchOf(m) === pitchOf(n))) };
+}
+
+/** True when the box plays the scale low to high without skipping a degree (degree order taken from `all`). */
+export function isGapless({ notes }: ScaleWindow, all: FretNote[]): boolean {
+  const order = [...new Set(all.map(p => p.degree))].sort((a, b) => a - b);
+  const run = notes.map(n => ({ pitch: pitchOf(n), i: order.indexOf(n.degree) })).sort((a, b) => a.pitch - b.pitch);
+  return run.every((n, k) => k === 0 || n.i === run[k - 1].i || n.i === (run[k - 1].i + 1) % order.length);
 }
 
 type DbPosition ={ frets: number[]; fingers: number[]; baseFret: number; barres: number[] };

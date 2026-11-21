@@ -9,7 +9,9 @@ import { NeckMap } from '../components/NeckMap.tsx';
 import { NoteCaller } from '../components/NoteCaller.tsx';
 import { PickingPattern } from '../components/PickingPattern.tsx';
 import { Rail } from '../components/Rail.tsx';
-import { ScaleBoard } from '../components/ScaleBoard.tsx';
+import { PositionBoard, ScaleBoard } from '../components/ScaleBoard.tsx';
+import { droneStartsOn, writeDroneOff } from '../lib/dronePref.ts';
+import { dayParent, nearestTo, renderRef } from '../../supabase/functions/_shared/engine/scaleShapes.ts';
 import { Recorder } from '../components/Recorder.tsx';
 import { SkillSheet } from '../components/SkillSheet.tsx';
 import { TriadBoard } from '../components/TriadBoard.tsx';
@@ -18,7 +20,7 @@ import { clock } from '../lib/dates.ts';
 import { shapeFor, withPickedShapes } from '../lib/chordLabels.ts';
 import { keyAction } from '../lib/keys.ts';
 import { tempoLadder } from '../lib/ladder.ts';
-import { BLOCK_META, blockCard, blockTerms, blockText, bpmTarget, refLabel, reviewView, startBpm, elementVisible, isMinorScale, stepElements, tonicOf, type TodayLesson } from '../lib/lesson.ts';
+import { BLOCK_META, blockCard, blockTerms, blockText, bpmTarget, itemList, refLabel, reviewView, startBpm, elementVisible, isMinorScale, stepElements, tonicOf, type TodayLesson } from '../lib/lesson.ts';
 import { neckMap } from '../../supabase/functions/_shared/engine/neck.ts';
 import { APPLY_DEFAULT_GRID, PATTERNS, rhythmPattern } from '../../supabase/functions/_shared/engine/patterns.ts';
 import type { StepElement } from '../../supabase/functions/_shared/engine/recipes.ts';
@@ -104,12 +106,25 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
     if (block.kind !== 'apply' && recipe?.grid) return rhythmPattern(recipe.gridName ?? "Today's rhythm", recipe.grid.split(''), null, recipe.gridPush);
     return rhythm ? rhythmPattern(rhythm.name, rhythm.grid, rhythm.swing, rhythm.push) : rhythmPattern('Steady down-strums', APPLY_DEFAULT_GRID.split(''));
   }, [card, skillPatterns, pi, block.kind, recipe, rhythm, rv]);
-  const showChords = block.kind === 'apply' || block.kind === 'create' || card === 'pattern' || card === 'rhythm' || card === 'chords';
+  const showChords = block.kind === 'apply' || block.kind === 'create' || card === 'pattern' || card === 'rhythm' || card === 'chords' || (block.kind === 'warmup' && !!plan.scale_block); // scale warm-up: Use plays over the chords
 
   const metro = useMetronome(first);
-  const [drone, setDrone] = useState(false);
+  // Scale warm-up (spec 2026-11-21): the drone starts on unless the learner switched it off last time; other blocks start silent
+  // (BlockView remounts per block, so leaving the warm-up stops it).
+  const sb = block.kind === 'warmup' ? plan.scale_block : null;
+  const [drone, setDroneState] = useState(() => !!sb && droneStartsOn(globalThis.localStorage, (navigator as Navigator & { userActivation?: { hasBeenActive: boolean } }).userActivation?.hasBeenActive ?? true));
+  const setDrone = (on: boolean) => { setDroneState(on); if (sb) writeDroneOff(!on, globalThis.localStorage); };
   useDrone(drone ? tonic : null);
-  const els = rv ? rv.els : stepElements(recipe, block.kind, step, steps.length, plan.create_task_id);
+  const sstep = sb?.steps[step];
+  const [shownStep, setShownStep] = useState(-1);
+  const hidden = sstep?.kind === 'retrieve' && shownStep !== step;
+  const position = useMemo(() => {
+    if (!sstep?.ref) return null;
+    const parent = dayParent(plan.music.scale.name);
+    const placed = renderRef(sstep.ref, plan.key, parent);
+    return { placed, parent, second: sstep.to ? nearestTo(renderRef(sstep.to, plan.key, parent), placed) : undefined };
+  }, [sstep, plan.key, plan.music.scale.name]);
+  const els = rv ? rv.els : stepElements(recipe, block.kind, step, steps.length, plan.create_task_id, sb);
   const on = (e: StepElement) => elementVisible(els, e);
   const [about, setAbout] = useState(false);
   const total = block.minutes * 60;
@@ -171,7 +186,13 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
       </section>
       {text.listen_for && <p className="muted"><b>Listen for:</b> {text.listen_for}</p>}
 
-      {block.kind === 'warmup' && on('scale') && <ScaleBoard scale={plan.music.scale} />}
+      {sb && (
+        <button type="button" className={drone ? 'btn-primary' : 'btn-ghost'} style={{ minHeight: 52 }} aria-pressed={drone} onClick={() => setDrone(!drone)}>Drone {tonic} · {drone ? 'on' : 'off'}</button>
+      )}
+      {block.kind === 'warmup' && !sb && on('scale') && <ScaleBoard scale={plan.music.scale} />}
+      {sb && position && on('scale') && (hidden
+        ? <button type="button" className="btn-ghost" onClick={() => setShownStep(step)}>Show the position</button>
+        : <PositionBoard placed={position.placed} second={position.second} labelTonic={tonicOf(plan.key)} labelParent={position.parent} />)}
       {block.kind === 'create' && <section className="card"><p><ChordText text={content.create_prompt} onChord={setSheet} /></p></section>}
       {showChords && on('chords') && <ChordPanel chords={chords} voicings={plan.music.voicings} idx={chordIdx} onIdx={setChordIdx} onShapes={setSheet} lift={recipe?.lift} />}
       {(block.kind === 'create' || block.kind === 'apply') && on('scale') && <ScaleBoard scale={plan.music.scale} />}
@@ -210,9 +231,9 @@ function BlockView({ lesson, session, onLog, onMove, onTake }: {
       <div className="spacer" />
       {block.kind === 'reset' ? (
         <button type="button" className="btn-primary" onClick={() => onMove(i + 1)}>Next block</button>
-      ) : slots.length > 1 ? (
+      ) : itemList(block.kind, slots, !!sb) ? (
         <>
-          <section className="list" aria-label="Review items">
+          <section className="list" aria-label={sb ? 'Retrieve results' : 'Review items'}>
             {slots.map(ref => (
               <div key={ref} className="list-row">
                 <span style={{ flex: 1 }}>{refLabel(ref ?? '')}</span>

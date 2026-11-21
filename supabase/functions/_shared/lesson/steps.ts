@@ -10,6 +10,7 @@ import { THEORY_DAY_SCALE, THEORY_REVIEWS } from '../engine/theory.ts';
 import type { BlockKind, LessonPlan, PlanBlock, Skill } from '../engine/types.ts';
 import type { ReviewRhythm } from './contract.ts';
 import type { Target } from '../engine/types.ts';
+import { scaleBlockSteps } from './scaleSteps.ts';
 import { lessonThread } from './thread.ts';
 
 /** A plan target as plain words (moved here from fallback.ts, which re-exports it). */
@@ -114,7 +115,7 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): Engine
       intro: thread.blocks[b.kind]?.intro ?? '', bridge: thread.blocks[b.kind]?.bridge ?? '',
     });
     switch (b.kind) {
-      case 'warmup': return make(renderSteps([
+      case 'warmup': return plan.scale_block ? make(scaleBlockSteps(plan)) : make(renderSteps([
         'Hum or lip-trill for 30 seconds to wake your voice up.',
         'Play {key} {scale} in the position shown, saying each note\'s number (1 is {degrees:1}) as you play it.',
         'Play it again, singing each note.',
@@ -151,8 +152,8 @@ export function buildSteps(plan: LessonPlan, skills: Map<string, Skill>): Engine
           // The scale came from today's style: play it, don't just mention it (spec 2026-10-07 §5). Shown with the scale card (src/lib/lesson.ts).
           // The phrase ends on the home note, so it goes over the home chord: another bar's chord can clash (flamenco E over A phrygian).
           ...(thread.scaleInApply ? [vamp
-            ? 'Every fourth bar, swap the groove for a short {key} {scale} phrase from the warm-up shape: four notes, ending on the note {degrees:1}. Then straight back into the groove.'
-            : 'Each time the progression comes back to HOME, swap that bar\'s groove for a short {key} {scale} phrase from the warm-up shape: four notes, ending on the note {degrees:1}. Then straight back into the groove.'] : []),
+            ? 'Every fourth bar, swap the groove for a short {key} {scale} phrase from the scale shown: four notes, ending on the note {degrees:1}. Then straight back into the groove.'
+            : 'Each time the progression comes back to HOME, swap that bar\'s groove for a short {key} {scale} phrase from the scale shown: four notes, ending on the note {degrees:1}. Then straight back into the groove.'] : []),
           'Keep the picking hand going and hum or sing any tune over it.',
         ], ctx).map(s => s.replace('HOME', `{${home}}`))); // renderSteps has no slot for the home chord
       }

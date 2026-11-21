@@ -18,8 +18,8 @@ describe('buildMessages', () => {
   it('gives the model the lesson path and each block intro and bridge, so more does not repeat them', () => {
     const funk = STYLE_CATALOG.profiles.find(p => p.id === 'funk')!;
     const b = briefOf(buildMessages({ plan: FUNK_PLAN, skills: SKILL_MAP, style: funk, settings, recent: [], questions: [], metSkills: [] })[1].content);
-    expect(b.path[0]).toContain('G dorian →');
-    expect(b.steps.find((s: { kind: string }) => s.kind === 'apply')).toMatchObject({ bridge: expect.stringContaining('Same G dorian notes') });
+    expect(b.path).toContain('Apply: G dorian phrases over the Funk groove on the chord {Gm7}.');
+    expect(b.steps.find((s: { kind: string }) => s.kind === 'apply')).toMatchObject({ bridge: expect.stringContaining('now as G dorian') });
     expect(SYSTEM_PROMPT).toContain('intro and bridge');
   });
   it('sends the fixed system prompt first', () => {

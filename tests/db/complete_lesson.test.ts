@@ -117,6 +117,27 @@ describe('complete_lesson', () => {
     expect((await q('select count(*)::int as n from public.exercise_logs where lesson_id = $1', [id])).rows[0].n).toBe(1);
   }));
 
+  const warmup = (ref: string, passed: boolean) => ({ block_index: 0, block_kind: 'warmup', item_ref: `scale:${ref}`, passed, value_reached: null });
+  const scaleRow = async (q: Q, ref: string) =>
+    (await q(`select interval_days, next_due from public.review_items where item_type = 'scale' and ref = $1`, [ref])).rows[0];
+
+  it('scores a warm-up scale retrieve and caps scale intervals at 14 days', () => asUser(async q => {
+    await q(`insert into public.review_items (item_type, ref, interval_days, next_due) values ('scale', 'minor_pent:E', 14, '2026-10-01')`);
+    await complete(q, await newLesson(q, { scale_block: { map: 'minor_pent:D', map_is_new: false } }), [warmup('minor_pent:E', true)]);
+    expect(await scaleRow(q, 'minor_pent:E')).toEqual({ interval_days: 14, next_due: '2026-10-15' });
+  }));
+
+  it('a miss on a scale retrieve resets it to 1 day', () => asUser(async q => {
+    await q(`insert into public.review_items (item_type, ref, interval_days, next_due) values ('scale', 'minor_pent:E', 7, '2026-10-01')`);
+    await complete(q, await newLesson(q), [warmup('minor_pent:E', false)]);
+    expect(await scaleRow(q, 'minor_pent:E')).toEqual({ interval_days: 1, next_due: '2026-10-02' });
+  }));
+
+  it('a new map position enters the scale queue due tomorrow', () => asUser(async q => {
+    await complete(q, await newLesson(q, { scale_block: { map: 'minor_pent:D', map_is_new: true } }), []);
+    expect(await scaleRow(q, 'minor_pent:D')).toEqual({ interval_days: 1, next_due: '2026-10-02' });
+  }));
+
   it('refuses another user\'s lesson (RLS)', async () => {
     let otherId = '';
     await expect(asUser(async q => { await complete(q, otherId, []); }, async q => {

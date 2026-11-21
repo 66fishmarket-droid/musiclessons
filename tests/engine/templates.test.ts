@@ -10,10 +10,14 @@ describe('templates', () => {
     expect(TEMPLATES[m][0].minutes / m).toBeLessThanOrEqual(0.15);
     expect(TEMPLATES[m].map(b => b.kind)).toEqual(['warmup', 'retest', 'new_skill', 'reset', 'review', 'apply', 'create', 'record']);
   });
+  it('gives the scale warm-up 3, 4 and 5 minutes, taken from new_skill', () => {
+    expect([25, 30, 40].map(m => TEMPLATES[m as 25].find(b => b.kind === 'warmup')!.minutes)).toEqual([3, 4, 5]);
+    expect([25, 30, 40].map(m => TEMPLATES[m as 25].find(b => b.kind === 'new_skill')!.minutes)).toEqual([6, 7.5, 9]);
+  });
   it('gives a missing retest to new_skill and a missing review to apply', () => {
     const blocks = buildBlocks(30, { hasRetest: false, hasReview: false });
     expect(blocks.map(b => b.kind)).toEqual(['warmup', 'new_skill', 'reset', 'apply', 'create', 'record']);
-    expect(blocks.find(b => b.kind === 'new_skill')!.minutes).toBe(10.5);
+    expect(blocks.find(b => b.kind === 'new_skill')!.minutes).toBe(9.5);
     expect(blocks.find(b => b.kind === 'apply')!.minutes).toBe(11);
     expect(total(blocks)).toBe(30);
   });
