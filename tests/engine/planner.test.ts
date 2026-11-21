@@ -139,6 +139,15 @@ describe('planLesson', () => {
     expect(plan.review).toEqual([{ item_type: 'skill', ref: 'fills.l1.a' }]);
   });
 
+  it('keeps scale positions out of Review and puts the retrieve positions on the warm-up', () => {
+    const plan = planLesson(state({ reviewItems: [
+      { item_type: 'scale', ref: 'minor_pent:E', interval_days: 3, next_due: '2026-10-01', last_result: true },
+    ] }), catalog);
+    expect(plan.review).toEqual([]);
+    expect(plan.scale_block).toMatchObject({ map: 'minor_pent:E', retrieve: ['minor_pent:E'] });
+    expect(plan.blocks[0]).toMatchObject({ kind: 'warmup', minutes: 4, items: [{ ref: 'scale:minor_pent:E', target: null }] });
+  });
+
   it('uses the skill\'s theory topic when it has one', () => {
     const plan = planLesson(state({ recentLessons: [lesson('2026-10-09', 'rhythm', 'rhythm.l1.a', 'G')] }), catalog);
     expect(plan).toMatchObject({ track: 'fretboard', theory_topic_id: 'theory.l2.a' });

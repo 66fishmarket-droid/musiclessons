@@ -17,7 +17,7 @@ export interface SkillProgress {
   last_seen: string | null; last_key: string | null;
 }
 export interface ReviewItem {
-  item_type: 'skill' | 'theory' | 'style'; ref: string; interval_days: number; next_due: string; last_result: boolean | null;
+  item_type: 'skill' | 'theory' | 'style' | 'scale'; ref: string; interval_days: number; next_due: string; last_result: boolean | null;
 }
 export interface StyleChoice { style: string; element_id: string; kind: 'rhythm' | 'progression'; is_new: boolean }
 export interface LessonSummary {
@@ -37,6 +37,11 @@ export interface PlannerState {
 export interface Target { metric: PassMetric; target: number | null; start: number | null }
 export interface PlanItem { ref: string; target: Target | null }
 export interface PlanBlock { kind: BlockKind; minutes: number; items: PlanItem[] }
+export type ScaleStepKind = 'retrieve' | 'map' | 'vary' | 'connect' | 'use';
+export type VariationId = 'from_3' | 'descend' | 'threes' | 'triplets';
+/** One warm-up step; `ref`/`to` are bare ladder ids (engine/scaleShapes.ts), `degree` the retrieve target, `to` Connect's neighbour. */
+export interface ScaleStep { kind: ScaleStepKind; ref: string | null; to?: string; degree?: string; variation?: VariationId }
+export interface ScaleBlock { map: string; map_is_new: boolean; retrieve: string[]; steps: ScaleStep[] }
 export interface LessonPlan {
   date: string; template: `standard_${SessionMinutes}`; track: Track; skill_id: string; key: string; is_repeat: boolean;
   style_element: StyleChoice | null; theory_topic_id: string | null;
@@ -44,4 +49,6 @@ export interface LessonPlan {
   review: { item_type: ReviewItem['item_type']; ref: string }[];
   blocks: PlanBlock[]; music: MusicContent;
   pattern_id: string | null; create_task_id: string;
+  /** Null on lessons planned before the scale block (2026-11-21). */
+  scale_block: ScaleBlock | null;
 }

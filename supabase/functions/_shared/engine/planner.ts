@@ -3,6 +3,7 @@ import { nextKey } from './keys.ts';
 import { buildMusic } from './music.ts';
 import { MINOR_FAMILY_SCALE } from './render.ts';
 import { RECIPES } from './recipes.ts';
+import { planScaleBlock } from './scaleBlock.ts';
 import { STYLE_CATALOG, type StyleCatalog, type StyleElement } from './styles.ts';
 import { buildBlocks } from './templates.ts';
 import {
@@ -113,10 +114,10 @@ export function pickTheoryTopic(state: PlannerState, ctx: Ctx, skill: Skill): st
     .sort((a, b) => a.level - b.level || a.id.localeCompare(b.id))[0]?.id ?? null;
 }
 
-/** Due review items, oldest first, excluding today's track, songwriting (the Create block writes daily) and anything already in the lesson. */
+/** Due review items, oldest first, excluding scale positions (the warm-up owns them), today's track, songwriting (the Create block writes daily) and anything already in the lesson. */
 export function pickReview(state: PlannerState, ctx: Ctx, track: Track, exclude: Set<string>, max = 3): LessonPlan['review'] {
   return state.reviewItems
-    .filter(r => r.next_due <= state.today && !exclude.has(`${r.item_type}:${r.ref}`)
+    .filter(r => r.item_type !== 'scale' && r.next_due <= state.today && !exclude.has(`${r.item_type}:${r.ref}`)
       && !(r.item_type === 'skill' && [track, 'songwriting'].includes(ctx.skills.get(r.ref)?.track ?? '')))
     .sort((a, b) => a.next_due.localeCompare(b.next_due) || a.ref.localeCompare(b.ref))
     .slice(0, max)
@@ -149,10 +150,12 @@ export function planLesson(state: PlannerState, catalog: StyleCatalog = STYLE_CA
   const exclude = new Set([`skill:${skill.id}`, `skill:${retest?.skill_id}`, `style:${style?.element_id}`, `theory:${theory}`]);
   const review = pickReview(state, ctx, track, exclude);
   const target = targetFor(skill, ctx.progress.get(skill.id));
+  const scale_block = planScaleBlock(state, state.settings.session_minutes);
   const items = (kind: BlockKind): PlanItem[] => {
     if (kind === 'new_skill') return [{ ref: `skill:${skill.id}`, target }];
     if (kind === 'retest' && retest) return [{ ref: `skill:${retest.skill_id}`, target: retest.target }];
     if (kind === 'review') return review.map(r => ({ ref: `${r.item_type}:${r.ref}`, target: null }));
+    if (kind === 'warmup') return scale_block.retrieve.map(id => ({ ref: `scale:${id}`, target: null }));
     return [];
   };
   const blocks = buildBlocks(state.settings.session_minutes, { hasRetest: !!retest, hasReview: review.length > 0 })
@@ -167,6 +170,6 @@ export function planLesson(state: PlannerState, catalog: StyleCatalog = STYLE_CA
     date: state.today, template: `standard_${state.settings.session_minutes}`, track, skill_id: skill.id, key,
     is_repeat: ctx.isRepeat, style_element: style, theory_topic_id: theory, retest, review, blocks,
     music: buildMusic({ key, track, style: profile, element }),
-    pattern_id, create_task_id,
+    pattern_id, create_task_id, scale_block,
   };
 }
