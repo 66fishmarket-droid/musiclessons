@@ -35,7 +35,7 @@ describe('buildSteps', () => {
     const apply = buildSteps(FUNK_PLAN, SKILL_MAP).blocks.find(b => b.kind === 'apply')!;
     expect(apply.instructions).toHaveLength(4);
     expect(apply.instructions[1]).toContain('one-chord vamp');
-    expect(apply.instructions[2]).toBe('Every fourth bar, swap the groove for a short G dorian phrase from the warm-up shape: four notes, ending on the note G. Then straight back into the groove.');
+    expect(apply.instructions[2]).toBe('Every fourth bar, swap the groove for a short G dorian phrase from the scale shown: four notes, ending on the note G. Then straight back into the groove.');
     expect(apply.instructions.join(' ')).not.toContain('then through');
   });
   it('adds the link step on a major-scale style day too (folk), and not on a no-style day', () => {
@@ -50,7 +50,7 @@ describe('buildSteps', () => {
     const steps = buildSteps(FUNK_PLAN, SKILL_MAP);
     expect(steps.blocks.find(b => b.kind === 'new_skill')!.bridge).toMatch(/^Change of focus: /);
     expect(steps.blocks.find(b => b.kind === 'reset')!).toMatchObject({ intro: '', bridge: '' });
-    expect(steps.path[0]).toContain('G dorian →');
+    expect(steps.path).toContain('Apply: G dorian phrases over the Funk groove on the chord {Gm7}.');
     const lesson = assembleLesson(FUNK_PLAN, SKILL_MAP, fallbackColour(FUNK_PLAN, SKILL_MAP), true, steps);
     expect(lesson.path).toEqual(steps.path);
     expect(lesson.blocks[0].intro).toBe(steps.blocks[0].intro);
@@ -71,7 +71,7 @@ describe('buildSteps', () => {
       const el = elementsOf(p)[0];
       const music = buildMusic({ key: 'A', track: 'rhythm', style: p, element: el });
       const plan = { ...PLAN, key: 'A', music, style_element: { style: p.id, element_id: el.id, kind: el.kind, is_new: false } };
-      const link = buildSteps(plan, SKILL_MAP).blocks.find(b => b.kind === 'apply')!.instructions.find(s => s.includes('phrase from the warm-up shape'))!;
+      const link = buildSteps(plan, SKILL_MAP).blocks.find(b => b.kind === 'apply')!.instructions.find(s => s.includes('phrase from the scale shown'))!;
       expect(link, p.id).toBeTruthy();
       if (new Set(music.progression.chords).size === 1) continue; // vamp: "every fourth bar", the one chord is home
       const home = /comes back to \{([^}]+)\}/.exec(link)?.[1];

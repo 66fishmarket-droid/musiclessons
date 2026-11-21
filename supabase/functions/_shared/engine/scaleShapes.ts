@@ -43,8 +43,16 @@ export const dayParent = (scaleName: string): 'major' | 'minor' => (MINOR_FAMILY
 
 const isMinorType = (t: ScaleType) => t === 'minor' || t === 'minor_pent';
 
-/** One scale position wrapped around a CAGED chord shape in `tonic`, computed from semitones so it works in every key. */
+const placed = new Map<string, PlacedShape>();
+/** One scale position wrapped around a CAGED chord shape in `tonic`, computed from semitones so it works in every key.
+ * Memoised: the lesson thread and steps ask for the same few positions many times (12 tonics × 20 shapes at most). */
 export function placeShape(tonic: string, type: ScaleType, shape: Shape): PlacedShape {
+  const key = `${tonic}|${type}|${shape}`;
+  if (!placed.has(key)) placed.set(key, computeShape(tonic, type, shape));
+  return placed.get(key)!;
+}
+
+function computeShape(tonic: string, type: ScaleType, shape: Shape): PlacedShape {
   const scaleName = TONAL_NAME[type];
   const positions = scalePositions(tonic, scaleName, 17);
   const s = SHAPES[shape];

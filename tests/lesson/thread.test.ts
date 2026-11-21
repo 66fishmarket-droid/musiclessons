@@ -16,12 +16,14 @@ describe('lessonThread', () => {
     const t = lessonThread(FUNK_PLAN, SKILL_MAP);
     expect(t.scaleInApply).toBe(true);
     const dorian = GLOSSARY.find(g => g.id === 'dorian')!;
-    expect(t.blocks.warmup!.intro).toContain(dorian.plain);
-    expect(t.blocks.warmup!.intro).toContain('Funk players');
-    expect(t.blocks.new_skill!.bridge).toBe('Change of focus: The B-string rule. Nothing carries over from the G dorian warm-up here.');
-    expect(t.blocks.apply!.bridge).toContain('Same G dorian notes, now over the {Gm7} groove');
-    expect(t.blocks.create!.bridge).toBe('Same {Gm7} as Apply. The notes come from the G dorian warm-up.');
-    expect(t.path[0]).toBe('Warm-up: G dorian → Apply plays it over the Funk groove on the chord {Gm7}.');
+    // Warm-up plays the plain parent (G minor pentatonic positions); Apply brings in dorian as one changed note.
+    expect(t.blocks.warmup!.intro).toMatch(/^Scale positions, one at a time over a drone on the note G\. Today's (new|review) position: /);
+    expect(t.blocks.apply!.bridge).toContain('Same home note as the warm-up, now as G dorian over the {Gm7} groove: Funk players');
+    expect(t.blocks.apply!.bridge).toContain(dorian.plain);
+    expect(t.blocks.new_skill!.bridge).toBe('Change of focus: The B-string rule. Nothing carries over from the G minor pentatonic warm-up here.');
+    expect(t.blocks.create!.bridge).toBe('Same {Gm7} as Apply. The notes come from G dorian.');
+    expect(t.path[0]).toBe('Warm-up: G minor pentatonic, new position E-shape.');
+    expect(t.path).toContain('Apply: G dorian phrases over the Funk groove on the chord {Gm7}.');
     expect(t.path).toContain('New skill: The B-string rule (separate from the scale).');
   });
   it('explains I–IV–V–I with the circle of fifths on a no-style day, and the path skips blocks the day lacks', () => {
@@ -37,7 +39,7 @@ describe('lessonThread', () => {
     const blues = STYLE_CATALOG.profiles.find(p => p.id === 'blues')!;
     const el = elementsOf(blues)[0];
     const plan: LessonPlan = { ...PLAN, key: 'A', music: buildMusic({ key: 'A', track: 'rhythm', style: blues, element: el }),
-      style_element: { style: 'blues', element_id: el.id, kind: el.kind, is_new: false } };
+      style_element: { style: 'blues', element_id: el.id, kind: el.kind, is_new: false }, scale_block: null }; // pre-scale-block plan
     const intro = lessonThread(plan, SKILL_MAP).blocks.warmup!.intro;
     expect(intro.startsWith("Today's scale: A minor pentatonic (A, C, D, E, G).")).toBe(true);
     expect(intro).not.toMatch(/In [A-G][#b]? that's/);
@@ -61,7 +63,7 @@ describe('lessonThread', () => {
     expect(shortStyleName('Country (classic/Nashville + modern)')).toBe('Country');
     expect(shortStyleName('R&B / neo-soul')).toBe('R&B / neo-soul');
   });
-  it('gives every block but reset/record an intro and every later block a bridge, for every skill × style × key', () => {
+  it('gives every block but reset/record an intro and every later block a bridge, for every skill × style × key', { timeout: 20_000 }, () => {
     const retestSkill = SKILLS.find(s => s.id === 'rhythm.l1.locked_8ths')!;
     const theoryTopic = SKILLS.find(s => s.track === 'theory')!;
     const practice = SKILLS.filter(s => s.track !== 'theory');

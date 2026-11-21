@@ -2,6 +2,7 @@ import { CREATE_TASKS } from '../engine/create.ts';
 import { termsIn } from '../engine/glossary.ts';
 import { recipeFor } from '../engine/recipes.ts';
 import { STYLE_CATALOG } from '../engine/styles.ts';
+import { positionPhrase, warmScaleName } from './scaleSteps.ts';
 import type { BlockKind, LessonPlan, Skill } from '../engine/types.ts';
 
 export interface BlockThread { intro: string; bridge: string }
@@ -45,10 +46,17 @@ export function lessonThread(plan: LessonPlan, skills: Map<string, Skill>): Less
   const scaleTerm = termsIn([music.scale.name])[0];
   const [i, iv, v] = music.progression.chords;
   const iivvi = !profile && music.progression.roman.join(' ') === 'I IV V I';
+  const sb = plan.scale_block;
+  // Warm-up scale: the plain parent major/minor of today's scale once the scale block runs (spec 2026-11-21).
+  const warmScale = sb ? warmScaleName(plan, sb.map) : scale;
+  const warmTerm = termsIn([warmScale.slice(key.length + 1)])[0];
+  const warmIntro = sb
+    ? `Scale positions, one at a time over a drone on the note ${key}. Today's ${sb.map_is_new ? 'new' : 'review'} position: ${positionPhrase(plan, sb.map)}.${warmTerm ? ` ${warmTerm.plain.replace(KEYED_EXAMPLE, '')}` : ''}`
+    : `Today's scale: ${scale} (${music.scale.notes.join(', ')}).${scaleTerm ? ` ${scaleTerm.plain.replace(KEYED_EXAMPLE, '')}` : ''}${scaleInApply ? ` It's today's scale because ${style} players build their phrases from it, and Apply uses it.` : ''}`;
 
   const blocks: LessonThread['blocks'] = {
     warmup: {
-      intro: `Today's scale: ${scale} (${music.scale.notes.join(', ')}).${scaleTerm ? ` ${scaleTerm.plain.replace(KEYED_EXAMPLE, '')}` : ''}${scaleInApply ? ` It's today's scale because ${style} players build their phrases from it, and Apply uses it.` : ''}`,
+      intro: warmIntro,
       bridge: '',
     },
     retest: {
@@ -57,9 +65,9 @@ export function lessonThread(plan: LessonPlan, skills: Map<string, Skill>): Less
     },
     new_skill: {
       intro: skill?.description ?? '',
-      bridge: sameScale ? `Same ${scale} as the warm-up.`
+      bridge: sameScale ? (warmScale === scale ? `Same ${scale} as the warm-up.` : `Same home note as the warm-up's ${warmScale}, now as ${scale}.`)
         : inStyle ? `Part of today's ${style} style.`
-        : `Change of focus: ${skill?.name ?? plan.skill_id}. Nothing carries over from the ${scale} warm-up here.`,
+        : `Change of focus: ${skill?.name ?? plan.skill_id}. Nothing carries over from the ${warmScale} warm-up here.`,
     },
     review: {
       intro: 'Spaced review: a quick pass over things you learned earlier, so they stick.',
@@ -69,23 +77,27 @@ export function lessonThread(plan: LessonPlan, skills: Map<string, Skill>): Less
       intro: profile && element ? `${style} groove: ${element.name}.`
         : iivvi ? `{${iv}} and {${v}} sit either side of {${i}} on the circle of fifths: home, its two nearest neighbours, then home again. That's why it sounds settled.`
         : `Strumming ${chords} with today's rhythm.`,
-      bridge: scaleInApply
+      bridge: scaleInApply && warmScale === scale
         ? `Same ${scale} notes, now over the ${chords} groove: ${style} players build their phrases from this scale.`
+        : scaleInApply
+        ? `Same home note as the warm-up, now as ${scale} over the ${chords} groove: ${style} players build their phrases from this scale.${scaleTerm ? ` ${scaleTerm.plain.replace(KEYED_EXAMPLE, '')}` : ''}`
         : skill?.track === 'rhythm' && has('new_skill') ? `Same strumming hand as the new skill, now over ${chords}.`
         : 'Change of focus: rhythm. The warm-up scale isn\'t used here; this is about locking the strum to the beat.',
     },
     create: {
       intro: task.why,
-      bridge: `Same ${chords} as Apply.${scaleInApply && task.show.some(s => s.includes('scale')) ? ` The notes come from the ${scale} warm-up.` : ''}`,
+      bridge: `Same ${chords} as Apply.${scaleInApply && task.show.some(s => s.includes('scale')) ? ` The notes come from ${scale}.` : ''}`,
     },
     record: { intro: '', bridge: 'Same groove as Apply.' },
   };
 
   const path: string[] = [];
   const onChords = chordPhrase(music.progression.chords);
-  if (has('warmup')) path.push(`Warm-up: ${scale}${scaleInApply ? ` → Apply plays it over the ${style} groove on ${onChords}.` : '.'}`);
+  if (has('warmup')) path.push(`Warm-up: ${warmScale}${sb ? `, ${sb.map_is_new ? 'new' : 'review'} position ${sb.map.split(':')[1]}-shape` : ''}${scaleInApply && warmScale === scale ? ` → Apply plays it over the ${style} groove on ${onChords}.` : '.'}`);
   if (has('new_skill')) path.push(`New skill: ${skill?.name ?? plan.skill_id}${sameScale || inStyle ? '.' : ' (separate from the scale).'}`);
-  if (has('apply') && !scaleInApply) path.push(`Apply: ${profile ? `${style} groove` : 'strumming'} on ${onChords}.`);
+  if (has('apply') && !(scaleInApply && warmScale === scale)) {
+    path.push(scaleInApply ? `Apply: ${scale} phrases over the ${style} groove on ${onChords}.` : `Apply: ${profile ? `${style} groove` : 'strumming'} on ${onChords}.`);
+  }
   if (has('review')) { const n = plan.review.length; path.push(`Review: ${n} earlier item${n === 1 ? '' : 's'}.`); }
   if (has('create')) path.push(`Create: ${task.label} on ${onChords}.`);
 
