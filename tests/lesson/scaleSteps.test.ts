@@ -28,6 +28,14 @@ describe('scale block steps', () => {
     expect(first).toContain('Tap Show');
   });
 
+  it('never asks for "every 1 ... then every 1" when the target is the home note', () => {
+    const plan = planLesson(known, STYLE_CATALOG);
+    const home = { ...plan, scale_block: { ...plan.scale_block!, steps: [{ kind: 'retrieve' as const, ref: 'minor_pent:D', degree: 'b3' }, ...plan.scale_block!.steps.slice(1)] } };
+    const [first] = warm({ ...home, key: 'G', music: buildMusic({ key: 'G', track: 'rhythm', style: null, element: null }) }).instructions;
+    expect(first).toContain('play every 1 (the note G) on every string');
+    expect(first).not.toContain('then every 1');
+  });
+
   it('lands each Use phrase on the named 3rd of every chord', () => {
     const plan = planLesson(known, STYLE_CATALOG);
     const use = warm(plan).instructions.at(-1)!;

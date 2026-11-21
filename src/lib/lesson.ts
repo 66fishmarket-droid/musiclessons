@@ -2,7 +2,7 @@ import { CREATE_TASKS } from '../../supabase/functions/_shared/engine/create.ts'
 import { termsIn, type GlossaryEntry } from '../../supabase/functions/_shared/engine/glossary.ts';
 import { MINOR_FAMILY_SCALE } from '../../supabase/functions/_shared/engine/render.ts';
 import { PLAYS_THROUGH, playStep, recipeFor, type Card, type SkillRecipe, type StepElement } from '../../supabase/functions/_shared/engine/recipes.ts';
-import type { BlockKind, LessonPlan, Skill } from '../../supabase/functions/_shared/engine/types.ts';
+import type { BlockKind, LessonPlan, ScaleBlock, Skill } from '../../supabase/functions/_shared/engine/types.ts';
 import type { BlockContent, LessonContent, ReviewRhythm } from '../../supabase/functions/_shared/lesson/contract.ts';
 
 /** The lessons row generate-lesson returns (the columns the app reads). */
@@ -45,6 +45,11 @@ export function tonicOf(key: string): string {
 
 /** Readable name for a plan ref ("skill:fingerstyle.l1.giuliani_arpeggios" → "giuliani arpeggios"). */
 export function refLabel(ref: string): string {
+  if (ref.startsWith('scale:')) {
+    const [type, shape] = ref.slice('scale:'.length).split(':');
+    const name = type.replace('_pent', ' pentatonic');
+    return `${name[0].toUpperCase()}${name.slice(1)}, ${shape} shape`;
+  }
   const id = ref.slice(ref.indexOf(':') + 1);
   return (id.split('.').pop() ?? id).replaceAll('_', ' ');
 }
@@ -76,12 +81,24 @@ const FIXED_SHOW: Partial<Record<BlockKind, StepElement[][]>> = {
 // Apply with the link step (lesson/steps.ts, scale from today's style): the third step plays the warm-up scale, so show it.
 const APPLY_LINK_SHOW: StepElement[][] = [['card', 'metronome'], ['card', 'chords', 'metronome'], ['card', 'scale', 'chords', 'metronome'], ['card', 'chords', 'metronome']];
 
+/** True when a block's items get one verdict row each (plus Next block) instead of the pass pair that also moves on:
+ * every multi-item block, and the scale warm-up's retrieves, whose verdict must not skip the steps after them. */
+export function itemList(kind: BlockKind, slots: (string | null)[], scaleBlock: boolean): boolean {
+  return slots.length > 1 || (kind === 'warmup' && scaleBlock && slots[0] !== null);
+}
+
+/** Warm-up step elements, one per scale-block step: every step shows its position; Use adds the chords it plays over. */
+export function warmupShow(block: ScaleBlock): StepElement[][] {
+  return block.steps.map(s => (s.kind === 'use' ? ['scale', 'chords', 'metronome'] : ['scale', 'metronome']));
+}
+
 /**
  * What the current step shows besides its text, or null for the whole block's elements (review and reset blocks, or a
  * stored lesson whose step count no longer matches). Retest prepends a "Cold retest" line, so its steps shift by one.
  */
-export function stepElements(recipe: SkillRecipe | undefined, kind: BlockKind, step: number, stepCount: number, createTaskId?: string | null): StepElement[] | null {
-  const show = kind === 'new_skill' ? recipe?.show
+export function stepElements(recipe: SkillRecipe | undefined, kind: BlockKind, step: number, stepCount: number, createTaskId?: string | null, scaleBlock?: ScaleBlock | null): StepElement[] | null {
+  const show = kind === 'warmup' && scaleBlock ? warmupShow(scaleBlock)
+    : kind === 'new_skill' ? recipe?.show
     : kind === 'retest' ? recipe?.show && [recipe.show[0], ...recipe.show.slice(0, stepCount - 1)]
     : kind === 'create' ? CREATE_TASKS.find(t => t.id === createTaskId)?.show
     : kind === 'apply' && stepCount === APPLY_LINK_SHOW.length ? APPLY_LINK_SHOW

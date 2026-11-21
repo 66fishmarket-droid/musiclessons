@@ -45,7 +45,10 @@ export function scaleBlockSteps(plan: LessonPlan): string[] {
     const pos = positionPhrase(plan, s.ref!);
     switch (s.kind) {
       case 'retrieve':
-        return `Without looking: in ${pos}, play every ${targetPhrase(plan, s)} on every string, then every 1. Tap Show to check.`;
+      {
+        const target = targetPhrase(plan, s);
+        return `Without looking: in ${pos}, play every ${target} on every string${target.startsWith('1 ') ? ', low to high' : ', then every 1'}. Tap Show to check.`;
+      }
       case 'map': {
         const pent = parseRef(s.ref!).type.endsWith('pent');
         const fresh = s.ref === block.map && block.map_is_new;
