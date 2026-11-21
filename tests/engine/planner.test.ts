@@ -133,6 +133,12 @@ describe('planLesson', () => {
     ]);
   });
 
+  it('never reviews songwriting skills: the Create block already writes every day', () => {
+    const due = (ref: string, next_due: string) => ({ item_type: 'skill' as const, ref, interval_days: 3, next_due, last_result: true });
+    const plan = planLesson(state({ reviewItems: [due('songwriting.l1.a', '2026-10-01'), due('fills.l1.a', '2026-10-02')] }), catalog);
+    expect(plan.review).toEqual([{ item_type: 'skill', ref: 'fills.l1.a' }]);
+  });
+
   it('uses the skill\'s theory topic when it has one', () => {
     const plan = planLesson(state({ recentLessons: [lesson('2026-10-09', 'rhythm', 'rhythm.l1.a', 'G')] }), catalog);
     expect(plan).toMatchObject({ track: 'fretboard', theory_topic_id: 'theory.l2.a' });
