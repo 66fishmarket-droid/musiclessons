@@ -113,11 +113,11 @@ export function pickTheoryTopic(state: PlannerState, ctx: Ctx, skill: Skill): st
     .sort((a, b) => a.level - b.level || a.id.localeCompare(b.id))[0]?.id ?? null;
 }
 
-/** Due review items, oldest first, excluding today's track and anything already in the lesson. */
+/** Due review items, oldest first, excluding today's track, songwriting (the Create block writes daily) and anything already in the lesson. */
 export function pickReview(state: PlannerState, ctx: Ctx, track: Track, exclude: Set<string>, max = 3): LessonPlan['review'] {
   return state.reviewItems
     .filter(r => r.next_due <= state.today && !exclude.has(`${r.item_type}:${r.ref}`)
-      && !(r.item_type === 'skill' && ctx.skills.get(r.ref)?.track === track))
+      && !(r.item_type === 'skill' && [track, 'songwriting'].includes(ctx.skills.get(r.ref)?.track ?? '')))
     .sort((a, b) => a.next_due.localeCompare(b.next_due) || a.ref.localeCompare(b.ref))
     .slice(0, max)
     .map(r => ({ item_type: r.item_type, ref: r.ref }));
