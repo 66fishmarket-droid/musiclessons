@@ -50,7 +50,7 @@ A position is a scale type wrapped around one CAGED chord shape. Ref format `sca
 | 1 | `minor_pent:E` | Box 1, wraps the minor barre shape they know |
 | 2 | `minor_pent:D` | Its upper neighbour; linked by the shared edge notes |
 | 3 | `major_pent:G` | Same dots as #1, new home note (relative major) |
-| 4 | `major_pent:C` | Same dots as #2 |
+| 4 | `major_pent:E` | Same dots as #2 (minor D-shape box = relative major E-shape box) |
 | 5 | `major:E` | Full major grown from the E-shape chord: chord → triad → add 2, 6 → add 4, 7 |
 | 6 | `major:A` | Same, from the A-shape chord |
 | 7–9 | `major:C`, `major:G`, `major:D` | Remaining positions, each learned against its already-known neighbour |

@@ -40,7 +40,7 @@
 - Produces:
   - `type Shape = 'C' | 'A' | 'G' | 'E' | 'D'`
   - `type ScaleType = 'minor_pent' | 'major_pent' | 'major' | 'minor'`
-  - `const LADDER: string[]` = `['minor_pent:E','minor_pent:D','major_pent:G','major_pent:C','major:E','major:A','major:C','major:G','major:D','minor:E','minor:D','minor:C','minor:A','minor:G']` (bare ids; DB/plan refs are `scale:<id>`)
+  - `const LADDER: string[]` = `['minor_pent:E','minor_pent:D','major_pent:G','major_pent:E','major:E','major:A','major:C','major:G','major:D','minor:E','minor:D','minor:C','minor:A','minor:G']` (bare ids; DB/plan refs are `scale:<id>`)
   - `parseRef(id: string): { type: ScaleType; shape: Shape }`
   - `neighbours(id: string): string[]` — the two ids of the same type whose shapes are adjacent in the cycle C → A → G → E → D → C (only those that exist in `LADDER`)
   - `interface PlacedShape { tonic: string; scaleName: string; chord: string; rootString: number; rootFret: number; from: number; to: number; notes: FretNote[] }`
